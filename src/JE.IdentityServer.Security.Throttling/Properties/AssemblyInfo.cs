@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("JE.IdentityServer.Security.Tests")]
+[assembly: AssemblyTitle("JE.IdentityServer.Security.Throttling")]
 [assembly: AssemblyDescription("Native login throttling middleware for OpenIdConnect (IdentityServer)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("JE.IdentityServer.Security")]
