@@ -1,0 +1,13 @@
+{
+    "scripts":  {
+                    "version":  1
+                },
+    "feature":  {
+                    "name":  "identityserver.security",
+                    "role":  "library"
+                },
+    "build":  {
+                  "solution":  "JE.IdentityServer.Security.Library.sln",
+                  "mainproject":  "JE.IdentityServer.Security.Library\\JE.IdentityServer.Security.Library.csproj"
+              }
+}
