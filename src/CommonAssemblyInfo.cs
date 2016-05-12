@@ -1,5 +1,6 @@
 using System.Reflection;
 
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("JUSTEAT")]
 [assembly: AssemblyInformationalVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
