@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JE.IdentityServer.Security.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JE.IdentityServer.Security.Throttling", "src\JE.IdentityServer.Security.Throttling\JE.IdentityServer.Security.Throttling.csproj", "{90EE0DB2-DE19-47E5-82E5-1FBA94F62AB0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3A2E2CAE-BA34-419A-8319-79EDBE66E927}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,5 +42,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{476BAD6E-38F8-4EC3-8507-2E5010556120} = {3A2E2CAE-BA34-419A-8319-79EDBE66E927}
 	EndGlobalSection
 EndGlobal

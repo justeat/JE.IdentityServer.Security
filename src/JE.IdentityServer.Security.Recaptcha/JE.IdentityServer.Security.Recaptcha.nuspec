@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>http://github.com/justeat/JE.IdentityServer.Security.Recaptcha/LICENSE</licenseUrl>
+    <projectUrl>http://github.com/justeat/JE.IdentityServer.Security.Recaptcha</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>http://github.com/justeat/JE.IdentityServer.Security.Recaptcha/CHANGELOG.md</releaseNotes>
+    <copyright>Copyright JUSTEAT 2016</copyright>
+    <tags>recaptcha api owin openidconnect identityserver</tags>
+  </metadata>
+</package>
