@@ -1,0 +1,6 @@
+<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=AE172BC6E319994DA3E9A358F52857F9/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=AE172BC6E319994DA3E9A358F52857F9/AbsolutePath/@EntryValue">C:\src\je\sys-automation\JE.IdentityServer.Security.Library\JE.IdentityServer.Security.Library.sln.DotSettings</s:String>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=AE172BC6E319994DA3E9A358F52857F9/RelativePath/@EntryValue"></s:String>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileAE172BC6E319994DA3E9A358F52857F9/@KeyIndexDefined">True</s:Boolean>
+	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileAE172BC6E319994DA3E9A358F52857F9/RelativePriority/@EntryValue">1</s:Double></wpf:ResourceDictionary>
