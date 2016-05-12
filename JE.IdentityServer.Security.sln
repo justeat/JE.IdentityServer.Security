@@ -1,0 +1,44 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{2EC480A8-BA7F-46D7-9BAB-0B1684A868F1}"
+	ProjectSection(SolutionItems) = preProject
+		Build.ps1 = Build.ps1
+		src\CommonAssemblyInfo.cs = src\CommonAssemblyInfo.cs
+		Generate-Configs.ps1 = Generate-Configs.ps1
+		nuget.config = nuget.config
+		Package.ps1 = Package.ps1
+		README.md = README.md
+		version.txt = version.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JE.IdentityServer.Security.Recaptcha", "src\JE.IdentityServer.Security.Recaptcha\JE.IdentityServer.Security.Recaptcha.csproj", "{E5CBC67A-185B-403E-957E-09C790C3010A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JE.IdentityServer.Security.Tests", "tests\JE.IdentityServer.Security.Tests\JE.IdentityServer.Security.Tests.csproj", "{476BAD6E-38F8-4EC3-8507-2E5010556120}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JE.IdentityServer.Security.Throttling", "src\JE.IdentityServer.Security.Throttling\JE.IdentityServer.Security.Throttling.csproj", "{90EE0DB2-DE19-47E5-82E5-1FBA94F62AB0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E5CBC67A-185B-403E-957E-09C790C3010A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5CBC67A-185B-403E-957E-09C790C3010A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5CBC67A-185B-403E-957E-09C790C3010A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5CBC67A-185B-403E-957E-09C790C3010A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{476BAD6E-38F8-4EC3-8507-2E5010556120}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{476BAD6E-38F8-4EC3-8507-2E5010556120}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{476BAD6E-38F8-4EC3-8507-2E5010556120}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{476BAD6E-38F8-4EC3-8507-2E5010556120}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90EE0DB2-DE19-47E5-82E5-1FBA94F62AB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90EE0DB2-DE19-47E5-82E5-1FBA94F62AB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90EE0DB2-DE19-47E5-82E5-1FBA94F62AB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90EE0DB2-DE19-47E5-82E5-1FBA94F62AB0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
