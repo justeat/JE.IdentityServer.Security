@@ -53,6 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Extensions\OwinContextExtensions.cs" />
     <Compile Include="OpenIdConnect\ILoginStatistics.cs" />
     <Compile Include="OpenIdConnect\IOpenIdConnectRequest.cs" />

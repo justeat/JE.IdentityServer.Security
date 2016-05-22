@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Google Recaptcha middleware for OpenIdConnect (IdentityServer)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("JE.IdentityServer.Security")]
-[assembly: AssemblyCopyright("Copyright Â© JUSTEAT 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
