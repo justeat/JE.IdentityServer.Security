@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{90EE0DB2-DE19-47E5-82E5-1FBA94F62AB0}</ProjectGuid>
+    <ProjectGuid>{D1201F47-5A86-4E85-A67B-D387384726D6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JE.IdentityServer.Security.Throttling</RootNamespace>
-    <AssemblyName>JE.IdentityServer.Security.Throttling</AssemblyName>
+    <RootNamespace>JE.IdentityServer.Security</RootNamespace>
+    <AssemblyName>JE.IdentityServer.Security</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -35,6 +35,10 @@
       <HintPath>..\..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
@@ -52,20 +56,22 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="IdentityServerThrottlingAppBuilderExtensions.cs" />
-    <Compile Include="IdentityServerThrottlingMiddleware.cs" />
-    <Compile Include="IdentityServerThrottlingOptions.cs" />
+    <Compile Include="Extensions\OwinContextExtensions.cs" />
+    <Compile Include="OpenIdConnect\ILoginStatistics.cs" />
+    <Compile Include="OpenIdConnect\IOpenIdConnectRequest.cs" />
+    <Compile Include="OpenIdConnect\IOpenIdConnectRequestOptions.cs" />
+    <Compile Include="OpenIdConnect\OpenIdConnectRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resolver\IDependencyFactory.cs" />
+    <Compile Include="Resolver\ServiceFactory.cs" />
+    <Compile Include="Resolver\ServiceFactoryMiddleware.cs" />
+    <Compile Include="Resolver\ServiceFactoryOptions.cs" />
+    <Compile Include="Resolver\ServiceResolverAppBuilderExtensions.cs" />
+    <Compile Include="Resources\IdentityServerErrorResource.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <None Include="JE.IdentityServer.Security.Throttling.nuspec" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\JE.IdentityServer.Security\JE.IdentityServer.Security.csproj">
-      <Project>{d1201f47-5a86-4e85-a67b-d387384726d6}</Project>
-      <Name>JE.IdentityServer.Security</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -3,12 +3,10 @@ using Owin;
 
 namespace JE.IdentityServer.Security.Tests.Infrastructure
 {
-    public class IdentityServerStartup
+    public static class InMemoryIdentityServerStartup
     {
-        public void Configuration(IAppBuilder appBuilder)
+        public static void UseInMemoryIdentityServer(this IAppBuilder appBuilder)
         {
-            // This is where our stuff should go
-
             appBuilder.Map("/identity", app =>
             {
                 app.UseIdentityServer(new IdentityServerOptions

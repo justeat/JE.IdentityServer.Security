@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JE.IdentityServer.Security.Tests</RootNamespace>
     <AssemblyName>JE.IdentityServer.Security.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -73,6 +74,10 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -85,16 +90,43 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Infrastructure\IdentityServerConfiguration.cs" />
-    <Compile Include="Infrastructure\IdentityServerStartup.cs" />
+    <Compile Include="Infrastructure\InmemoryIdentityServerStartup.cs" />
+    <Compile Include="Infrastructure\LoginStatisticsStub.cs" />
     <Compile Include="Infrastructure\NativeLoginRequestBuilder.cs" />
     <Compile Include="Infrastructure\NoDataProtector.cs" />
-    <Compile Include="Infrastructure\WhenLoggingIn.cs" />
-    <Compile Include="LogginginWithUsernameAndPassword.cs" />
+    <Compile Include="Infrastructure\IdentityServerWithThrottledLoginRequests.cs" />
+    <Compile Include="Infrastructure\TokenFailureResponseModel.cs" />
+    <Compile Include="Infrastructure\TokenResponseModel.cs" />
+    <Compile Include="Throttling\ThrottledRequestsWithExcludedUsername.cs" />
+    <Compile Include="Throttling\ThrottledRequestsWithMissingGrantType.cs" />
+    <Compile Include="Throttling\ThrottledRequestsWithMatchingGrantType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceResolver\ITextDataSource.cs" />
+    <Compile Include="ServiceResolver\RandomTextSelectorMiddleware.cs" />
+    <Compile Include="ServiceResolver\StartUp.cs" />
+    <Compile Include="ServiceResolver\TextDataSource.cs" />
+    <Compile Include="ServiceResolver\WhenInjectingDependencies.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Infrastructure\idsrv3test.pfx" />
-    <None Include="packages.config" />
+    <None Include="app.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JE.IdentityServer.Security.Recaptcha\JE.IdentityServer.Security.Recaptcha.csproj">
+      <Project>{e5cbc67a-185b-403e-957e-09c790c3010a}</Project>
+      <Name>JE.IdentityServer.Security.Recaptcha</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\JE.IdentityServer.Security.Throttling\JE.IdentityServer.Security.Throttling.csproj">
+      <Project>{90ee0db2-de19-47e5-82e5-1fba94f62ab0}</Project>
+      <Name>JE.IdentityServer.Security.Throttling</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\JE.IdentityServer.Security\JE.IdentityServer.Security.csproj">
+      <Project>{d1201f47-5a86-4e85-a67b-d387384726d6}</Project>
+      <Name>JE.IdentityServer.Security</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
