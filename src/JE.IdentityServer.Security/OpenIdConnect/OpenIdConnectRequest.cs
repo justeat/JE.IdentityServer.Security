@@ -1,12 +1,16 @@
-using System;
-using System.Linq;
 using System.Net;
+using JE.IdentityServer.Security.Extensions;
+using JE.IdentityServer.Security.Resources;
 using Microsoft.Owin;
 
 namespace JE.IdentityServer.Security.OpenIdConnect
 {
     public class OpenIdConnectRequest : IOpenIdConnectRequest
     {
+        private const string AcrValuesFormKey = "acr_values";
+        private const string RecaptchaAnswerHeaderKey = "x-recaptcha-answer";
+        private const string GrantTypeFormKey = "grant_type";
+
         private readonly IPAddress _remoteIpAddress;
         private readonly string _path;
         private readonly IHeaderDictionary _headers;
@@ -25,29 +29,38 @@ namespace JE.IdentityServer.Security.OpenIdConnect
             return _form.Get("username");
         }
 
+        public string GetPath()
+        {
+            return _path;
+        }
+
         public IPAddress GetRemoteIpAddress()
         {
             return _remoteIpAddress;
         }
 
-        public IPAddress GetIpAddress()
+        public string GetLanguage()
         {
-            return _remoteIpAddress;
+            return _form.Get(AcrValuesFormKey).ToKnownAcrValues().Language;
         }
 
-        public bool Matches(IOpenIdConnectRequestOptions openIdConnectRequestOptions)
+        public string GetGrantType()
         {
-            var path = openIdConnectRequestOptions.ProtectedPath;
-            if (string.IsNullOrEmpty(path) || !path.Equals(_path, StringComparison.OrdinalIgnoreCase)) return false;
-
-            return openIdConnectRequestOptions.ProtectedGrantTypes.Contains(_form.Get("grant_type"));
+            return _form.Get(GrantTypeFormKey);
         }
 
-        public bool IsExcluded(IOpenIdConnectRequestOptions options)
+        public string GetRecaptchaChallengeResponse()
         {
-            var username = _form.Get("username");
-            return !string.IsNullOrEmpty(username) && 
-                    options.ExcludedUsernameExpressions.Any(regex => regex.IsMatch(username));
+            var recaptchaValue = _headers.Get(RecaptchaAnswerHeaderKey);
+            return !string.IsNullOrEmpty(recaptchaValue)
+                ? recaptchaValue.ToStringFromBase64String()
+                : _form.Get(AcrValuesFormKey)
+                    .ToKnownAcrValues().RecaptchaResponse;
+        }
+
+        public IDevice GetDevice()
+        {
+            return _form.Get(AcrValuesFormKey).ToKnownAcrValues().Device;
         }
     }
 }

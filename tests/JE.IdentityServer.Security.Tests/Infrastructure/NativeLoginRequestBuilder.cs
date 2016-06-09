@@ -1,6 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using JE.IdentityServer.Security.Extensions;
+using JE.IdentityServer.Security.OpenIdConnect;
+using JE.IdentityServer.Security.Resources;
 using Microsoft.Owin.Testing;
+using Newtonsoft.Json;
 
 namespace JE.IdentityServer.Security.Tests.Infrastructure
 {
@@ -14,6 +19,9 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         private readonly IDictionary<string, string> _headers = new Dictionary<string, string>();
         private string _username;
         private string _password;
+        private string _recaptchaAnswerAcrValue;
+        private string _languageCode;
+        private string _device;
 
         public NativeLoginRequestBuilder(TestServer server)
         {
@@ -44,6 +52,18 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             return this;
         }
 
+        public NativeLoginRequestBuilder WithHttpHeaderRecaptchaResponse(string httpHeaderRecaptchaResponse)
+        {
+            _headers.Add("x-recaptcha-answer", httpHeaderRecaptchaResponse.ToBase64String());
+            return this;
+        }
+
+        public NativeLoginRequestBuilder WithRecaptchaResponseAsAcrValue(string recaptchaAnswerAcrValue)
+        {
+            _recaptchaAnswerAcrValue = recaptchaAnswerAcrValue;
+            return this;
+        }
+
         public NativeLoginRequestBuilder WithUsername(string username)
         {
             _username = username;
@@ -56,16 +76,24 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             return this;
         }
 
+        public NativeLoginRequestBuilder WithDeviceType(string deviceType)
+        {
+            var device = new Device(string.Empty, deviceType, string.Empty, string.Empty);
+            _device = JsonConvert.SerializeObject(device).ToBase64String();
+
+            return this;
+        }
+
+        public NativeLoginRequestBuilder WithLanguageCode(string languageCode)
+        {
+            _languageCode = languageCode;
+            return this;
+        }
+
         public RequestBuilder Build()
         {
             var builder = _server.CreateRequest(_path)
-                .And(x => x.Content = new FormUrlEncodedContent(new[]
-                {
-                    new KeyValuePair<string, string>("username", _username),
-                    new KeyValuePair<string, string>("password", _password),
-                    new KeyValuePair<string, string>("grant_type", _grantType),
-                    new KeyValuePair<string, string>("scope", "mobile_scope")
-                }))
+                .And(x => x.Content = CreateFormUrlEncodedContent())
                 .And(x => x.Headers.Authorization =
                     new BasicAuthenticationHeaderValue(_clientId, _secret));
             
@@ -74,7 +102,50 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
                 builder.AddHeader(header.Key, header.Value);
             }
 
+            builder.AddHeader("HTTP_X_FORWARDED_FOR", "192.168.1.101");
+
             return builder;
+        }
+
+        private FormUrlEncodedContent CreateFormUrlEncodedContent()
+        {
+            var formInputValues = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("username", _username),
+                new KeyValuePair<string, string>("password", _password),
+                new KeyValuePair<string, string>("grant_type", _grantType),
+                new KeyValuePair<string, string>("scope", "mobile_scope")
+            };
+
+            var acrValues = GetAcrValues();
+            if (acrValues.Count > 0)
+            {
+                formInputValues.Add(new KeyValuePair<string, string>("acr_values", string.Join(" ", acrValues)));
+            }
+
+            return new FormUrlEncodedContent(formInputValues);
+        }
+
+        private List<string> GetAcrValues()
+        {
+            var acrValues = new List<string>();
+
+            if (!string.IsNullOrEmpty(_recaptchaAnswerAcrValue))
+            {
+                acrValues.Add($"{KnownAcrValuesExtensions.RecaptchaAnswer}:{_recaptchaAnswerAcrValue}");
+            }
+
+            if (!string.IsNullOrEmpty(_languageCode))
+            {
+                acrValues.Add($"{KnownAcrValuesExtensions.Language}:{_languageCode}");
+            }
+
+            if (!string.IsNullOrEmpty(_device))
+            {
+                acrValues.Add($"{KnownAcrValuesExtensions.Device}:{_device}");
+            }
+
+            return acrValues;
         }
     }
 

@@ -1,15 +1,22 @@
 ﻿using System.Net;
+using JE.IdentityServer.Security.Resources;
 
 namespace JE.IdentityServer.Security.OpenIdConnect
 {
     public interface IOpenIdConnectRequest
     {
-        bool Matches(IOpenIdConnectRequestOptions openIdConnectRequestOptions);
-
-        bool IsExcluded(IOpenIdConnectRequestOptions options);
+        string GetPath();
 
         string GetUsername();
 
         IPAddress GetRemoteIpAddress();
+
+        string GetLanguage();
+
+        string GetGrantType();
+
+        string GetRecaptchaChallengeResponse();
+
+        IDevice GetDevice();
     }
 }
