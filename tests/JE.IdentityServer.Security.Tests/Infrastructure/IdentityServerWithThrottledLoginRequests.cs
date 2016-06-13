@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using JE.IdentityServer.Security.OpenIdConnect;
 using JE.IdentityServer.Security.Resolver;
 using JE.IdentityServer.Security.Services;
 using JE.IdentityServer.Security.Throttling;

@@ -27,6 +27,14 @@ namespace JE.IdentityServer.Security.Recaptcha
                 return;
             }
 
+            var loginStatistics = context.Get<ILoginStatistics>();
+            if (await loginStatistics.GetNumberOfFailedLoginsForIpAddress(openIdConnectRequest.GetRemoteIpAddress()) <
+                _options.NumberOfAllowedLoginFailuresPerIpAddress)
+            {
+                await Next.Invoke(context);
+                return;
+            }
+
             var recaptchaValidationService = context.Get<IRecaptchaValidationService>();
             var recaptchaChallengeResponse = openIdConnectRequest.GetRecaptchaChallengeResponse();
             if (!string.IsNullOrEmpty(recaptchaChallengeResponse))
@@ -46,13 +54,6 @@ namespace JE.IdentityServer.Security.Recaptcha
         private async Task ChallengeWithRequestForRecaptcha(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest)
         {
             var loginStatistics = context.Get<ILoginStatistics>();
-
-            if (await loginStatistics.GetNumberOfFailedLoginsForIpAddress(openIdConnectRequest.GetRemoteIpAddress()) <
-                _options.NumberOfAllowedLoginFailuresPerIpAddress)
-            {
-                await Next.Invoke(context);
-                return;
-            }
 
             await loginStatistics.IncrementFailedLoginsForUserAndIpAddress(openIdConnectRequest.GetUsername(),
                 openIdConnectRequest.GetRemoteIpAddress());
