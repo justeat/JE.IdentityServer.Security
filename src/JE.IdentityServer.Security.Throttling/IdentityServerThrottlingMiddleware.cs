@@ -2,6 +2,7 @@
 using JE.IdentityServer.Security.Extensions;
 using JE.IdentityServer.Security.OpenIdConnect;
 using JE.IdentityServer.Security.Resources;
+using JE.IdentityServer.Security.Services;
 using Microsoft.Owin;
 
 namespace JE.IdentityServer.Security.Throttling
@@ -20,19 +21,19 @@ namespace JE.IdentityServer.Security.Throttling
         public override async Task Invoke(IOwinContext context)
         {
             var openIdConnectRequest = await context.ToOpenIdConnectRequest();
-            var isExcludedFromThrottling = openIdConnectRequest.IsExcluded(_options);
-            if (openIdConnectRequest.Matches(_options) && !isExcludedFromThrottling)
+            var isExcludedFromThrottling = _options.IsExcluded(openIdConnectRequest);
+            if (!_options.Matches(openIdConnectRequest) || isExcludedFromThrottling)
             {
-                await InvokeCore(context, openIdConnectRequest);
+                if (isExcludedFromThrottling)
+                {
+                    await SetLoginStatusForExcludedUser(context, openIdConnectRequest);
+                }
+
+                await Next.Invoke(context);
                 return;
             }
 
-            if (isExcludedFromThrottling)
-            {
-                await SetLoginStatusForExcludedUser(context, openIdConnectRequest);
-            }
-
-            await Next.Invoke(context);
+            await InvokeCore(context, openIdConnectRequest);
         }
 
         private async Task InvokeCore(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest)

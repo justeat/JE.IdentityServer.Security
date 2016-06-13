@@ -11,7 +11,7 @@ namespace JE.IdentityServer.Security.Extensions
     public static class OwinContextExtensions
     {
         private const string IdentityKeyPrefix = "je.identityserver:security";
-
+        
         public static IOwinContext Set<T>(this IOwinContext owinContext, T value)
         {
             if (owinContext == null)
@@ -36,18 +36,48 @@ namespace JE.IdentityServer.Security.Extensions
             var formAsNameValueCollection = await owinContext.ReadRequestFormAsync();
 
             IPAddress remoteIpAddress;
-            IPAddress.TryParse(owinContext.Request.RemoteIpAddress, out remoteIpAddress);
-            
+            IPAddress.TryParse(owinContext.GetRemoteClientIpAddress(), out remoteIpAddress);
+
             return new OpenIdConnectRequest(remoteIpAddress, owinContext.Request.Path.Value, owinContext.Request.Headers, formAsNameValueCollection);
         }
 
-        public static async Task ReturnResponse<T>(this IOwinContext owinContext, int statusCode, T message)
+        public static async Task ReturnResponse<T>(this IOwinContext owinContext, HttpStatusCode httpStatusCode, T message)
         {
-            owinContext.Response.StatusCode = statusCode;
+            if (owinContext == null)
+            {
+                throw new ArgumentNullException(nameof(owinContext));
+            }
+
+            owinContext.Response.StatusCode = (int)httpStatusCode;
             owinContext.Response.ContentType = "application/json";
             await owinContext.Response.WriteAsync(JsonConvert.SerializeObject(message));
         }
 
+        public static async Task ReturnResponse<T>(this IOwinContext owinContext, int httpStatusCode, T message)
+        {
+            if (owinContext == null)
+            {
+                throw new ArgumentNullException(nameof(owinContext));
+            }
+
+            owinContext.Response.StatusCode = httpStatusCode;
+            owinContext.Response.ContentType = "application/json";
+            await owinContext.Response.WriteAsync(JsonConvert.SerializeObject(message));
+        }
+
+        public static async Task ReturnResponse<T>(this IOwinContext owinContext, HttpStatusCode httpStatusCode, T resource, string authenticateChallengeHeaderValue)
+        {
+            if (owinContext == null)
+            {
+                throw new ArgumentNullException(nameof(owinContext));
+            }
+
+            owinContext.Response.Headers["WWW-Authenticate"] = authenticateChallengeHeaderValue;
+            owinContext.Response.StatusCode = (int)httpStatusCode;
+            owinContext.Response.ContentType = "application/json";
+            await owinContext.Response.WriteAsync(JsonConvert.SerializeObject(resource));
+        }
+        
         private static async Task<IFormCollection> ReadRequestFormAsync(this IOwinContext owinContext)
         {
             if (owinContext == null) throw new ArgumentNullException(nameof(owinContext));

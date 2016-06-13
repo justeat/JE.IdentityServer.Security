@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,18 +57,29 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Extensions\IpAddresExtensions.cs" />
     <Compile Include="Extensions\OwinContextExtensions.cs" />
-    <Compile Include="OpenIdConnect\ILoginStatistics.cs" />
+    <Compile Include="Extensions\OwinContextIpAddressExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="OpenIdConnect\IOpenIdConnectRequest.cs" />
     <Compile Include="OpenIdConnect\IOpenIdConnectRequestOptions.cs" />
+    <Compile Include="OpenIdConnect\KnownAcrValues.cs" />
+    <Compile Include="OpenIdConnect\KnownAcrValuesExtensions.cs" />
     <Compile Include="OpenIdConnect\OpenIdConnectRequest.cs" />
+    <Compile Include="OpenIdConnect\OpenIdConnectRequestOptionsExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resolver\IDependencyFactory.cs" />
     <Compile Include="Resolver\ServiceFactory.cs" />
     <Compile Include="Resolver\ServiceFactoryMiddleware.cs" />
     <Compile Include="Resolver\ServiceFactoryOptions.cs" />
     <Compile Include="Resolver\ServiceResolverAppBuilderExtensions.cs" />
+    <Compile Include="Resources\Device.cs" />
+    <Compile Include="Resources\IdentityServerBadRequestChallengeResource.cs" />
     <Compile Include="Resources\IdentityServerErrorResource.cs" />
+    <Compile Include="Resources\IdentityServerUnauthorizedChallengeResource.cs" />
+    <Compile Include="Resources\IDevice.cs" />
+    <Compile Include="Resources\IPNetwork.cs" />
+    <Compile Include="Services\ILoginStatistics.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

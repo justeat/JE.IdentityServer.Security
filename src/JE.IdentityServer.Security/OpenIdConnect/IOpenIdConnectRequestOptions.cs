@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using JE.IdentityServer.Security.Resources;
 
 namespace JE.IdentityServer.Security.OpenIdConnect
 {
@@ -11,6 +12,6 @@ namespace JE.IdentityServer.Security.OpenIdConnect
 
         IEnumerable<Regex> ExcludedUsernameExpressions { get; }
 
-        int NumberOfAllowedLoginFailures { get; }
+        IEnumerable<IPNetwork> ExcludedSubnets { get; set; }
     }
 }
