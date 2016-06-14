@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using JE.IdentityServer.Security.Extensions;
 using JE.IdentityServer.Security.OpenIdConnect;
 using JE.IdentityServer.Security.Resources;
@@ -45,10 +46,7 @@ namespace JE.IdentityServer.Security.Throttling
                 var numberOfFailedLogins = await loginStatistics.GetNumberOfFailedLoginsForUser(username);
                 if (numberOfFailedLogins >= _options.NumberOfAllowedLoginFailures)
                 {
-                    await context.ReturnResponse(429, new IdentityServerErrorResource
-                    {
-                        Message = "Too many connections"
-                    });
+                    await ReturnThrottledResponse(context);
 
                     return;
                 }
@@ -57,6 +55,24 @@ namespace JE.IdentityServer.Security.Throttling
             await Next.Invoke(context);
 
             await SetLoginStatusForUser(context, openIdConnectRequest);
+        }
+
+        private async Task ReturnThrottledResponse(IOwinContext context)
+        {
+            if (_options.HttpRequestThrottledStatusCode == HttpStatusCode.BadRequest)
+            {
+                await context.ReturnResponse(HttpStatusCode.BadRequest, new IdentityServerBadRequestChallengeResource
+                {
+                    Message = "Too many connections"
+                });
+            }
+            else
+            {
+                await context.ReturnResponse(429, new IdentityServerErrorResource
+                {
+                    Message = "Too many connections"
+                });
+            }
         }
 
         private static async Task SetLoginStatusForUser(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest)
