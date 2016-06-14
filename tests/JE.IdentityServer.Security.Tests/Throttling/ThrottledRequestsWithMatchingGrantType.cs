@@ -51,7 +51,7 @@ namespace JE.IdentityServer.Security.Tests.Throttling
         }
 
         [Test]
-        public async Task ThrottledRequests_WithAllowedFailures_ShouldThrottleRequestsAboveThreshold()
+        public async Task ThrottledRequests_WithAllowedFailuresAndDefaultResponse_ShouldThrottleRequestsAboveThreshold()
         {
             const int numberOfAllowedLoginFailures = 3;
             using (var server = new IdentityServerWithThrottledLoginRequests()
@@ -76,6 +76,37 @@ namespace JE.IdentityServer.Security.Tests.Throttling
 
                 response.StatusCode.Should().Be((HttpStatusCode)429);
                 var tokenResponse = await response.Content.ReadAsAsync<IdentityServerErrorResource>();
+                tokenResponse.Message.Should().Be("Too many connections");
+            }
+        }
+
+        [Test]
+        public async Task ThrottledRequests_WithAllowedFailuresAndBadRequestResponse_ShouldThrottleRequestsAboveThreshold()
+        {
+            const int numberOfAllowedLoginFailures = 3;
+            using (var server = new IdentityServerWithThrottledLoginRequests()
+                                        .WithNumberOfAllowedLoginFailures(numberOfAllowedLoginFailures)
+                                        .WithRequestsThrottledAsBadRequest()
+                                        .WithProtectedGrantType("password").Build())
+            {
+
+                for (var attempt = 0; attempt < numberOfAllowedLoginFailures; ++attempt)
+                {
+                    await server.CreateNativeLoginRequest()
+                        .WithUsername("jeuser")
+                        .WithPassword("Passw0rd123")
+                        .Build()
+                        .PostAsync();
+                }
+
+                var response = await server.CreateNativeLoginRequest()
+                                           .WithUsername("jeuser")
+                                           .WithPassword("Passw0rd123")
+                                           .Build()
+                                           .PostAsync();
+
+                response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var tokenResponse = await response.Content.ReadAsAsync<IdentityServerBadRequestChallengeResource>();
                 tokenResponse.Message.Should().Be("Too many connections");
             }
         }

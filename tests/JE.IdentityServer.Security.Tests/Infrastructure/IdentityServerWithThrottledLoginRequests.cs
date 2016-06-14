@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text.RegularExpressions;
 using JE.IdentityServer.Security.Resolver;
 using JE.IdentityServer.Security.Services;
@@ -16,6 +17,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         private readonly IList<Regex> _excludedUsernameExpressions = new List<Regex>();
         private readonly IList<string> _protectedGrantTypes = new List<string>();
         private TestServer _testServer;
+        private HttpStatusCode _throttledHttpStatusCode = (HttpStatusCode) 429;
 
         public LoginStatisticsStub LoginStatistics => _loginStatistics;
 
@@ -37,6 +39,12 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             return this;
         }
 
+        public IdentityServerWithThrottledLoginRequests WithRequestsThrottledAsBadRequest()
+        {
+            _throttledHttpStatusCode = HttpStatusCode.BadRequest;
+            return this;
+        }
+
         public IdentityServerWithThrottledLoginRequests WithExcludedUsernameExpression(string excludedUsernameExpression)
         {
             _excludedUsernameExpressions.Add(new Regex(excludedUsernameExpression));
@@ -54,6 +62,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
                     NumberOfAllowedLoginFailures = _numberOfAllowedLoginFailures,
                     ExcludedUsernameExpressions = _excludedUsernameExpressions,
                     ProtectedGrantTypes = _protectedGrantTypes,
+                    HttpRequestThrottledStatusCode = _throttledHttpStatusCode
                 });
                 app.UseInMemoryIdentityServer();
             });
