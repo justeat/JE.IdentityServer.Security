@@ -18,6 +18,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         private readonly IList<string> _protectedGrantTypes = new List<string>();
         private readonly IList<Regex> _exludedUsernameExpressions = new List<Regex>();
         private HttpStatusCode _challengeType = HttpStatusCode.Unauthorized;
+        private readonly IList<IOpenIdConnectClient> _webClients = new List<IOpenIdConnectClient>();
         private TestServer _testServer;
         private Uri _verifyUri = new Uri("https://www.google.com/recaptcha/api/siteverify");
         private string _recaptchaPrivateKey;
@@ -95,6 +96,12 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             return this;
         }
 
+        public IdentityServerWithRecaptcha WithWebClients()
+        {
+            _webClients.Add(new OpenIdConnectClient("web_native", "cb0da8d4-2243-4f96-9a96-d01d1c301320"));
+            return this;
+        }
+
         public TestServer Build()
         {
             _testServer = TestServer.Create(app =>
@@ -112,7 +119,8 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
                     VerifyUri = _verifyUri,
                     PrivateKey = _recaptchaPrivateKey,
                     PublicKey = _recaptchaPublicKey,
-                    ContentServerName = _contentServerName
+                    ContentServerName = _contentServerName,
+                    WebClients = _webClients
                 });
                 app.UseInMemoryIdentityServer();
             });

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using JE.IdentityServer.Security.Resources;
 
 namespace JE.IdentityServer.Security.Recaptcha
 {
@@ -15,5 +17,7 @@ namespace JE.IdentityServer.Security.Recaptcha
         string ContentServerName { get; }
 
         bool SupportBrowsersWithoutJavaScript { get; }
+
+        IEnumerable<IOpenIdConnectClient> WebClients { get; }
     }
 }

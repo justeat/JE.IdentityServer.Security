@@ -16,6 +16,7 @@ namespace JE.IdentityServer.Security.Recaptcha
             WhiteListedEmailAddresses = Enumerable.Empty<string>();
             ExcludedSubnets = Enumerable.Empty<IPNetwork>();
             ExcludedUsernameExpressions = Enumerable.Empty<Regex>();
+            WebClients = Enumerable.Empty<IOpenIdConnectClient>();
             HttpChallengeStatusCode = HttpStatusCode.Unauthorized;
             LinkToChallenge = "/recaptcha.aspx";
         }
@@ -45,5 +46,7 @@ namespace JE.IdentityServer.Security.Recaptcha
         public string ContentServerName { get; set; }
 
         public bool SupportBrowsersWithoutJavaScript { get; set; }
+
+        public IEnumerable<IOpenIdConnectClient> WebClients { get; set; }
     }
 }

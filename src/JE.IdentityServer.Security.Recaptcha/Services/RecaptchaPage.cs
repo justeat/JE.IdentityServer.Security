@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Linq;
+using JE.IdentityServer.Security.OpenIdConnect;
 using JE.IdentityServer.Security.Resources;
 
 namespace JE.IdentityServer.Security.Recaptcha.Services
@@ -21,6 +22,25 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
                 languageCode = DefaultLanguageCode;
             }
 
+            return CreateFullHtmlBody(languageCode, device);
+        }
+
+        public string CreateHtmlBody(IOpenIdConnectRequest openIdConnectRequest)
+        {
+            var languageCode = openIdConnectRequest.GetLanguage();
+
+            if (string.IsNullOrEmpty(languageCode))
+            {
+                languageCode = DefaultLanguageCode;
+            }
+
+            return _options.SupportsPartialRecaptcha(openIdConnectRequest) 
+                ? CreatePartialHtmlBody(languageCode, openIdConnectRequest.GetDevice()) 
+                : CreateFullHtmlBody(languageCode, openIdConnectRequest.GetDevice());
+        }
+
+        private string CreateFullHtmlBody(string languageCode, IDevice device)
+        {
             return string.Format(CultureInfo.InvariantCulture, @"<!DOCTYPE html>
             <html>
               <head>
@@ -35,6 +55,14 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
                 </form>
               </body>
             </html>", CssIncludeForDevice(device), languageCode, _options.PublicKey, HtmlContentForIfNoScriptIsAllowed());
+        }
+
+        private string CreatePartialHtmlBody(string languageCode, IDevice device)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                @"{0}<script src=""https://www.google.com/recaptcha/api.js?hl={1}"" async defer></script>
+          <div class=""g-recaptcha"" data-sitekey=""{2}""></div>{3}",
+                CssIncludeForDevice(device), languageCode, _options.PublicKey, HtmlContentForIfNoScriptIsAllowed());
         }
 
         private string CssIncludeForDevice(IDevice device)

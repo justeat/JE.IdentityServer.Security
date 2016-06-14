@@ -64,6 +64,53 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
             }
         }
 
+        [Test]
+        public async Task RecaptchaResponseBody_WithDefaultClients_ShouldContainFullRecaptchaHtml()
+        {
+            using (var server = new IdentityServerWithRecaptcha()
+                .WithProtectedGrantType("password")
+                .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures)
+                .WithFailuresForIpAddress("192.168.1.101", NumberOfAllowedLoginFailures)
+                .WithPublicKey("recaptcha-public-key")
+                .Build())
+            {
+                var response = await server.CreateNativeLoginRequest()
+                    .WithUsername("jeuser")
+                    .WithPassword("Passw0rd")
+                    .WithGrantType("password")
+                    .WithLanguageCode("es-ES")
+                    .Build()
+                    .PostAsync();
+                response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+                var resource = await response.Content.ReadAsAsync<IdentityServerUnauthorizedChallengeResource>();
+                resource.ChallengeHtml.Should().StartWith("<!DOCTYPE html>");
+            }
+        }
+
+        [Test]
+        public async Task RecaptchaResponseBody_WithClientSupportingPartials_ShouldContainPartialRecaptchaHtml()
+        {
+            using (var server = new IdentityServerWithRecaptcha()
+                .WithProtectedGrantType("password")
+                .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures)
+                .WithFailuresForIpAddress("192.168.1.101", NumberOfAllowedLoginFailures)
+                .WithWebClients()
+                .WithPublicKey("recaptcha-public-key")
+                .Build())
+            {
+                var response = await server.CreateNativeLoginRequest()
+                    .WithUsername("jeuser")
+                    .WithPassword("Passw0rd")
+                    .WithGrantType("password")
+                    .WithLanguageCode("es-ES")
+                    .Build()
+                    .PostAsync();
+                response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+                var resource = await response.Content.ReadAsAsync<IdentityServerUnauthorizedChallengeResource>();
+                resource.ChallengeHtml.Should().StartWith("<script src=\"");
+            }
+        }
+
         [TestCase("android", "<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"https://public.example-api.com/content/recaptcha.android.css\"/>")]
         [TestCase("iphone", "<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"https://public.example-api.com/content/recaptcha.iphone.css\"/>")]
         [TestCase("windows", "<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"https://public.example-api.com/content/recaptcha.windows.css\"/>")]
@@ -91,5 +138,6 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                 resource.ChallengeHtml.Should().Contain(expectedHtml);
             }
         }
+
     }
 }
