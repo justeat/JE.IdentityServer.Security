@@ -18,5 +18,7 @@ namespace JE.IdentityServer.Security.OpenIdConnect
         string GetRecaptchaChallengeResponse();
 
         IDevice GetDevice();
+
+        string GetBasicAuthenticationHeaderValue();
     }
 }

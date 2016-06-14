@@ -78,7 +78,9 @@
     <Compile Include="Resources\IdentityServerErrorResource.cs" />
     <Compile Include="Resources\IdentityServerUnauthorizedChallengeResource.cs" />
     <Compile Include="Resources\IDevice.cs" />
+    <Compile Include="Resources\IOpenIdConnectClient.cs" />
     <Compile Include="Resources\IPNetwork.cs" />
+    <Compile Include="Resources\OpenIdConnectClient.cs" />
     <Compile Include="Services\ILoginStatistics.cs" />
   </ItemGroup>
   <ItemGroup />

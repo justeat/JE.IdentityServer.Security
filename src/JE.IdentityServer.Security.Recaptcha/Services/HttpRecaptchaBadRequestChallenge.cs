@@ -21,7 +21,7 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
             var identityServerChallengeResource = new IdentityServerBadRequestChallengeResource
             {
                 Message = CreateResponseMessage(),
-                ChallengeHtml = _recaptchaPage.CreateHtmlBody(openIdConnectRequest.GetLanguage(), openIdConnectRequest.GetDevice())
+                ChallengeHtml = _recaptchaPage.CreateHtmlBody(openIdConnectRequest)
             };
 
             await context.ReturnResponse(HttpStatusCode.BadRequest, identityServerChallengeResource);

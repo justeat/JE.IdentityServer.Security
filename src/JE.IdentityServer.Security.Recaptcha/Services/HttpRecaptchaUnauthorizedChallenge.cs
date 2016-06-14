@@ -21,7 +21,7 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
             await context.ReturnResponse(HttpStatusCode.Unauthorized,
                 new IdentityServerUnauthorizedChallengeResource
                 {
-                    ChallengeHtml = _recaptchaPage.CreateHtmlBody(openIdConnectRequest.GetLanguage(), openIdConnectRequest.GetDevice()),
+                    ChallengeHtml = _recaptchaPage.CreateHtmlBody(openIdConnectRequest),
                     LinkToChallenge = "/recaptcha.aspx",
                     Description = CreateResponseMessage()
                 }, $@"recaptcha url=""{options.LinkToChallenge}""");
