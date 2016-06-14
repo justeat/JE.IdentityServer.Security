@@ -8,5 +8,7 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
     public interface IHttpRecaptchaChallenge : IDisposable
     {
         Task ReturnResponse(IOwinContext context, IIdentityServerRecaptchaOptions options, IOpenIdConnectRequest openIdConnectRequest);
+
+        Task ReturnResponse(IOwinContext context, IIdentityServerRecaptchaOptions options);
     }
 }

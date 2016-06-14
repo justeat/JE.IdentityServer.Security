@@ -7,10 +7,10 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
 {
     public class RecaptchaPage : IRecaptchaPage
     {
-        private readonly IdentityServerRecaptchaOptions _options;
+        private readonly IIdentityServerRecaptchaOptions _options;
         private const string DefaultLanguageCode = "en-GB";
 
-        public RecaptchaPage(IdentityServerRecaptchaOptions options)
+        public RecaptchaPage(IIdentityServerRecaptchaOptions options)
         {
             _options = options;
         }
@@ -37,6 +37,11 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
             return _options.SupportsPartialRecaptcha(openIdConnectRequest) 
                 ? CreatePartialHtmlBody(languageCode, openIdConnectRequest.GetDevice()) 
                 : CreateFullHtmlBody(languageCode, openIdConnectRequest.GetDevice());
+        }
+
+        public string CreateHtmlBody()
+        {
+            return CreatePartialHtmlBody(DefaultLanguageCode, null);
         }
 
         private string CreateFullHtmlBody(string languageCode, IDevice device)

@@ -67,7 +67,7 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     .PostAsync();
                 response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
                 var resource = await response.Content.ReadAsAsync<IdentityServerUnauthorizedChallengeResource>();
-                resource.LinkToChallenge.Should().Be("/recaptcha.aspx");
+                resource.LinkToChallenge.Should().Be("/recaptcha/platform");
                 resource.Description.Should().Contain("add the x-recaptcha-answer");
                 resource.ChallengeHtml.Should().Contain("<script src=\"https://www.google.com/recaptcha/api.js?hl=en-GB\" async defer>");
             }

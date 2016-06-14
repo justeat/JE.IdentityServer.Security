@@ -93,6 +93,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         public RequestBuilder Build()
         {
             var builder = _server.CreateRequest(_path)
+                .AddHeader("HTTP_X_FORWARDED_FOR", "192.168.1.101")
                 .And(x => x.Content = CreateFormUrlEncodedContent())
                 .And(x => x.Headers.Authorization =
                     new BasicAuthenticationHeaderValue(_clientId, _secret));
@@ -101,8 +102,6 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             {
                 builder.AddHeader(header.Key, header.Value);
             }
-
-            builder.AddHeader("HTTP_X_FORWARDED_FOR", "192.168.1.101");
 
             return builder;
         }
