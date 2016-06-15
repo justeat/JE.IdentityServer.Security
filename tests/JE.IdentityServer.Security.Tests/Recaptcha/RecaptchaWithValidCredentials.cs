@@ -30,6 +30,24 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
         }
 
         [Test]
+        public async Task RecaptchaWithValidCredentials_WithUnsupportedGrantType_ShouldReport()
+        {
+            var identityServerBuilder = new IdentityServerWithRecaptcha()
+                .WithProtectedGrantType("password")
+                .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures);
+            using (var server = identityServerBuilder.Build())
+            {
+                await server.CreateNativeLoginRequest()
+                    .WithUsername("jeuser")
+                    .WithPassword("Passw0rd")
+                    .Build()
+                    .PostAsync();
+                identityServerBuilder.LoginStatistics.TotalNumberOfNonChallengesForFailedLogins.Should().Be(1);
+                identityServerBuilder.LoginStatistics.TotalNumberOfChallengesForFailedLogins.Should().Be(0);
+            }
+        }
+
+        [Test]
         public async Task RecaptchaWithValidCredentials_WithDefaultChallengeType_ShouldChallengeAsUnauthorized()
         {
             using (var server = new IdentityServerWithRecaptcha()
@@ -47,6 +65,26 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                 response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
                 response.Headers.WwwAuthenticate.Should().Contain(h => h.Scheme == "recaptcha");
                 response.Headers.WwwAuthenticate.Should().Contain(h => h.Parameter == @"url=""/recaptcha/platform""");
+            }
+        }
+
+        [Test]
+        public async Task RecaptchaWithValidCredentials_WithDefaultChallengeType_ShouldReport()
+        {
+            var identityServerBuilder = new IdentityServerWithRecaptcha()
+                .WithProtectedGrantType("password")
+                .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures)
+                .WithFailuresForIpAddress("192.168.1.101", NumberOfAllowedLoginFailures);
+            using (var server = identityServerBuilder.Build())
+            {
+                await server.CreateNativeLoginRequest()
+                    .WithUsername("jeuser")
+                    .WithPassword("Passw0rd")
+                    .WithGrantType("password")
+                    .Build()
+                    .PostAsync();
+
+                identityServerBuilder.LoginStatistics.TotalNumberOfChallengesForFailedLogins.Should().Be(1);
             }
         }
 

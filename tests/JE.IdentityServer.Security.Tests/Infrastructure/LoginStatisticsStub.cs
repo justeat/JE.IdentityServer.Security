@@ -14,9 +14,15 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         private readonly IDictionary<string, int> _successfulLoginStatistics = new Dictionary<string, int>();
         private readonly IDictionary<string, int> _excludedAttemptedloginStatistics = new Dictionary<string, int>();
         
+        private readonly IDictionary<string, int> _challengesForAttemptedLogins = new Dictionary<string, int>();
+        private readonly IDictionary<string, int> _nonChallengesForAttemptedLogins = new Dictionary<string, int>();
+
         public int TotalNumberOfFailedLogins => _failedloginStatistics.Values.Sum();
         public int TotalNumberOfSuccessfulLogins => _successfulLoginStatistics.Values.Sum();
         public int TotalNumberOfExcludedAttemptedLogins => _excludedAttemptedloginStatistics.Values.Sum();
+        public int TotalNumberOfChallengesForFailedLogins => _challengesForAttemptedLogins.Values.Sum();
+        public int TotalNumberOfNonChallengesForFailedLogins => _nonChallengesForAttemptedLogins.Values.Sum();
+
 
         public Task<int> GetNumberOfFailedLoginsForUser(string username)
         {
@@ -77,6 +83,36 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             else
             {
                 _excludedAttemptedloginStatistics[username] = 1;
+            }
+
+            return Task.Run(() => { });
+        }
+
+        public Task IncrementChallengedLoginsForUserAndIpAddress(string username, IPAddress ipAddress, int numberOfFailedLogins,
+            int numberOfAllowedLoginFailuresPerIpAddress)
+        {
+            if (_challengesForAttemptedLogins.ContainsKey(username))
+            {
+                _challengesForAttemptedLogins[username] = _challengesForAttemptedLogins[username] + 1;
+            }
+            else
+            {
+                _challengesForAttemptedLogins[username] = 1;
+            }
+
+            return Task.Run(() => { });
+        }
+
+        public Task IncrementUnchallengedLoginsForUserAndIpAddress(string username, IPAddress ipAddress, int numberOfFailedLogins,
+            int numberOfAllowedLoginFailuresPerIpAddress)
+        {
+            if (_nonChallengesForAttemptedLogins.ContainsKey(username))
+            {
+                _nonChallengesForAttemptedLogins[username] = _nonChallengesForAttemptedLogins[username] + 1;
+            }
+            else
+            {
+                _nonChallengesForAttemptedLogins[username] = 1;
             }
 
             return Task.Run(() => { });

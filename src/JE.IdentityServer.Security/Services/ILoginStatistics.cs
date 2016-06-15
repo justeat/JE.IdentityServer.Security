@@ -15,5 +15,9 @@ namespace JE.IdentityServer.Security.Services
         Task IncrementFailedLoginsForUserAndIpAddress(string username, IPAddress ipAddress);
 
         Task IncrementAttemptedLoginsForExcludedUsernameAndIpAddress(string username, IPAddress ipAddress);
+
+        Task IncrementChallengedLoginsForUserAndIpAddress(string username, IPAddress ipAddress, int numberOfFailedLogins, int numberOfAllowedLoginFailuresPerIpAddress);
+
+        Task IncrementUnchallengedLoginsForUserAndIpAddress(string username, IPAddress ipAddress, int numberOfFailedLogins, int numberOfAllowedLoginFailuresPerIpAddress);
     }
 }
