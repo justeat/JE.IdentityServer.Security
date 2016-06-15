@@ -82,6 +82,7 @@
     <Compile Include="Resources\IPNetwork.cs" />
     <Compile Include="Resources\OpenIdConnectClient.cs" />
     <Compile Include="Services\ILoginStatistics.cs" />
+    <Compile Include="Services\IPlatformSecurity.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

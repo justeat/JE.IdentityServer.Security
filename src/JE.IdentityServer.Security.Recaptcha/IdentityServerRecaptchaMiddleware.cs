@@ -29,7 +29,9 @@ namespace JE.IdentityServer.Security.Recaptcha
 
             var loginStatistics = context.Get<ILoginStatistics>();
             var numberOfFailedLogins = await loginStatistics.GetNumberOfFailedLoginsForIpAddress(openIdConnectRequest.GetRemoteIpAddress());
-            if (numberOfFailedLogins < _options.NumberOfAllowedLoginFailuresPerIpAddress)
+
+            var challengeForAllLogins = await ShouldChallengeForAllLogins(context);
+            if (!challengeForAllLogins && numberOfFailedLogins < _options.NumberOfAllowedLoginFailuresPerIpAddress)
             {
                 await loginStatistics.IncrementUnchallengedLoginsForUserAndIpAddress(openIdConnectRequest.GetUsername(),
                         openIdConnectRequest.GetRemoteIpAddress(), numberOfFailedLogins, _options.NumberOfAllowedLoginFailuresPerIpAddress);
@@ -51,6 +53,12 @@ namespace JE.IdentityServer.Security.Recaptcha
             }
 
             await ChallengeWithRequestForRecaptcha(context, openIdConnectRequest, numberOfFailedLogins);
+        }
+
+        private static async Task<bool> ShouldChallengeForAllLogins(IOwinContext context)
+        {
+            var platformSecurity = context.Get<IPlatformSecurity>();
+            return platformSecurity != null && await platformSecurity.ShieldsAreUp();
         }
 
         private async Task ChallengeWithRequestForRecaptcha(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest, int numberOfFailedLogins)

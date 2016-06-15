@@ -114,11 +114,13 @@
     <Compile Include="Infrastructure\NativeLoginRequestBuilder.cs" />
     <Compile Include="Infrastructure\NoDataProtector.cs" />
     <Compile Include="Infrastructure\IdentityServerWithThrottledLoginRequests.cs" />
+    <Compile Include="Infrastructure\PlatformSecurityStub.cs" />
     <Compile Include="Infrastructure\TokenFailureResponseModel.cs" />
     <Compile Include="Infrastructure\TokenResponseModel.cs" />
     <Compile Include="Recaptcha\RecaptchaResponseBodyStructure.cs" />
     <Compile Include="Recaptcha\RecaptchaValidationEndpoint.cs" />
     <Compile Include="Recaptcha\RecaptchaWithExcludedUsers.cs" />
+    <Compile Include="Recaptcha\RecaptchaWithPlatformLevelSecurity.cs" />
     <Compile Include="Recaptcha\RecaptchaWithRecaptchaServerFailures.cs" />
     <Compile Include="Recaptcha\RecaptchaWithInvalidRecaptchaAnswer.cs" />
     <Compile Include="Recaptcha\RecaptchaWithValidRecaptchaAnswer.cs" />
