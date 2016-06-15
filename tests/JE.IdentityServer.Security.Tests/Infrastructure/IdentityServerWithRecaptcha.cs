@@ -24,6 +24,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         private string _recaptchaPrivateKey;
         private string _recaptchaPublicKey;
         private string _contentServerName;
+        private Func<IPlatformSecurity> _platformSecurity;
 
         public LoginStatisticsStub LoginStatistics { get; } = new LoginStatisticsStub();
 
@@ -48,6 +49,18 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         public IdentityServerWithRecaptcha WithExcludedSubnet(string excludedSubnet)
         {
             _excludedSubnets.Add(new IPNetwork(excludedSubnet));
+            return this;
+        }
+
+        public IdentityServerWithRecaptcha WithPlatformSecurityShieldsDown()
+        {
+            _platformSecurity = () => new PlatformSecurityStub(false);
+            return this;
+        }
+
+        public IdentityServerWithRecaptcha WithPlatformSecurityShieldsUp()
+        {
+            _platformSecurity = () => new PlatformSecurityStub(true);
             return this;
         }
 
@@ -107,6 +120,12 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             _testServer = TestServer.Create(app =>
             {
                 app.UsePerOwinContext<ILoginStatistics>(() => LoginStatistics);
+
+                if (_platformSecurity != null)
+                {
+                    app.UsePerOwinContext<IPlatformSecurity>(_platformSecurity);
+                }
+
                 app.UseRecaptchaForAuthenticationRequests(new IdentityServerRecaptchaOptions
                 {
                     ProtectedPath = _protectedPath,

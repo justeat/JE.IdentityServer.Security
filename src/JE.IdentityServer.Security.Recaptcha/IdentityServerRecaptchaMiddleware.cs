@@ -29,7 +29,10 @@ namespace JE.IdentityServer.Security.Recaptcha
 
             var loginStatistics = context.Get<ILoginStatistics>();
             var numberOfFailedLogins = await loginStatistics.GetNumberOfFailedLoginsForIpAddress(openIdConnectRequest.GetRemoteIpAddress());
-            if (numberOfFailedLogins < _options.NumberOfAllowedLoginFailuresPerIpAddress)
+
+            var platformSecurity = context.Get<IPlatformSecurity>();
+            var challengeForAllLogins = platformSecurity != null && await platformSecurity.ShieldsAreUp();
+            if (!challengeForAllLogins && numberOfFailedLogins < _options.NumberOfAllowedLoginFailuresPerIpAddress)
             {
                 await loginStatistics.IncrementUnchallengedLoginsForUserAndIpAddress(openIdConnectRequest.GetUsername(),
                         openIdConnectRequest.GetRemoteIpAddress(), numberOfFailedLogins, _options.NumberOfAllowedLoginFailuresPerIpAddress);

@@ -35,8 +35,10 @@ namespace JE.IdentityServer.Security.Recaptcha
                 return;
             }
 
-            if (await loginStatistics.GetNumberOfFailedLoginsForIpAddress(ipAaddress) <
-                _options.NumberOfAllowedLoginFailuresPerIpAddress)
+            var platformSecurity = context.Get<IPlatformSecurity>();
+            var challengeForAllLogins = platformSecurity != null && await platformSecurity.ShieldsAreUp();
+            if (!challengeForAllLogins && 
+                await loginStatistics.GetNumberOfFailedLoginsForIpAddress(ipAaddress) < _options.NumberOfAllowedLoginFailuresPerIpAddress)
             {
                 await Next.Invoke(context);
                 return;
