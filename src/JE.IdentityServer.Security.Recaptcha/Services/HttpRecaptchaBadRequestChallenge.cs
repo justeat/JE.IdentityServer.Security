@@ -27,6 +27,17 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
             await context.ReturnResponse(HttpStatusCode.BadRequest, identityServerChallengeResource);
         }
 
+        public async Task ReturnResponse(IOwinContext context, IIdentityServerRecaptchaOptions options)
+        {
+            var identityServerChallengeResource = new IdentityServerBadRequestChallengeResource
+            {
+                Message = CreateResponseMessage(),
+                ChallengeHtml = _recaptchaPage.CreateHtmlBody()
+            };
+
+            await context.ReturnResponse(HttpStatusCode.BadRequest, identityServerChallengeResource);
+        }
+
         private static string CreateResponseMessage()
         {
             return "Please complete the Recaptcha";

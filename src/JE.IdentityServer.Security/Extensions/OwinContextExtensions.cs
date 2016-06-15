@@ -37,8 +37,30 @@ namespace JE.IdentityServer.Security.Extensions
 
             IPAddress remoteIpAddress;
             IPAddress.TryParse(owinContext.GetRemoteClientIpAddress(), out remoteIpAddress);
+            
+            return new OpenIdConnectRequest(remoteIpAddress, owinContext.ResourcePath(), owinContext.Request.Headers, formAsNameValueCollection);
+        }
 
-            return new OpenIdConnectRequest(remoteIpAddress, owinContext.Request.Path.Value, owinContext.Request.Headers, formAsNameValueCollection);
+        public static string ResourcePath(this IOwinContext owinContext)
+        {
+            if (owinContext == null)
+            {
+                throw new ArgumentNullException(nameof(owinContext));
+            }
+
+            var path = "/";
+
+            if (owinContext.Request.PathBase.HasValue && !string.IsNullOrEmpty(owinContext.Request.PathBase.Value))
+            {
+                path = owinContext.Request.PathBase.Value;
+            }
+
+            if (owinContext.Request.Path.HasValue && !string.IsNullOrEmpty(owinContext.Request.Path.Value))
+            {
+                path = owinContext.Request.Path.Value;
+            }
+
+            return path;
         }
 
         public static async Task ReturnResponse<T>(this IOwinContext owinContext, HttpStatusCode httpStatusCode, T message)

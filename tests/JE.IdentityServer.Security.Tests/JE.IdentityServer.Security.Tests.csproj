@@ -108,6 +108,7 @@
     <Compile Include="Extensions\StubOpenIdConnectRequestOptions.cs" />
     <Compile Include="Infrastructure\IdentityServerConfiguration.cs" />
     <Compile Include="Infrastructure\IdentityServerWithRecaptcha.cs" />
+    <Compile Include="Infrastructure\IdentityServerWithRecaptchaValidationEndpoint.cs" />
     <Compile Include="Infrastructure\InmemoryIdentityServerStartup.cs" />
     <Compile Include="Infrastructure\LoginStatisticsStub.cs" />
     <Compile Include="Infrastructure\NativeLoginRequestBuilder.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Infrastructure\TokenFailureResponseModel.cs" />
     <Compile Include="Infrastructure\TokenResponseModel.cs" />
     <Compile Include="Recaptcha\RecaptchaResponseBodyStructure.cs" />
+    <Compile Include="Recaptcha\RecaptchaValidationEndpoint.cs" />
     <Compile Include="Recaptcha\RecaptchaWithExcludedUsers.cs" />
     <Compile Include="Recaptcha\RecaptchaWithRecaptchaServerFailures.cs" />
     <Compile Include="Recaptcha\RecaptchaWithInvalidRecaptchaAnswer.cs" />

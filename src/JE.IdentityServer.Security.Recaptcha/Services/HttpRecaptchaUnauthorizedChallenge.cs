@@ -22,7 +22,18 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
                 new IdentityServerUnauthorizedChallengeResource
                 {
                     ChallengeHtml = _recaptchaPage.CreateHtmlBody(openIdConnectRequest),
-                    LinkToChallenge = "/recaptcha.aspx",
+                    LinkToChallenge = options.LinkToChallenge,
+                    Description = CreateResponseMessage()
+                }, $@"recaptcha url=""{options.LinkToChallenge}""");
+        }
+
+        public async Task ReturnResponse(IOwinContext context, IIdentityServerRecaptchaOptions options)
+        {
+            await context.ReturnResponse(HttpStatusCode.Unauthorized,
+                new IdentityServerUnauthorizedChallengeResource
+                {
+                    ChallengeHtml = _recaptchaPage.CreateHtmlBody(),
+                    LinkToChallenge = options.LinkToChallenge,
                     Description = CreateResponseMessage()
                 }, $@"recaptcha url=""{options.LinkToChallenge}""");
         }
