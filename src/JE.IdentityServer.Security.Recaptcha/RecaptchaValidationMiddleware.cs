@@ -34,9 +34,8 @@ namespace JE.IdentityServer.Security.Recaptcha
                 await Next.Invoke(context);
                 return;
             }
-
-            var platformSecurity = context.Get<IPlatformSecurity>();
-            var challengeForAllLogins = platformSecurity != null && await platformSecurity.ShieldsAreUp();
+            
+            var challengeForAllLogins = await ShouldChallengeForAllLogins(context);
             if (!challengeForAllLogins && 
                 await loginStatistics.GetNumberOfFailedLoginsForIpAddress(ipAaddress) < _options.NumberOfAllowedLoginFailuresPerIpAddress)
             {
@@ -45,6 +44,12 @@ namespace JE.IdentityServer.Security.Recaptcha
             }
             
             await ChallengeWithRequestForRecaptcha(context);
+        }
+
+        private static async Task<bool> ShouldChallengeForAllLogins(IOwinContext context)
+        {
+            var platformSecurity = context.Get<IPlatformSecurity>();
+            return platformSecurity != null && await platformSecurity.ShieldsAreUp();
         }
 
         private async Task ChallengeWithRequestForRecaptcha(IOwinContext context)
