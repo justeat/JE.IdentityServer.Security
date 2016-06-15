@@ -28,9 +28,11 @@ namespace JE.IdentityServer.Security.Recaptcha
             }
 
             var loginStatistics = context.Get<ILoginStatistics>();
-            if (await loginStatistics.GetNumberOfFailedLoginsForIpAddress(openIdConnectRequest.GetRemoteIpAddress()) <
-                _options.NumberOfAllowedLoginFailuresPerIpAddress)
+            var numberOfFailedLogins = await loginStatistics.GetNumberOfFailedLoginsForIpAddress(openIdConnectRequest.GetRemoteIpAddress());
+            if (numberOfFailedLogins < _options.NumberOfAllowedLoginFailuresPerIpAddress)
             {
+                await loginStatistics.IncrementUnchallengedLoginsForUserAndIpAddress(openIdConnectRequest.GetUsername(),
+                        openIdConnectRequest.GetRemoteIpAddress(), numberOfFailedLogins, _options.NumberOfAllowedLoginFailuresPerIpAddress);
                 await Next.Invoke(context);
                 return;
             }
@@ -48,15 +50,18 @@ namespace JE.IdentityServer.Security.Recaptcha
                 }
             }
 
-            await ChallengeWithRequestForRecaptcha(context, openIdConnectRequest);
+            await ChallengeWithRequestForRecaptcha(context, openIdConnectRequest, numberOfFailedLogins);
         }
 
-        private async Task ChallengeWithRequestForRecaptcha(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest)
+        private async Task ChallengeWithRequestForRecaptcha(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest, int numberOfFailedLogins)
         {
             var loginStatistics = context.Get<ILoginStatistics>();
 
             await loginStatistics.IncrementFailedLoginsForUserAndIpAddress(openIdConnectRequest.GetUsername(),
                 openIdConnectRequest.GetRemoteIpAddress());
+
+            await loginStatistics.IncrementChallengedLoginsForUserAndIpAddress(openIdConnectRequest.GetUsername(),
+                openIdConnectRequest.GetRemoteIpAddress(), numberOfFailedLogins, _options.NumberOfAllowedLoginFailuresPerIpAddress);
 
             var httpChallenge = context.Get<IHttpRecaptchaChallenge>();
             await httpChallenge.ReturnResponse(context, _options, openIdConnectRequest);
