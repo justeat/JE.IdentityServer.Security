@@ -127,6 +127,7 @@
     <Compile Include="Recaptcha\RecaptchaWithInvalidRecaptchaAnswer.cs" />
     <Compile Include="Recaptcha\RecaptchaWithValidRecaptchaAnswer.cs" />
     <Compile Include="Recaptcha\RecaptchaWithValidCredentials.cs" />
+    <Compile Include="Throttling\ThrottledRequestsWithExcludedOsVersion.cs" />
     <Compile Include="Throttling\ThrottledRequestsWithExcludedTenant.cs" />
     <Compile Include="Throttling\ThrottledRequestsWithExcludedUsername.cs" />
     <Compile Include="Throttling\ThrottledRequestsWithMissingGrantType.cs" />
