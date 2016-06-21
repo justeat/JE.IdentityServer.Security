@@ -11,7 +11,7 @@ namespace JE.IdentityServer.Security.Tests.Extensions
         {
             ProtectedPath = "identity/connect/token";
             ProtectedGrantTypes = new[] { "password" };
-            ExcludedUsernameExpression = new Regex("example.com$");
+            ExcludedUsernameExpression = new Regex("example\\.com$");
             ExcludedTenantExpression = new Regex("es");
             NumberOfAllowedLoginFailures = 10;
             ExcludedSubnets = new[] {new IPNetwork("192.168.100.0/24")};
