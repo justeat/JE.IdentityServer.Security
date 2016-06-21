@@ -16,7 +16,6 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         private int _numberOfAllowedLoginFailuresPerIpAddress;
         private readonly IList<IPNetwork> _excludedSubnets = new List<IPNetwork>();
         private readonly IList<string> _protectedGrantTypes = new List<string>();
-        private readonly IList<Regex> _exludedUsernameExpressions = new List<Regex>();
         private HttpStatusCode _challengeType = HttpStatusCode.Unauthorized;
         private readonly IList<IOpenIdConnectClient> _webClients = new List<IOpenIdConnectClient>();
         private TestServer _testServer;
@@ -25,6 +24,9 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         private string _recaptchaPublicKey;
         private string _contentServerName;
         private Func<IPlatformSecurity> _platformSecurity;
+
+        private Regex _excludedUsernameExpression;
+        private Regex _excludedTenantExpression;
 
         public LoginStatisticsStub LoginStatistics { get; } = new LoginStatisticsStub();
 
@@ -99,7 +101,13 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
 
         public IdentityServerWithRecaptcha WithExcludedUsernamesMatching(string usernameMatchString)
         {
-            _exludedUsernameExpressions.Add(new Regex(usernameMatchString));
+            _excludedUsernameExpression =new Regex(usernameMatchString);
+            return this;
+        }
+
+        public IdentityServerWithRecaptcha WithExcludedTenantsMatching(string tenantMatchString)
+        {
+            _excludedTenantExpression = new Regex(tenantMatchString);
             return this;
         }
 
@@ -130,7 +138,8 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
                 {
                     ProtectedPath = _protectedPath,
                     NumberOfAllowedLoginFailuresPerIpAddress = _numberOfAllowedLoginFailuresPerIpAddress,
-                    ExcludedUsernameExpressions = _exludedUsernameExpressions,
+                    ExcludedUsernameExpression = _excludedUsernameExpression,
+                    ExcludedTenantExpression = _excludedTenantExpression,
                     ExcludedSubnets = _excludedSubnets,
                     ProtectedGrantTypes = _protectedGrantTypes,
                     HttpChallengeStatusCode = _challengeType,

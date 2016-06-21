@@ -13,6 +13,7 @@ namespace JE.IdentityServer.Security.OpenIdConnect
         public const string Language = "language";
         public const string Sdk = "sdk";
         public const string Device = "device";
+        public const string Tenant = "tenant";
 
         public static KnownAcrValues ToKnownAcrValues(this string raw)
         {
@@ -54,6 +55,9 @@ namespace JE.IdentityServer.Security.OpenIdConnect
                     break;
                 case Device:
                     acrValues.Device = ParseDevice(acrValue);
+                    break;
+                case Tenant:
+                    acrValues.Tenant = acrValue;
                     break;
             }
         }

@@ -10,7 +10,9 @@ namespace JE.IdentityServer.Security.OpenIdConnect
 
         IEnumerable<string> ProtectedGrantTypes { get; }
 
-        IEnumerable<Regex> ExcludedUsernameExpressions { get; }
+        Regex ExcludedUsernameExpression { get; }
+
+        Regex ExcludedTenantExpression { get; }
 
         IEnumerable<IPNetwork> ExcludedSubnets { get; set; }
     }

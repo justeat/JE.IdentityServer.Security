@@ -50,6 +50,14 @@ namespace JE.IdentityServer.Security.Tests.Extensions
         }
 
         [Test]
+        public void ParsingAcrValues_WithTenantSet_ShouldReturnExpectedTenant()
+        {
+            var expectedAcrValues = new KnownAcrValues { Tenant = "es" };
+            var acrValues = "tenant:es".ToKnownAcrValues();
+            acrValues.ShouldBeEquivalentTo(expectedAcrValues);
+        }
+
+        [Test]
         public void ParsingAcrValues_WithNonEncodedDeviceSet_ShouldReturnExpectedDevice()
         {
             var expectedAcrValues = new KnownAcrValues { Device = new Device("all") };
