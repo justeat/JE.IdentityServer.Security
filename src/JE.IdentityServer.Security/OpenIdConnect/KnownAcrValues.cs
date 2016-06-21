@@ -11,5 +11,7 @@ namespace JE.IdentityServer.Security.OpenIdConnect
         public string Language { get; set; }
 
         public IDevice Device { get; set; }
+
+        public string Tenant { get; set; }
     }
 }

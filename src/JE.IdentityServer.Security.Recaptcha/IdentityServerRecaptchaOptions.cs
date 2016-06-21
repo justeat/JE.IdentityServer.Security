@@ -15,7 +15,6 @@ namespace JE.IdentityServer.Security.Recaptcha
             VerifyUri = new Uri("https://www.google.com/recaptcha/api/siteverify");
             WhiteListedEmailAddresses = Enumerable.Empty<string>();
             ExcludedSubnets = Enumerable.Empty<IPNetwork>();
-            ExcludedUsernameExpressions = Enumerable.Empty<Regex>();
             WebClients = Enumerable.Empty<IOpenIdConnectClient>();
             HttpChallengeStatusCode = HttpStatusCode.Unauthorized;
             LinkToChallenge = "/recaptcha.aspx";
@@ -35,7 +34,9 @@ namespace JE.IdentityServer.Security.Recaptcha
 
         public string ProtectedPath { get; set; }
 
-        public IEnumerable<Regex> ExcludedUsernameExpressions { get; set; }
+        public Regex ExcludedUsernameExpression { get; set; }
+
+        public Regex ExcludedTenantExpression { get; set; }
 
         public int NumberOfAllowedLoginFailuresPerIpAddress { get; set; }
 

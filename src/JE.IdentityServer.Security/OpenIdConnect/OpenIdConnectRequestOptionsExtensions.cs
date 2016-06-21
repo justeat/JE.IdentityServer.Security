@@ -21,8 +21,12 @@ namespace JE.IdentityServer.Security.OpenIdConnect
         public static bool IsExcluded(this IOpenIdConnectRequestOptions options, IOpenIdConnectRequest openIdConnectRequest)
         {
             var username = openIdConnectRequest.GetUsername();
-            if (!string.IsNullOrEmpty(username) &&
-                options.ExcludedUsernameExpressions.Any(regex => regex.IsMatch(username))) return true;
+            if (!string.IsNullOrEmpty(username) && options.ExcludedUsernameExpression != null &&
+                options.ExcludedUsernameExpression.IsMatch(username)) return true;
+
+            var tenant = openIdConnectRequest.GetTenant();
+            if (!string.IsNullOrEmpty(tenant) && options.ExcludedTenantExpression != null &&
+                options.ExcludedTenantExpression.IsMatch(tenant)) return true;
 
             return options.ExcludedSubnets.Any(excludedSubnet => excludedSubnet.Contains(openIdConnectRequest.GetRemoteIpAddress()));
         }

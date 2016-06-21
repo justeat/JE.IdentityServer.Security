@@ -11,7 +11,8 @@ namespace JE.IdentityServer.Security.Tests.Extensions
         {
             ProtectedPath = "identity/connect/token";
             ProtectedGrantTypes = new[] { "password" };
-            ExcludedUsernameExpressions = new[] {new Regex("example.com$")};
+            ExcludedUsernameExpression = new Regex("example.com$");
+            ExcludedTenantExpression = new Regex("es");
             NumberOfAllowedLoginFailures = 10;
             ExcludedSubnets = new[] {new IPNetwork("192.168.100.0/24")};
         }
@@ -20,7 +21,9 @@ namespace JE.IdentityServer.Security.Tests.Extensions
 
         public IEnumerable<string> ProtectedGrantTypes { get; }
 
-        public IEnumerable<Regex> ExcludedUsernameExpressions { get; }
+        public Regex ExcludedUsernameExpression { get; }
+
+        public Regex ExcludedTenantExpression { get; }
 
         public IEnumerable<IPNetwork> ExcludedSubnets { get; set; }
 
