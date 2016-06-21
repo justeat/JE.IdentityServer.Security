@@ -38,6 +38,8 @@ namespace JE.IdentityServer.Security.Recaptcha
 
         public Regex ExcludedTenantExpression { get; set; }
 
+        public Regex ExcludedOsVersionExpression { get; set; }
+
         public int NumberOfAllowedLoginFailuresPerIpAddress { get; set; }
 
         public IEnumerable<string> ProtectedGrantTypes { get; set; }

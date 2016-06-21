@@ -14,6 +14,8 @@ namespace JE.IdentityServer.Security.OpenIdConnect
 
         Regex ExcludedTenantExpression { get; }
 
-        IEnumerable<IPNetwork> ExcludedSubnets { get; set; }
+        IEnumerable<IPNetwork> ExcludedSubnets { get; }
+
+        Regex ExcludedOsVersionExpression { get; }
     }
 }

@@ -23,6 +23,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         private string _languageCode;
         private string _device;
         private string _tenant;
+        private string _osVersion;
 
         public NativeLoginRequestBuilder(TestServer server)
         {
@@ -97,6 +98,12 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             return this;
         }
 
+        public NativeLoginRequestBuilder WithOsVersion(string osVersion)
+        {
+            _osVersion = osVersion;
+            return this;
+        }
+
         public RequestBuilder Build()
         {
             var builder = _server.CreateRequest(_path)
@@ -154,6 +161,11 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             if (!string.IsNullOrEmpty(_tenant))
             {
                 acrValues.Add($"{KnownAcrValuesExtensions.Tenant}:{_tenant}");
+            }
+
+            if (!string.IsNullOrEmpty(_osVersion))
+            {
+                acrValues.Add($"{KnownAcrValuesExtensions.OsVersion}:{_osVersion}");
             }
 
             return acrValues;

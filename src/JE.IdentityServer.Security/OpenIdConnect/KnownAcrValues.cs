@@ -4,7 +4,7 @@ namespace JE.IdentityServer.Security.OpenIdConnect
 {
     public class KnownAcrValues
     {
-        public string Sdk { get; set; }
+        public string OsVersion { get; set; }
 
         public string RecaptchaResponse { get; set; }
 

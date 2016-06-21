@@ -27,6 +27,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
 
         private Regex _excludedUsernameExpression;
         private Regex _excludedTenantExpression;
+        private Regex _excludedOsVersionExpression;
 
         public LoginStatisticsStub LoginStatistics { get; } = new LoginStatisticsStub();
 
@@ -111,6 +112,12 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             return this;
         }
 
+        public IdentityServerWithRecaptcha WithExcludedOsVersionsMatching(string osVersionMatchString)
+        {
+            _excludedOsVersionExpression = new Regex(osVersionMatchString);
+            return this;
+        }
+
         public IdentityServerWithRecaptcha WithContentServerName(string hostServer)
         {
             _contentServerName = hostServer;
@@ -140,6 +147,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
                     NumberOfAllowedLoginFailuresPerIpAddress = _numberOfAllowedLoginFailuresPerIpAddress,
                     ExcludedUsernameExpression = _excludedUsernameExpression,
                     ExcludedTenantExpression = _excludedTenantExpression,
+                    ExcludedOsVersionExpression = _excludedOsVersionExpression,
                     ExcludedSubnets = _excludedSubnets,
                     ProtectedGrantTypes = _protectedGrantTypes,
                     HttpChallengeStatusCode = _challengeType,

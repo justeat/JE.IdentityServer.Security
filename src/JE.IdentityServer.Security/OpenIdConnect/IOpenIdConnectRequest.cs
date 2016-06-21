@@ -22,5 +22,7 @@ namespace JE.IdentityServer.Security.OpenIdConnect
         string GetBasicAuthenticationHeaderValue();
 
         string GetTenant();
+
+        string GetOsVersion();
     }
 }

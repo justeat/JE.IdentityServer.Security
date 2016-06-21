@@ -13,6 +13,7 @@ namespace JE.IdentityServer.Security.Tests.Extensions
             ProtectedGrantTypes = new[] { "password" };
             ExcludedUsernameExpression = new Regex("example\\.com$");
             ExcludedTenantExpression = new Regex("es");
+            ExcludedOsVersionExpression = new Regex("5.0");
             NumberOfAllowedLoginFailures = 10;
             ExcludedSubnets = new[] {new IPNetwork("192.168.100.0/24")};
         }
@@ -25,7 +26,9 @@ namespace JE.IdentityServer.Security.Tests.Extensions
 
         public Regex ExcludedTenantExpression { get; }
 
-        public IEnumerable<IPNetwork> ExcludedSubnets { get; set; }
+        public Regex ExcludedOsVersionExpression { get; }
+
+        public IEnumerable<IPNetwork> ExcludedSubnets { get; }
 
         public int NumberOfAllowedLoginFailures { get; }
     }
