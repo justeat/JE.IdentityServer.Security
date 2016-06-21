@@ -14,8 +14,11 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         private string _protectedPath = "/identity/connect/token";
         private readonly LoginStatisticsStub _loginStatistics = new LoginStatisticsStub();
         private int _numberOfAllowedLoginFailures;
+
         private Regex _excludedUsernameExpression;
         private Regex _excludedTenantExpression;
+        private Regex _excludedOsVersionExpression;
+
         private readonly IList<string> _protectedGrantTypes = new List<string>();
         private TestServer _testServer;
         private HttpStatusCode _throttledHttpStatusCode = (HttpStatusCode) 429;
@@ -52,6 +55,12 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             return this;
         }
 
+        public IdentityServerWithThrottledLoginRequests WithExcludedOsVersionExpression(string excludedOsVersionExpression)
+        {
+            _excludedOsVersionExpression = new Regex(excludedOsVersionExpression);
+            return this;
+        }
+
         public IdentityServerWithThrottledLoginRequests WithExcludedTenantExpression(string tenant)
         {
             _excludedTenantExpression = new Regex(tenant);
@@ -69,6 +78,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
                     NumberOfAllowedLoginFailures = _numberOfAllowedLoginFailures,
                     ExcludedUsernameExpression = _excludedUsernameExpression,
                     ExcludedTenantExpression = _excludedTenantExpression,
+                    ExcludedOsVersionExpression = _excludedOsVersionExpression,
                     ProtectedGrantTypes = _protectedGrantTypes,
                     HttpRequestThrottledStatusCode = _throttledHttpStatusCode
                 });

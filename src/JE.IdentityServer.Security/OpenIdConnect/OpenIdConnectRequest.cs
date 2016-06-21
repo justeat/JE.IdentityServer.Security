@@ -68,6 +68,11 @@ namespace JE.IdentityServer.Security.OpenIdConnect
             return _form.Get(AcrValuesFormKey).ToKnownAcrValues().Tenant;
         }
 
+        public string GetOsVersion()
+        {
+            return _form.Get(AcrValuesFormKey).ToKnownAcrValues().OsVersion;
+        }
+
         public string GetBasicAuthenticationHeaderValue()
         {
             return _headers.Get("Authorization");

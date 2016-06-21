@@ -28,6 +28,10 @@ namespace JE.IdentityServer.Security.OpenIdConnect
             if (!string.IsNullOrEmpty(tenant) && options.ExcludedTenantExpression != null &&
                 options.ExcludedTenantExpression.IsMatch(tenant)) return true;
 
+            var osVersion = openIdConnectRequest.GetOsVersion();
+            if (!string.IsNullOrEmpty(osVersion) && options.ExcludedOsVersionExpression != null &&
+                options.ExcludedOsVersionExpression.IsMatch(osVersion)) return true;
+
             return options.ExcludedSubnets.Any(excludedSubnet => excludedSubnet.Contains(openIdConnectRequest.GetRemoteIpAddress()));
         }
     }

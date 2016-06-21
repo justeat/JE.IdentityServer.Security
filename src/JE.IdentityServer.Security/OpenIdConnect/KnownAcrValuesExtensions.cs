@@ -14,6 +14,7 @@ namespace JE.IdentityServer.Security.OpenIdConnect
         public const string Sdk = "sdk";
         public const string Device = "device";
         public const string Tenant = "tenant";
+        public const string OsVersion = "osversion";
 
         public static KnownAcrValues ToKnownAcrValues(this string raw)
         {
@@ -50,14 +51,20 @@ namespace JE.IdentityServer.Security.OpenIdConnect
                 case Language:
                     acrValues.Language = acrValue;
                     break;
-                case Sdk:
-                    acrValues.Sdk = acrValue;
+                case Sdk:   // Backwards compatibility
+                    if (string.IsNullOrEmpty(acrValues.OsVersion))
+                    {
+                        acrValues.OsVersion = acrValue;
+                    }
                     break;
                 case Device:
                     acrValues.Device = ParseDevice(acrValue);
                     break;
                 case Tenant:
                     acrValues.Tenant = acrValue;
+                    break;
+                case OsVersion:
+                    acrValues.OsVersion = acrValue;
                     break;
             }
         }

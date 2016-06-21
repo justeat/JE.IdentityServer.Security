@@ -26,10 +26,18 @@ namespace JE.IdentityServer.Security.Tests.Extensions
         }
 
         [Test]
-        public void ParsingAcrValues_WithSdkSet_ShouldReturnExpectedSdkValue()
+        public void ParsingAcrValues_WithSdkSet_ShouldReturnExpectedOsVersionValue()
         {
-            var expectedAcrValues = new KnownAcrValues { Sdk = "SDK1.0" };
+            var expectedAcrValues = new KnownAcrValues { OsVersion = "SDK1.0" };
             var acrValues = "sdk:SDK1.0".ToKnownAcrValues();
+            acrValues.ShouldBeEquivalentTo(expectedAcrValues);
+        }
+
+        [Test]
+        public void ParsingAcrValues_WithOsVersionSet_ShouldReturnExpectedOsVersionValue()
+        {
+            var expectedAcrValues = new KnownAcrValues { OsVersion = "SDK1.0" };
+            var acrValues = "osversion:SDK1.0".ToKnownAcrValues();
             acrValues.ShouldBeEquivalentTo(expectedAcrValues);
         }
 
