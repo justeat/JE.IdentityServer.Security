@@ -87,6 +87,30 @@ namespace JE.IdentityServer.Security.Extensions
             await owinContext.Response.WriteAsync(JsonConvert.SerializeObject(message));
         }
 
+        public static T ReadRequestBodyAsync<T>(this IOwinContext context) where T: class 
+        {
+            try
+            {
+                var stream = context.Request.Body;
+                if (stream == Stream.Null || !stream.CanSeek)
+                {
+                    return null;
+                }
+
+                var body = new StreamReader(context.Request.Body).ReadToEnd();
+                if (!string.IsNullOrEmpty(body))
+                {
+                    return JsonConvert.DeserializeObject<T>(body);
+                }
+            }
+            catch (JsonSerializationException)
+            {
+                // NOOP
+            }
+
+            return null;
+        }
+
         public static async Task ReturnResponse<T>(this IOwinContext owinContext, HttpStatusCode httpStatusCode, T resource, string authenticateChallengeHeaderValue)
         {
             if (owinContext == null)
@@ -99,7 +123,7 @@ namespace JE.IdentityServer.Security.Extensions
             owinContext.Response.ContentType = "application/json";
             await owinContext.Response.WriteAsync(JsonConvert.SerializeObject(resource));
         }
-        
+
         private static async Task<IFormCollection> ReadRequestFormAsync(this IOwinContext owinContext)
         {
             if (owinContext == null) throw new ArgumentNullException(nameof(owinContext));

@@ -8,12 +8,12 @@ using NUnit.Framework;
 
 namespace JE.IdentityServer.Security.Tests.Recaptcha
 {
-    public class RecaptchaValidationEndpoint
+    public class RecaptchaGetOnValidationEndpoint
     {
         private const int NumberOfAllowedLoginFailures = 1;
 
         [Test]
-        public async Task RecaptchaValidationEndpoint_WithExceededLoginFailures_ShouldReturnUnauthorized()
+        public async Task RecaptchaGetOnValidationEndpoint_WithExceededLoginFailures_ShouldReturnUnauthorized()
         {
             using (var server = new IdentityServerWithRecaptchaValidationEndpoint()
                 .WithProtectedGrantType("password")
@@ -30,7 +30,7 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
         }
 
         [Test]
-        public async Task RecaptchaValidationEndpoint_WithExceededLoginFailures_ShouldContainExpectedRecaptchaBody()
+        public async Task RecaptchaGetOnValidationEndpoint_WithExceededLoginFailures_ShouldContainExpectedRecaptchaBody()
         {
             using (var server = new IdentityServerWithRecaptchaValidationEndpoint()
                 .WithProtectedGrantType("password")
@@ -48,7 +48,7 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
         }
 
         [Test]
-        public async Task RecaptchaValidationEndpoint_WithExceededLoginFailures_ShouldContainExpectedCssInRecaptchaBody()
+        public async Task RecaptchaGetOnValidationEndpoint_WithExceededLoginFailures_ShouldContainExpectedCssInRecaptchaBody()
         {
             using (var server = new IdentityServerWithRecaptchaValidationEndpoint()
                 .WithProtectedGrantType("password")
@@ -71,7 +71,7 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
         }
 
         [Test]
-        public async Task RecaptchaValidationEndpoint_WithFailuresBelowThreshold_ShouldReturnSuccessNoContent()
+        public async Task RecaptchaGetOnValidationEndpoint_WithFailuresBelowThreshold_ShouldReturnSuccessNoContent()
         {
             using (var server = new IdentityServerWithRecaptchaValidationEndpoint()
                 .WithProtectedGrantType("password")
