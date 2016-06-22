@@ -10,6 +10,7 @@ namespace JE.IdentityServer.Security.Extensions
         {
             new HeaderItem("HTTP_CLIENT_IP", false),
             new HeaderItem("HTTP_X_FORWARDED_FOR", true),
+            new HeaderItem("X-Forwarded-For", true),
             new HeaderItem("HTTP_X_FORWARDED", true),
             new HeaderItem("HTTP_X_CLUSTER_CLIENT_IP", false),
             new HeaderItem("HTTP_FORWARDED_FOR", true),
