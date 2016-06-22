@@ -4,6 +4,7 @@ The easier your PRs are to review and merge, the more likely your contribution w
 
 ## Develop
 
+* We have a Continuous Integration (CI) build [here](https://ci.appveyor.com/project/justeattech/je-identityserver-security)
 * Work in a feature branch in a fork, PR to our master
 * One logical change per PR, please - do refactorings in separate PRs, ahead of your feature change(s)
 * Have [editorconfig plugin](http://editorconfig.org) for your editor(s) installed so that your file touches are consistent with ours and the diff is reduced.
