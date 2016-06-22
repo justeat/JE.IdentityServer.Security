@@ -10,10 +10,19 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
     {
         public static bool SupportsPartialRecaptcha(this IIdentityServerRecaptchaOptions openIdConnectRequestOptions, IOpenIdConnectRequest openIdConnectRequest)
         {
+            var basicAuthenticationHeaderValue = openIdConnectRequest.GetBasicAuthenticationHeaderValue();
+            if (string.IsNullOrEmpty(basicAuthenticationHeaderValue))
+            {
+                return true;
+            }
+
             var basicAuthenticationHeaders = openIdConnectRequestOptions.WebClients.Select(client => Convert.ToBase64String(Encoding.UTF8.GetBytes($"{client.ClientId}:{client.Secret}")))
                 .Select(authorizationValue => new AuthenticationHeaderValue("Basic", authorizationValue));
             return basicAuthenticationHeaders
-                .Any(authenticationHeaderValue => authenticationHeaderValue.ToString() == openIdConnectRequest.GetBasicAuthenticationHeaderValue());
+                .Any(authenticationHeaderValue =>
+                {
+                    return authenticationHeaderValue.ToString() == basicAuthenticationHeaderValue;
+                });
         }
     }
 }

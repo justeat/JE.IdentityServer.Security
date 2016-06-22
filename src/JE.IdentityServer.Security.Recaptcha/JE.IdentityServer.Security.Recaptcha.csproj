@@ -64,6 +64,8 @@
     <Compile Include="RecaptchaValidationAppBuilderExtensions.cs" />
     <Compile Include="RecaptchaValidationMiddleware.cs" />
     <Compile Include="RecaptchaValidationOptions.cs" />
+    <Compile Include="Resources\RecaptchaValidationResource.cs" />
+    <Compile Include="Resources\ValidationResourceBasedOpenIdConnectRequest.cs" />
     <Compile Include="Services\IdentityServerRecaptchaOptionsExtenstions.cs" />
     <Compile Include="Services\RecaptchaPage.cs" />
     <Compile Include="Services\HttpRecaptchaBadRequestChallenge.cs" />

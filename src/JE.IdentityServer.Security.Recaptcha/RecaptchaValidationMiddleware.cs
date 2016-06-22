@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using JE.IdentityServer.Security.Extensions;
+using JE.IdentityServer.Security.OpenIdConnect;
+using JE.IdentityServer.Security.Recaptcha.Resources;
 using JE.IdentityServer.Security.Recaptcha.Services;
 using JE.IdentityServer.Security.Services;
 using Microsoft.Owin;
@@ -19,7 +21,10 @@ namespace JE.IdentityServer.Security.Recaptcha
 
         public override async Task Invoke(IOwinContext context)
         {
-            var isExcludedFromRecaptcha = _options.IsExcluded(context);
+            var recaptchaValidationResource = context.ReadRequestBodyAsync<RecaptchaValidationResource>();
+            var openIdConnectRequest = recaptchaValidationResource == null ? null :
+                                           new ValidationResourceBasedOpenIdConnectRequest(recaptchaValidationResource, context);
+            var isExcludedFromRecaptcha = _options.IsExcluded(context, openIdConnectRequest);
             if (!_options.Matches(context) || isExcludedFromRecaptcha)
             {
                 await Next.Invoke(context);
@@ -43,7 +48,7 @@ namespace JE.IdentityServer.Security.Recaptcha
                 return;
             }
             
-            await ChallengeWithRequestForRecaptcha(context);
+            await ChallengeWithRequestForRecaptcha(context, openIdConnectRequest);
         }
 
         private static async Task<bool> ShouldChallengeForAllLogins(IOwinContext context)
@@ -52,10 +57,16 @@ namespace JE.IdentityServer.Security.Recaptcha
             return platformSecurity != null && await platformSecurity.ShieldsAreUp();
         }
 
-        private async Task ChallengeWithRequestForRecaptcha(IOwinContext context)
+        private async Task ChallengeWithRequestForRecaptcha(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest)
         {
             var httpChallenge = context.Get<IHttpRecaptchaChallenge>();
-            await httpChallenge.ReturnResponse(context, _options);
+            if (openIdConnectRequest == null)
+            {
+                await httpChallenge.ReturnResponse(context, _options);
+                return;
+            }
+
+            await httpChallenge.ReturnResponse(context, _options, openIdConnectRequest);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text.RegularExpressions;
 using JE.IdentityServer.Security.Recaptcha;
 using JE.IdentityServer.Security.Resolver;
 using JE.IdentityServer.Security.Resources;
@@ -22,6 +23,9 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         private string _recaptchaPublicKey;
         private string _contentServerName;
         private string _recaptchaValidationEndpoint;
+        private Regex _excludedUsernameExpression;
+        private Regex _exludedTenantExpression;
+        private Regex _excludedOsVersionExpression;
 
         public LoginStatisticsStub LoginStatistics { get; } = new LoginStatisticsStub();
 
@@ -82,6 +86,24 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             return this;
         }
 
+        public IdentityServerWithRecaptchaValidationEndpoint WithExcludedUsernamesMatching(string excludedUsernameExpression)
+        {
+            _excludedUsernameExpression = new Regex(excludedUsernameExpression);
+            return this;
+        }
+
+        public IdentityServerWithRecaptchaValidationEndpoint WithExcludedTenantsMatching(string excludedTenantExpression)
+        {
+            _exludedTenantExpression = new Regex(excludedTenantExpression);
+            return this;
+        }
+
+        public IdentityServerWithRecaptchaValidationEndpoint WithExcludedOsVersionsMatching(string exludedOsVersionExpression)
+        {
+            _excludedOsVersionExpression = new Regex(exludedOsVersionExpression);
+            return this;
+        }
+
         public IdentityServerWithRecaptchaValidationEndpoint WithPublicKey(string recptchaPublicKey)
         {
             _recaptchaPublicKey = recptchaPublicKey;
@@ -126,6 +148,9 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
                     PrivateKey = _recaptchaPrivateKey,
                     PublicKey = _recaptchaPublicKey,
                     ContentServerName = _contentServerName,
+                    ExcludedUsernameExpression = _excludedUsernameExpression,
+                    ExcludedTenantExpression = _exludedTenantExpression,
+                    ExcludedOsVersionExpression = _excludedOsVersionExpression
                 });
 
                 app.UseInMemoryIdentityServer();

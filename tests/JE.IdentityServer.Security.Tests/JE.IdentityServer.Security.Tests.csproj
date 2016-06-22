@@ -117,8 +117,9 @@
     <Compile Include="Infrastructure\PlatformSecurityStub.cs" />
     <Compile Include="Infrastructure\TokenFailureResponseModel.cs" />
     <Compile Include="Infrastructure\TokenResponseModel.cs" />
+    <Compile Include="Recaptcha\RecaptchaPostOnValidationEndpoint.cs" />
     <Compile Include="Recaptcha\RecaptchaResponseBodyStructure.cs" />
-    <Compile Include="Recaptcha\RecaptchaValidationEndpoint.cs" />
+    <Compile Include="Recaptcha\RecaptchaGetOnValidationEndpoint.cs" />
     <Compile Include="Recaptcha\RecaptchaWithExcludedOsVersion.cs" />
     <Compile Include="Recaptcha\RecaptchaWithExcludedTenant.cs" />
     <Compile Include="Recaptcha\RecaptchaWithExcludedUsers.cs" />

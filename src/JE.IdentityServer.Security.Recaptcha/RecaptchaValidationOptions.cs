@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
+using JE.IdentityServer.Security.OpenIdConnect;
 using JE.IdentityServer.Security.Resources;
 
 namespace JE.IdentityServer.Security.Recaptcha
 {
-    public class RecaptchaValidationOptions : IIdentityServerRecaptchaOptions
+    public class RecaptchaValidationOptions : IOpenIdConnectRequestOptions, IIdentityServerRecaptchaOptions
     {
         public RecaptchaValidationOptions()
         {
@@ -20,6 +22,8 @@ namespace JE.IdentityServer.Security.Recaptcha
         public IEnumerable<IPNetwork> ExcludedSubnets { get; set; }
 
         public string ProtectedPath { get; set; }
+
+        public IEnumerable<string> ProtectedGrantTypes { get; set; }
 
         public int NumberOfAllowedLoginFailuresPerIpAddress { get; set; }
 
@@ -38,5 +42,11 @@ namespace JE.IdentityServer.Security.Recaptcha
         public IEnumerable<IOpenIdConnectClient> WebClients { get; set; }
 
         public HttpStatusCode HttpChallengeStatusCode { get; set; }
+
+        public Regex ExcludedUsernameExpression { get; set; }
+
+        public Regex ExcludedTenantExpression { get; set; }
+
+        public Regex ExcludedOsVersionExpression { get; set; }
     }
 }
