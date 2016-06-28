@@ -130,7 +130,7 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     .WithPassword("Passw0rd")
                     .WithGrantType("password")
                     .WithLanguageCode("es-ES")
-                    .WithDeviceType(deviceType)
+                    .WithEncodedDevice("device-id", deviceType, "some-device-name", "some-device-token")
                     .Build()
                     .PostAsync();
                 response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);

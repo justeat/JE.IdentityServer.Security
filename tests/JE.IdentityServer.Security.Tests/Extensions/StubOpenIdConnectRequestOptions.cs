@@ -28,6 +28,8 @@ namespace JE.IdentityServer.Security.Tests.Extensions
 
         public Regex ExcludedOsVersionExpression { get; }
 
+        public Regex ExcludedDeviceExpression { get; set; }
+
         public IEnumerable<IPNetwork> ExcludedSubnets { get; }
 
         public int NumberOfAllowedLoginFailures { get; }

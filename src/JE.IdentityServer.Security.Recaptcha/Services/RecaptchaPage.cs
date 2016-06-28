@@ -82,7 +82,7 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
 
             if (!string.IsNullOrEmpty(device?.DeviceType))
             {
-                platform = supportedDevices.All(d => d != device.DeviceType) ? "other" : device.DeviceType;
+                platform = supportedDevices.Any(d => d.Contains(device.DeviceType)) ? device.DeviceType : "other";
             }
 
             return string.Format(CultureInfo.InvariantCulture,

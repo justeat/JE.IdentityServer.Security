@@ -10,9 +10,9 @@
             DeviceToken = deviceToken;
         }
 
-        public Device(string deviceName)
+        public Device(string deviceType)
         {
-            DeviceName = deviceName;
+            DeviceType = deviceType;
         }
 
         public Device()

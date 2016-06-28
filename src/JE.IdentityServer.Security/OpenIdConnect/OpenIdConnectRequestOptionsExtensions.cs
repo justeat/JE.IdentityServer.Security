@@ -32,6 +32,9 @@ namespace JE.IdentityServer.Security.OpenIdConnect
             if (!string.IsNullOrEmpty(osVersion) && options.ExcludedOsVersionExpression != null &&
                 options.ExcludedOsVersionExpression.IsMatch(osVersion)) return true;
 
+            var device = openIdConnectRequest.GetDevice();
+            if (!string.IsNullOrEmpty(device?.DeviceType) && options.ExcludedDeviceExpression != null && options.ExcludedDeviceExpression.IsMatch(device.DeviceType)) return true;
+
             return options.ExcludedSubnets.Any(excludedSubnet => excludedSubnet.Contains(openIdConnectRequest.GetRemoteIpAddress()));
         }
     }
