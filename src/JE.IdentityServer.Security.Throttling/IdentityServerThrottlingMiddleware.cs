@@ -44,7 +44,7 @@ namespace JE.IdentityServer.Security.Throttling
             if (loginStatistics != null)
             {
                 var numberOfFailedLogins = await loginStatistics.GetNumberOfFailedLoginsForUser(username);
-                if (numberOfFailedLogins >= _options.NumberOfAllowedLoginFailures)
+                if (numberOfFailedLogins > _options.NumberOfAllowedLoginFailures)
                 {
                     await ReturnThrottledResponse(context);
 

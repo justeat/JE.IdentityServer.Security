@@ -58,8 +58,8 @@ namespace JE.IdentityServer.Security.Tests.Throttling
                                         .WithNumberOfAllowedLoginFailures(numberOfAllowedLoginFailures)
                                         .WithProtectedGrantType("password").Build())
             {
-
-                for (var attempt = 0; attempt < numberOfAllowedLoginFailures; ++attempt)
+                const int numberOfFailedLoginAttemptsThatExceedThreshold = numberOfAllowedLoginFailures + 1;
+                for (var attempt = 1; attempt <= numberOfFailedLoginAttemptsThatExceedThreshold; ++attempt)
                 {
                     await server.CreateNativeLoginRequest()
                         .WithUsername("jeuser")
@@ -89,8 +89,8 @@ namespace JE.IdentityServer.Security.Tests.Throttling
                                         .WithRequestsThrottledAsBadRequest()
                                         .WithProtectedGrantType("password").Build())
             {
-
-                for (var attempt = 0; attempt < numberOfAllowedLoginFailures; ++attempt)
+                const int numberOfFailedLoginAttemptsThatExceedThreshold = numberOfAllowedLoginFailures + 1;
+                for (var attempt = 1; attempt <= numberOfFailedLoginAttemptsThatExceedThreshold; ++attempt)
                 {
                     await server.CreateNativeLoginRequest()
                         .WithUsername("jeuser")
@@ -119,7 +119,7 @@ namespace JE.IdentityServer.Security.Tests.Throttling
                                         .WithNumberOfAllowedLoginFailures(numberOfAllowedLoginFailures)
                                         .WithProtectedGrantType("password").Build())
             {
-                for (var attempt = 0; attempt < numberOfAllowedLoginFailures; ++attempt)
+                for (var attempt = 1; attempt <= numberOfAllowedLoginFailures; ++attempt)
                 {
                     var response = await server.CreateNativeLoginRequest()
                         .WithUsername("jeuser")
@@ -143,7 +143,7 @@ namespace JE.IdentityServer.Security.Tests.Throttling
                                                                         .WithProtectedGrantType("password"))
             {
                 var server = identityServerWithThrottledLoginRequests.Build();
-                for (var attempt = 0; attempt < numberOfAllowedLoginFailures; ++attempt)
+                for (var attempt = 1; attempt <= numberOfAllowedLoginFailures; ++attempt)
                 {
                     await server.CreateNativeLoginRequest()
                         .WithUsername("jeuser")
@@ -158,8 +158,9 @@ namespace JE.IdentityServer.Security.Tests.Throttling
                     .Build()
                     .PostAsync();
 
+                const int expectedNumberOfReportedLoginFailures = numberOfAllowedLoginFailures + 1;
                 identityServerWithThrottledLoginRequests.LoginStatistics.TotalNumberOfFailedLogins.Should()
-                    .Be(numberOfAllowedLoginFailures);
+                    .Be(expectedNumberOfReportedLoginFailures);
                 identityServerWithThrottledLoginRequests.LoginStatistics.TotalNumberOfSuccessfulLogins.Should()
                     .Be(0);
             }
@@ -174,7 +175,7 @@ namespace JE.IdentityServer.Security.Tests.Throttling
                                                                         .WithProtectedGrantType("password"))
             {
                 var server = identityServerWithThrottledLoginRequests.Build();
-                for (var attempt = 0; attempt < numberOfAllowedLoginFailures; ++attempt)
+                for (var attempt = 1; attempt <= numberOfAllowedLoginFailures; ++attempt)
                 {
                     await server.CreateNativeLoginRequest()
                         .WithUsername("jeuser")
