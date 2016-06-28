@@ -121,6 +121,7 @@
     <Compile Include="Recaptcha\RecaptchaResponseBodyStructure.cs" />
     <Compile Include="Recaptcha\RecaptchaGetOnValidationEndpoint.cs" />
     <Compile Include="Recaptcha\RecaptchaWithExcludedOsVersion.cs" />
+    <Compile Include="Recaptcha\RecaptchaWithExcludedDeviceType.cs" />
     <Compile Include="Recaptcha\RecaptchaWithExcludedTenant.cs" />
     <Compile Include="Recaptcha\RecaptchaWithExcludedUsers.cs" />
     <Compile Include="Recaptcha\RecaptchaWithPlatformLevelSecurity.cs" />

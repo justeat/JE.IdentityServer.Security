@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using JE.IdentityServer.Security.Extensions;
 using JE.IdentityServer.Security.OpenIdConnect;
@@ -78,11 +77,17 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             return this;
         }
 
-        public NativeLoginRequestBuilder WithDeviceType(string deviceType)
+        public NativeLoginRequestBuilder WithEncodedDevice(string deviceId, string deviceType, string deviceName, string deviceToken)
         {
-            var device = new Device(string.Empty, deviceType, string.Empty, string.Empty);
+            var device = new Device(deviceId, deviceType, deviceType, deviceToken);
             _device = JsonConvert.SerializeObject(device).ToBase64String();
 
+            return this;
+        }
+
+        public NativeLoginRequestBuilder WithDeviceType(string deviceType)
+        {
+            _device = deviceType;
             return this;
         }
 

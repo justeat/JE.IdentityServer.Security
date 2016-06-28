@@ -48,5 +48,7 @@ namespace JE.IdentityServer.Security.Recaptcha
         public Regex ExcludedTenantExpression { get; set; }
 
         public Regex ExcludedOsVersionExpression { get; set; }
+
+        public Regex ExcludedDeviceExpression { get; set; }
     }
 }

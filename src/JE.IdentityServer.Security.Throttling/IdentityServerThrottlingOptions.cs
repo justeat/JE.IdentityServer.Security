@@ -26,6 +26,8 @@ namespace JE.IdentityServer.Security.Throttling
 
         public Regex ExcludedOsVersionExpression { set; get; }
 
+        public Regex ExcludedDeviceExpression { get; set; }
+
         public IEnumerable<IPNetwork> ExcludedSubnets { get; set; }
 
         public int NumberOfAllowedLoginFailures { get; set; }

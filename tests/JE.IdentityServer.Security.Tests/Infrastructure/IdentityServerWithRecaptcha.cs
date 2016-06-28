@@ -28,6 +28,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         private Regex _excludedUsernameExpression;
         private Regex _excludedTenantExpression;
         private Regex _excludedOsVersionExpression;
+        private Regex _excludedDeviceExpression;
 
         public LoginStatisticsStub LoginStatistics { get; } = new LoginStatisticsStub();
 
@@ -112,6 +113,12 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             return this;
         }
 
+        public IdentityServerWithRecaptcha WithExcludedDevicesMatching(string deviceMatchString)
+        {
+            _excludedDeviceExpression = new Regex(deviceMatchString);
+            return this;
+        }
+
         public IdentityServerWithRecaptcha WithExcludedOsVersionsMatching(string osVersionMatchString)
         {
             _excludedOsVersionExpression = new Regex(osVersionMatchString);
@@ -148,6 +155,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
                     ExcludedUsernameExpression = _excludedUsernameExpression,
                     ExcludedTenantExpression = _excludedTenantExpression,
                     ExcludedOsVersionExpression = _excludedOsVersionExpression,
+                    ExcludedDeviceExpression = _excludedDeviceExpression,
                     ExcludedSubnets = _excludedSubnets,
                     ProtectedGrantTypes = _protectedGrantTypes,
                     HttpChallengeStatusCode = _challengeType,

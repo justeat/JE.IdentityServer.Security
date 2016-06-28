@@ -40,6 +40,8 @@ namespace JE.IdentityServer.Security.Recaptcha
 
         public Regex ExcludedOsVersionExpression { get; set; }
 
+        public Regex ExcludedDeviceExpression { get; set; }
+
         public int NumberOfAllowedLoginFailuresPerIpAddress { get; set; }
 
         public IEnumerable<string> ProtectedGrantTypes { get; set; }
