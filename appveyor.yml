@@ -30,5 +30,5 @@ notifications:
   auth_token:
     secure: eJWABMRPoyfEF9iLzFaTcUEqTc7/64v0FtS1qQe4yhs=
   on_build_success: false
-  on_build_failure: false
-  on_build_status_changed: false
+  on_build_failure: true
+  on_build_status_changed: true
