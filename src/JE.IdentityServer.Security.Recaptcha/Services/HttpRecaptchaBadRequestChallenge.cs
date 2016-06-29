@@ -29,10 +29,12 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
 
         public async Task ReturnResponse(IOwinContext context, IIdentityServerRecaptchaOptions options)
         {
+            var challengeHtml = _recaptchaPage.CreateHtmlBody();
             var identityServerChallengeResource = new IdentityServerBadRequestChallengeResource
             {
                 Message = CreateResponseMessage(),
-                ChallengeHtml = _recaptchaPage.CreateHtmlBody()
+                ChallengeHtml = challengeHtml,
+                Challenge = challengeHtml
             };
 
             await context.ReturnResponse(HttpStatusCode.BadRequest, identityServerChallengeResource);
