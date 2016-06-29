@@ -137,7 +137,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
                     ContentServerName = _contentServerName
                 });
 
-                app.UseRecaptchaValidationEndpoint(new RecaptchaValidationOptions
+                app.UseRecaptchaValidationEnabledEndpoint(new RecaptchaValidationOptions
                 {
                     ProtectedPath = _recaptchaValidationEndpoint,
                     NumberOfAllowedLoginFailuresPerIpAddress = _numberOfAllowedLoginFailuresPerIpAddress,
