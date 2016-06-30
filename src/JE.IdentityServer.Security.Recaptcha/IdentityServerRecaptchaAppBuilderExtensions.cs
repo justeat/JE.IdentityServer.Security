@@ -38,7 +38,7 @@ namespace JE.IdentityServer.Security.Recaptcha
             else
             {
                 app.UsePerOwinContext<IHttpRecaptchaChallenge>(
-                    () => new HttpRecaptchaBadRequestChallenge(new RecaptchaPage(options)));
+                    () => new HttpRecaptchaOkChallenge(new RecaptchaPage(options)));
             }
         }
 

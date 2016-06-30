@@ -58,15 +58,20 @@ namespace JE.IdentityServer.Security.Recaptcha
 
         private static void UseRequestedChallengeType(this IAppBuilder app, IIdentityServerRecaptchaOptions options)
         {
-            if (options.HttpChallengeStatusCode == HttpStatusCode.Unauthorized)
+            switch (options.HttpChallengeStatusCode)
             {
-                app.UsePerOwinContext<IHttpRecaptchaChallenge>(
-                    () => new HttpRecaptchaUnauthorizedChallenge(new RecaptchaPage(options)));
-            }
-            else
-            {
-                app.UsePerOwinContext<IHttpRecaptchaChallenge>(
-                    () => new HttpRecaptchaBadRequestChallenge(new RecaptchaPage(options)));
+                case HttpStatusCode.OK:
+                    app.UsePerOwinContext<IHttpRecaptchaChallenge>(
+                        () => new HttpRecaptchaOkChallenge(new RecaptchaPage(options)));
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    app.UsePerOwinContext<IHttpRecaptchaChallenge>(
+                        () => new HttpRecaptchaUnauthorizedChallenge(new RecaptchaPage(options)));
+                    break;
+                default:
+                    app.UsePerOwinContext<IHttpRecaptchaChallenge>(
+                        () => new HttpRecaptchaOkChallenge(new RecaptchaPage(options)));
+                    break;
             }
         }
     }

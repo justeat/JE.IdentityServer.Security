@@ -7,11 +7,11 @@ using Microsoft.Owin;
 
 namespace JE.IdentityServer.Security.Recaptcha.Services
 {
-    public class HttpRecaptchaBadRequestChallenge : IHttpRecaptchaChallenge
+    public class HttpRecaptchaOkChallenge : IHttpRecaptchaChallenge
     {
         private readonly IRecaptchaPage _recaptchaPage;
 
-        public HttpRecaptchaBadRequestChallenge(IRecaptchaPage recaptchaPage)
+        public HttpRecaptchaOkChallenge(IRecaptchaPage recaptchaPage)
         {
             _recaptchaPage = recaptchaPage;
         }
@@ -32,7 +32,7 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
             var identityServerChallengeResource = new IdentityServerBadRequestChallengeResource
             {
                 Message = CreateResponseMessage(),
-                ChallengeHtml = _recaptchaPage.CreateHtmlBody()
+                Challenge = _recaptchaPage.CreateHtmlBody()
             };
 
             await context.ReturnResponse(HttpStatusCode.BadRequest, identityServerChallengeResource);
