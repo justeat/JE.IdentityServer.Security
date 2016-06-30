@@ -7,11 +7,11 @@ using Microsoft.Owin;
 
 namespace JE.IdentityServer.Security.Recaptcha.Services
 {
-    public class HttpRecaptchaBadRequestChallenge : IHttpRecaptchaChallenge
+    public class HttpRecaptchaOkChallenge : IHttpRecaptchaChallenge
     {
         private readonly IRecaptchaPage _recaptchaPage;
 
-        public HttpRecaptchaBadRequestChallenge(IRecaptchaPage recaptchaPage)
+        public HttpRecaptchaOkChallenge(IRecaptchaPage recaptchaPage)
         {
             _recaptchaPage = recaptchaPage;
         }
@@ -21,10 +21,10 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
             var identityServerChallengeResource = new IdentityServerBadRequestChallengeResource
             {
                 Message = CreateResponseMessage(),
-                ChallengeHtml = _recaptchaPage.CreateHtmlBody(openIdConnectRequest)
+                Challenge = _recaptchaPage.CreateHtmlBody(openIdConnectRequest)
             };
 
-            await context.ReturnResponse(HttpStatusCode.BadRequest, identityServerChallengeResource);
+            await context.ReturnResponse(HttpStatusCode.OK, identityServerChallengeResource);
         }
 
         public async Task ReturnResponse(IOwinContext context, IIdentityServerRecaptchaOptions options)
@@ -32,10 +32,10 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
             var identityServerChallengeResource = new IdentityServerBadRequestChallengeResource
             {
                 Message = CreateResponseMessage(),
-                ChallengeHtml = _recaptchaPage.CreateHtmlBody()
+                Challenge = _recaptchaPage.CreateHtmlBody()
             };
 
-            await context.ReturnResponse(HttpStatusCode.BadRequest, identityServerChallengeResource);
+            await context.ReturnResponse(HttpStatusCode.OK, identityServerChallengeResource);
         }
 
         private static string CreateResponseMessage()
