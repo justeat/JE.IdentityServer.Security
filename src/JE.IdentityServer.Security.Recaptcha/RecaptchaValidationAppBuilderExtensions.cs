@@ -70,7 +70,7 @@ namespace JE.IdentityServer.Security.Recaptcha
                     break;
                 default:
                     app.UsePerOwinContext<IHttpRecaptchaChallenge>(
-                        () => new HttpRecaptchaOkChallenge(new RecaptchaPage(options)));
+                        () => new HttpRecaptchaBadRequestChallenge(new RecaptchaPage(options)));
                     break;
             }
         }
