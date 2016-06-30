@@ -12,21 +12,32 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
         {
             using (var client = new HttpClient())
             {
-                var recaptchaValidationUri = string.Format(options.VerifyUri + "?secret={0}&response={1}", options.PrivateKey, recaptchaResponse);
+                var recaptchaValidationUri = string.Format(
+                    options.VerifyUri + "?secret={0}&response={1}",
+                    options.PrivateKey,
+                    recaptchaResponse);
+
                 var httpResponse = await client.GetAsync(recaptchaValidationUri);
+
                 if (httpResponse.IsSuccessStatusCode)
                 {
                     using (var responseStream = await httpResponse.Content.ReadAsStreamAsync())
                     {
-                        var jsonResponse = new StreamReader(responseStream).ReadToEnd();
-                        return JsonConvert.DeserializeObject<RecaptchaVerificationResponse>(jsonResponse);
+                        using (var jsonStream = new StreamReader(responseStream))
+                        {
+                            var json = jsonStream.ReadToEnd();
+                            return JsonConvert.DeserializeObject<RecaptchaVerificationResponse>(json);
+                        }
                     }
                 }
 
-                var succeeded = (httpResponse.StatusCode == HttpStatusCode.InternalServerError ||
-                                 httpResponse.StatusCode == HttpStatusCode.ServiceUnavailable);
+                var succeeded = httpResponse.StatusCode == HttpStatusCode.InternalServerError ||
+                                httpResponse.StatusCode == HttpStatusCode.ServiceUnavailable;
 
-                return new RecaptchaVerificationResponse {Succeeded = succeeded};
+                return new RecaptchaVerificationResponse
+                {
+                    Succeeded = succeeded
+                };
             }
         }
 
