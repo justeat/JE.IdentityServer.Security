@@ -2,10 +2,6 @@
 
 namespace JE.IdentityServer.Security.Resources
 {
-    /*
-     * Challenge and ChallengeHtml are the same at the moment.
-     * Challenge will be dropped in the next release. 
-     */
     [DataContract]
     public class IdentityServerBadRequestChallengeResource
     {
@@ -17,8 +13,5 @@ namespace JE.IdentityServer.Security.Resources
 
         [DataMember(Name = "ChallengeHtml")]
         public string ChallengeHtml { get; set; }
-        
-        [DataMember(Name = "Challenge")]
-        public string Challenge { get; set; }
     }
 }
