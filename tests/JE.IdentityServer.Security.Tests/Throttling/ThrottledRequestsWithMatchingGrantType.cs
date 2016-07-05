@@ -106,8 +106,8 @@ namespace JE.IdentityServer.Security.Tests.Throttling
                                            .PostAsync();
 
                 response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-                var tokenResponse = await response.Content.ReadAsAsync<IdentityServerBadRequestChallengeResource>();
-                tokenResponse.Message.Should().Be("Too many connections");
+                var tokenResponse = await response.Content.ReadAsAsync<IdentityServerUnauthorizedChallengeResource>();
+                tokenResponse.Description.Should().Be("Too many connections");
             }
         }
 

@@ -13,13 +13,12 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
         private const int NumberOfAllowedLoginFailures = 1;
 
         [Test]
-        public async Task RecaptchaResponseBody_WithBadRequestChallengeType_ShouldContainExpectedRecaptchaBody()
+        public async Task RecaptchaResponseBody_ShouldContainExpectedRecaptchaBody()
         {
             using (var server = new IdentityServerWithRecaptcha()
                 .WithProtectedGrantType("password")
                 .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures)
                 .WithFailuresForIpAddress("192.168.1.101", NumberOfAllowedLoginFailures)
-                .WithChallengeAsBadRequest()
                 .WithPublicKey("recaptcha-public-key")
                 .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures).Build())
             {
@@ -30,9 +29,9 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     .WithLanguageCode("es-ES")
                     .Build()
                     .PostAsync();
-                response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-                var resource = await response.Content.ReadAsAsync<IdentityServerBadRequestChallengeResource>();
-                resource.Message.Should().Contain("Please complete the Recaptcha");
+                response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+                var resource = await response.Content.ReadAsAsync<IdentityServerUnauthorizedChallengeResource>();
+                resource.Description.Should().Contain("Please complete the Recaptcha");
                 resource.ChallengeHtml.Should().Contain("<script src=\"https://www.google.com/recaptcha/api.js?hl=es-ES\" async defer>");
                 resource.ChallengeHtml.Should().Contain("<div class=\"g-recaptcha\" data-sitekey=\"recaptcha-public-key\"></div>");
             }

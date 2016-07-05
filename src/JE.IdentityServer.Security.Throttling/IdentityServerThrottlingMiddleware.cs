@@ -61,9 +61,9 @@ namespace JE.IdentityServer.Security.Throttling
         {
             if (_options.HttpRequestThrottledStatusCode == HttpStatusCode.BadRequest)
             {
-                await context.ReturnResponse(HttpStatusCode.BadRequest, new IdentityServerBadRequestChallengeResource
+                await context.ReturnResponse(HttpStatusCode.BadRequest, new IdentityServerUnauthorizedChallengeResource
                 {
-                    Message = "Too many connections"
+                    Description = "Too many connections"
                 });
             }
             else

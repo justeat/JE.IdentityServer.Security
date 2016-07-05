@@ -68,12 +68,6 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             return this;
         }
 
-        public IdentityServerWithRecaptcha WithChallengeAsBadRequest()
-        {
-            _challengeType = HttpStatusCode.BadRequest;
-            return this;
-        }
-
         public IdentityServerWithRecaptcha WithVerificationUri(Uri verifyUri)
         {
             _verifyUri = verifyUri;

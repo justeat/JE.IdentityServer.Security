@@ -112,13 +112,12 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
         }
 
         [Test]
-        public async Task RecaptchaWithValidCredentials_WithBadRequestChallengeType_ShouldChallengAsBadRequest()
+        public async Task RecaptchaWithValidCredentials_ShouldChallengAsBadRequest()
         {
             using (var server = new IdentityServerWithRecaptcha()
                 .WithProtectedGrantType("password")
                 .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures)
                 .WithFailuresForIpAddress("192.168.1.101", NumberOfAllowedLoginFailures)
-                .WithChallengeAsBadRequest()
                 .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures).Build())
             {
                 var response = await server.CreateNativeLoginRequest()
@@ -127,18 +126,17 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     .WithGrantType("password")
                     .Build()
                     .PostAsync();
-                response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
             }
         }
 
         [Test]
-        public async Task RecaptchaWithValidCredentials_WithBadRequestChallengeType_ShouldContainExpectedRecaptchaBody()
+        public async Task RecaptchaWithValidCredentials_ShouldContainExpectedRecaptchaBody()
         {
             using (var server = new IdentityServerWithRecaptcha()
                 .WithProtectedGrantType("password")
                 .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures)
                 .WithFailuresForIpAddress("192.168.1.101", NumberOfAllowedLoginFailures)
-                .WithChallengeAsBadRequest()
                 .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures).Build())
             {
                 var response = await server.CreateNativeLoginRequest()
@@ -147,9 +145,9 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     .WithGrantType("password")
                     .Build()
                     .PostAsync();
-                response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-                var resource = await response.Content.ReadAsAsync<IdentityServerBadRequestChallengeResource>();
-                resource.Message.Should().Contain("Please complete the Recaptcha");
+                response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+                var resource = await response.Content.ReadAsAsync<IdentityServerUnauthorizedChallengeResource>();
+                resource.Description.Should().Contain("Please respond to the reCaptcha challenge");
                 resource.ChallengeHtml.Should().Contain("<script src=\"https://www.google.com/recaptcha/api.js?hl=en-GB\" async defer>");
             }
         }

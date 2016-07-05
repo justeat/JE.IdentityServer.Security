@@ -74,7 +74,6 @@
     <Compile Include="Resolver\ServiceFactoryOptions.cs" />
     <Compile Include="Resolver\ServiceResolverAppBuilderExtensions.cs" />
     <Compile Include="Resources\Device.cs" />
-    <Compile Include="Resources\IdentityServerBadRequestChallengeResource.cs" />
     <Compile Include="Resources\IdentityServerErrorResource.cs" />
     <Compile Include="Resources\IdentityServerUnauthorizedChallengeResource.cs" />
     <Compile Include="Resources\IDevice.cs" />
