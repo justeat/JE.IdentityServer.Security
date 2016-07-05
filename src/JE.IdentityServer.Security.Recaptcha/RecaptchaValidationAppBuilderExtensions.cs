@@ -41,11 +41,14 @@ namespace JE.IdentityServer.Security.Recaptcha
 
             app.Map(options.ProtectedPath, challenge =>
             {
-                challenge.UseRequestedChallengeType(options);
+                app.UsePerOwinContext<IHttpRecaptchaChallenge>(
+                    () => new HttpRecaptchaUnauthorizedChallenge(new RecaptchaPage(options)));
+
                 if (enableRecaptcha)
                 {
                     challenge.Use<RecaptchaValidationMiddleware>(options);
                 }
+
                 challenge.Run(ctx =>
                 {
                     ctx.Response.StatusCode = (int) HttpStatusCode.NoContent;
@@ -54,25 +57,6 @@ namespace JE.IdentityServer.Security.Recaptcha
             });
 
             return app;
-        }
-
-        private static void UseRequestedChallengeType(this IAppBuilder app, IIdentityServerRecaptchaOptions options)
-        {
-            switch (options.HttpChallengeStatusCode)
-            {
-                case HttpStatusCode.OK:
-                    app.UsePerOwinContext<IHttpRecaptchaChallenge>(
-                        () => new HttpRecaptchaOkChallenge(new RecaptchaPage(options)));
-                    break;
-                case HttpStatusCode.Unauthorized:
-                    app.UsePerOwinContext<IHttpRecaptchaChallenge>(
-                        () => new HttpRecaptchaUnauthorizedChallenge(new RecaptchaPage(options)));
-                    break;
-                default:
-                    app.UsePerOwinContext<IHttpRecaptchaChallenge>(
-                        () => new HttpRecaptchaBadRequestChallenge(new RecaptchaPage(options)));
-                    break;
-            }
         }
     }
 }

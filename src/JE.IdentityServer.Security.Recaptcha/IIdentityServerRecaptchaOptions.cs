@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using JE.IdentityServer.Security.Resources;
 
 namespace JE.IdentityServer.Security.Recaptcha
@@ -20,7 +19,5 @@ namespace JE.IdentityServer.Security.Recaptcha
         bool SupportBrowsersWithoutJavaScript { get; }
 
         IEnumerable<IOpenIdConnectClient> WebClients { get; }
-
-        HttpStatusCode HttpChallengeStatusCode { get; }
     }
 }

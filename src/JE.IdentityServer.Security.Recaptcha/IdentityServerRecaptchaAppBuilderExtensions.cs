@@ -20,31 +20,13 @@ namespace JE.IdentityServer.Security.Recaptcha
                 recaptchaValidationService = () => new DefaultRecaptchaValidationService();
             }
 
-            app.UseRequestedChallengeType(options);
+            app.UsePerOwinContext<IHttpRecaptchaChallenge>(
+                () => new HttpRecaptchaUnauthorizedChallenge(new RecaptchaPage(options)));
 
             app.UsePerOwinContext(recaptchaValidationService);
             app.Use<IdentityServerRecaptchaMiddleware>(options);
 
             return app;
-        }
-
-        private static void UseRequestedChallengeType(this IAppBuilder app, IIdentityServerRecaptchaOptions options)
-        {
-            switch (options.HttpChallengeStatusCode)
-            {
-                case HttpStatusCode.OK:
-                    app.UsePerOwinContext<IHttpRecaptchaChallenge>(
-                        () => new HttpRecaptchaOkChallenge(new RecaptchaPage(options)));
-                    break;
-                case HttpStatusCode.Unauthorized:
-                    app.UsePerOwinContext<IHttpRecaptchaChallenge>(
-                        () => new HttpRecaptchaUnauthorizedChallenge(new RecaptchaPage(options)));
-                    break;
-                default:
-                    app.UsePerOwinContext<IHttpRecaptchaChallenge>(
-                        () => new HttpRecaptchaBadRequestChallenge(new RecaptchaPage(options)));
-                    break;
-            }
         }
 
         public static IAppBuilder UseRecaptchaForAuthenticationRequests(this IAppBuilder app,
