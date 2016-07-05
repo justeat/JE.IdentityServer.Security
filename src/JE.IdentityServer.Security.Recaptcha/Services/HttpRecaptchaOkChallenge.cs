@@ -18,13 +18,10 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
 
         public async Task ReturnResponse(IOwinContext context, IIdentityServerRecaptchaOptions options, IOpenIdConnectRequest openIdConnectRequest)
         {
-            var challenge = _recaptchaPage.CreateHtmlBody(openIdConnectRequest);
-
             var identityServerChallengeResource = new IdentityServerBadRequestChallengeResource
             {
                 Message = CreateResponseMessage(),
-                Challenge = challenge,
-                ChallengeHtml = challenge
+                ChallengeHtml = _recaptchaPage.CreateHtmlBody(openIdConnectRequest)
             };
 
             await context.ReturnResponse(HttpStatusCode.OK, identityServerChallengeResource);
@@ -32,13 +29,11 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
 
         public async Task ReturnResponse(IOwinContext context, IIdentityServerRecaptchaOptions options)
         {
-            var challenge = _recaptchaPage.CreateHtmlBody();
 
             var identityServerChallengeResource = new IdentityServerBadRequestChallengeResource
             {
                 Message = CreateResponseMessage(),
-                Challenge = challenge,
-                ChallengeHtml = challenge
+                ChallengeHtml = _recaptchaPage.CreateHtmlBody()
             };
 
             await context.ReturnResponse(HttpStatusCode.OK, identityServerChallengeResource);
