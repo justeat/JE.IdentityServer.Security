@@ -1,0 +1,42 @@
+﻿using System.Threading.Tasks;
+using JE.IdentityServer.Security.OpenIdConnect;
+using JE.IdentityServer.Security.Services;
+using Microsoft.Owin;
+using JE.IdentityServer.Security.Extensions;
+using JE.IdentityServer.Security.Recaptcha.Services;
+
+namespace JE.IdentityServer.Security.Recaptcha.Pipeline
+{
+    public class ValidateRecaptchaChallenge : IdentityServerRecaptchaMiddlewareBase
+    {
+        public ValidateRecaptchaChallenge(OwinMiddleware next, IdentityServerRecaptchaOptions options) : base(next, options)
+        {
+            
+        }
+
+        public override async Task<PipelineState> DoInvoke(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest, ILoginStatistics loginStatistics)
+        {
+            var recaptchaValidationService = context.Get<IRecaptchaValidationService>();
+
+            var recaptchaChallengeResponse = openIdConnectRequest.GetRecaptchaChallengeResponse();
+
+            if (!string.IsNullOrEmpty(recaptchaChallengeResponse))
+            {
+                var recaptchaVerificationResponse = await recaptchaValidationService.Validate(recaptchaChallengeResponse, _options);
+
+                if (recaptchaVerificationResponse.Succeeded)
+                {
+                    var recaptchaContext = context.Set<IRecaptchaContext>(new RecaptchaContext(RecaptchaState.ChallengeSucceeded));
+                    return PipelineState.Continue;
+                }
+                else
+                {
+                    var recaptchaContext = context.Set<IRecaptchaContext>(new RecaptchaContext(RecaptchaState.Failed));
+                    return PipelineState.Challenge;
+                }
+            }
+
+            return PipelineState.Continue;
+        }
+    }
+}
