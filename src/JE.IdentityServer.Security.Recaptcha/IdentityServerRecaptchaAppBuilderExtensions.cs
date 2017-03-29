@@ -3,6 +3,7 @@ using System.Net;
 using JE.IdentityServer.Security.Recaptcha.Services;
 using JE.IdentityServer.Security.Resolver;
 using Owin;
+using JE.IdentityServer.Security.Recaptcha.Pipeline;
 
 namespace JE.IdentityServer.Security.Recaptcha
 {
@@ -23,7 +24,9 @@ namespace JE.IdentityServer.Security.Recaptcha
             app.UseRequestedChallengeType(options);
 
             app.UsePerOwinContext(recaptchaValidationService);
-            app.Use<IdentityServerRecaptchaMiddleware>(options);
+            app.Use<ValidateRecaptchaChallenge>(options);
+            app.Use<ChallengeEveryoneMiddleware>(options);
+            app.Use<ChallengeByIp>(options);
 
             return app;
         }

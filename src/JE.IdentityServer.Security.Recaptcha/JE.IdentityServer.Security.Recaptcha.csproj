@@ -56,11 +56,17 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Pipeline\ChallengeByIp.cs" />
     <Compile Include="IdentityServerRecaptchaAppBuilderExtensions.cs" />
-    <Compile Include="IdentityServerRecaptchaMiddleware.cs" />
+    <Compile Include="Pipeline\ChallengeEveryoneMiddleware.cs" />
+    <Compile Include="Pipeline\IdentityServerRecaptchaMiddleware.cs" />
     <Compile Include="IdentityServerRecaptchaOptions.cs" />
     <Compile Include="IIdentityServerRecaptchaOptions.cs" />
+    <Compile Include="Pipeline\PipelineState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Pipeline\ValidateRecaptchaChallenge.cs" />
+    <Compile Include="Services\IRecaptchaContext.cs" />
+    <Compile Include="Services\RecaptchaContext.cs" />
     <Compile Include="RecaptchaValidationAppBuilderExtensions.cs" />
     <Compile Include="RecaptchaValidationMiddleware.cs" />
     <Compile Include="RecaptchaValidationOptions.cs" />
@@ -75,6 +81,7 @@
     <Compile Include="Services\IHttpRecaptchaChallenge.cs" />
     <Compile Include="Services\IRecaptchaValidationService.cs" />
     <Compile Include="Services\DefaultRecaptchaValidationService.cs" />
+    <Compile Include="Services\RecaptchaState.cs" />
     <Compile Include="Services\RecaptchaValidationOptionsExtensions.cs" />
     <Compile Include="Services\RecaptchaVerificationResponse.cs" />
   </ItemGroup>
