@@ -52,8 +52,9 @@ namespace JE.IdentityServer.Security.OpenIdConnect
         public string GetRecaptchaChallengeResponse()
         {
             var recaptchaValue = _headers.Get(RecaptchaAnswerHeaderKey);
+
             return !string.IsNullOrEmpty(recaptchaValue)
-                ? recaptchaValue.ToStringFromBase64String()
+                ? recaptchaValue.TryToStringFromBase64String()
                 : _form.Get(AcrValuesFormKey)
                     .ToKnownAcrValues().RecaptchaResponse;
         }

@@ -33,7 +33,7 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     var response = await server.CreateNativeLoginRequest()
                         .WithUsername("jeuser")
                         .WithPassword("Passw0rd")
-                        .WithHttpHeaderRecaptchaResponse("correct_response")
+                        .WithHttpHeaderRecaptchaResponseBase64("correct_response")
                         .Build()
                         .PostAsync();
                     response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);

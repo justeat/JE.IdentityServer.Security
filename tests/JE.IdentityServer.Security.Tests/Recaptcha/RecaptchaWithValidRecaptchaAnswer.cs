@@ -13,7 +13,7 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
     public class RecaptchaWithValidRecaptchaAnswer
     {
         [Test]
-        public async Task RecaptchaWithValidRecaptchaAnswer_WithAnswerAsHeaderValue_ShouldNotChallenge()
+        public async Task RecaptchaWithValidRecaptchaAnswer_WithAnswerAsBase64HeaderValue_ShouldNotChallenge()
         {
             using (var fakeRecaptchaServer = new FakeServer())
             {
@@ -33,7 +33,38 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     var response = await server.CreateNativeLoginRequest()
                         .WithUsername("jeuser")
                         .WithPassword("Passw0rd")
-                        .WithHttpHeaderRecaptchaResponse("correct_response")
+                        .WithHttpHeaderRecaptchaResponseBase64("correct_response")
+                        .Build()
+                        .PostAsync();
+                    response.StatusCode.Should().Be(HttpStatusCode.OK);
+                    var tokenResponse = await response.Content.ReadAsAsync<TokenResponseModel>();
+                    tokenResponse.AccessToken.Should().NotBeNullOrEmpty();
+                }
+            }
+        }
+
+        [Test]
+        public async Task RecaptchaWithValidRecaptchaAnswer_WithAnswerAsRawHeaderValue_ShouldNotChallenge()
+        {
+            using (var fakeRecaptchaServer = new FakeServer())
+            {
+                fakeRecaptchaServer.Start();
+                fakeRecaptchaServer.Expect.Get("/?secret=private_key&response=correct_response")
+                    .Returns(HttpStatusCode.OK, JsonConvert.SerializeObject(new RecaptchaVerificationResponse
+                    {
+                        Succeeded = true
+                    }));
+
+                using (var server = new IdentityServerWithRecaptcha()
+                    .WithProtectedGrantType("password")
+                    .WithPrivateKey("private_key")
+                    .WithVerificationUri(fakeRecaptchaServer.BaseUri)
+                    .WithNumberOfAllowedLoginFailuresPerIpAddress(1).Build())
+                {
+                    var response = await server.CreateNativeLoginRequest()
+                        .WithUsername("jeuser")
+                        .WithPassword("Passw0rd")
+                        .WithHttpHeaderRecaptchaResponseRaw("correct_response")
                         .Build()
                         .PostAsync();
                     response.StatusCode.Should().Be(HttpStatusCode.OK);
