@@ -12,6 +12,20 @@ namespace JE.IdentityServer.Security.Extensions
             return (base64EncodedString.Length % 4 == 0) && Regex.IsMatch(base64EncodedString, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
         }
 
+        public static string TryToStringFromBase64String(this string base64String)
+        {
+            try
+            {
+                return string.IsNullOrEmpty(base64String)
+                    ? null
+                    : Encoding.UTF8.GetString(Convert.FromBase64String(base64String));
+            }
+            catch (FormatException)
+            {
+                return base64String;
+            }
+        }
+
         public static string ToStringFromBase64String(this string base64String)
         {
             try

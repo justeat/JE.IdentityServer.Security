@@ -85,7 +85,7 @@ namespace JE.IdentityServer.Security.OpenIdConnect
         {
             try
             {
-                return JsonConvert.DeserializeObject<Device>(acrValue.ToStringFromBase64String());
+                return JsonConvert.DeserializeObject<Device>(acrValue.TryToStringFromBase64String());
             }
             catch (JsonException)
             {
