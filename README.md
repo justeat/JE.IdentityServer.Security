@@ -2,6 +2,8 @@
 
 ## An OWIN Middleware component for an OpenIdConnect endpoint that provides the following a set of security features
 
+[![Build status](https://ci.appveyor.com/api/projects/status/356v801xb1hcdrvq?svg=true)](https://ci.appveyor.com/project/justeattech/je-identityserver-security)
+
 Currently targets IdentityServer3 v2.
 
 ### TL;DR
