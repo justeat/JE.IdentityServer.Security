@@ -38,7 +38,8 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
                             return;
                         }
                     case RecaptchaState.ChallengeSucceeded:
-                        break;
+                        await Next.Invoke(context);
+                        return;
                 }
             }
 
