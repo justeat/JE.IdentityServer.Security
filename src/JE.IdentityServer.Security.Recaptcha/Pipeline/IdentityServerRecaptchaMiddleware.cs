@@ -5,6 +5,8 @@ using JE.IdentityServer.Security.OpenIdConnect;
 using JE.IdentityServer.Security.Recaptcha.Services;
 using JE.IdentityServer.Security.Services;
 using Microsoft.Owin;
+using NLog;
+using NLog.StructuredLogging.Json;
 
 namespace JE.IdentityServer.Security.Recaptcha.Pipeline
 {
@@ -12,11 +14,13 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
     public abstract class IdentityServerRecaptchaMiddlewareBase : OwinMiddleware
     {
         protected readonly IdentityServerRecaptchaOptions _options;
+        protected readonly ILogger _logger;
 
         public IdentityServerRecaptchaMiddlewareBase(OwinMiddleware next, IdentityServerRecaptchaOptions options)
             : base(next)
         {
             _options = options;
+            _logger = NLog.LogManager.GetCurrentClassLogger();
         }
 
         public override async Task Invoke(IOwinContext context)
@@ -30,6 +34,8 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
 
             if (recaptchaContext != null)
             {
+                _logger.ExtendedInfo("Recaptcha completed", new { username = openIdConnectRequest.GetUsername(), ipAddress = openIdConnectRequest.GetRemoteIpAddress(), RecaptchaState = recaptchaContext.State });
+
                 switch (recaptchaContext.State)
                 {
                     case RecaptchaState.Failed:
@@ -54,6 +60,8 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
                             var numberOfFailedLogins = await loginStatistics.GetNumberOfFailedLoginsForIpAddress(openIdConnectRequest.GetRemoteIpAddress());
 
                             await ChallengeWithRequestForRecaptcha(context, openIdConnectRequest, numberOfFailedLogins);
+                            _logger.ExtendedInfo("Issuing Recaptcha Challenge", new { username = openIdConnectRequest.GetUsername(), ipAddress = openIdConnectRequest.GetRemoteIpAddress(), RecaptchaState = recaptchaContext?.State, numberOfFailedLogins });
+
                             return;
                         }
                     case PipelineState.Continue:
