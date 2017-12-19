@@ -53,9 +53,14 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             return this;
         }
 
-        public NativeLoginRequestBuilder WithHttpHeaderRecaptchaResponse(string httpHeaderRecaptchaResponse)
+        public NativeLoginRequestBuilder WithHttpHeaderRecaptchaResponseBase64(string httpHeaderRecaptchaResponse)
         {
             _headers.Add("x-recaptcha-answer", httpHeaderRecaptchaResponse.ToBase64String());
+            return this;
+        }
+        public NativeLoginRequestBuilder WithHttpHeaderRecaptchaResponseRaw(string httpHeaderRecaptchaResponse)
+        {
+            _headers.Add("x-recaptcha-answer", httpHeaderRecaptchaResponse);
             return this;
         }
 
