@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,48 +10,39 @@ namespace JE.IdentityServer.Security.Recaptcha
 {
     public class IdentityServerRecaptchaOptions : IOpenIdConnectRequestOptions, IIdentityServerRecaptchaOptions
     {
-        public IdentityServerRecaptchaOptions()
-        {
-            VerifyUri = new Uri("https://www.google.com/recaptcha/api/siteverify");
-            WhiteListedEmailAddresses = Enumerable.Empty<string>();
-            ExcludedSubnets = Enumerable.Empty<IPNetwork>();
-            WebClients = Enumerable.Empty<IOpenIdConnectClient>();
-            HttpChallengeStatusCode = HttpStatusCode.Unauthorized;
-            LinkToChallenge = "/recaptcha.aspx";
-        }
 
-        public string PublicKey { get; set; }
+        public virtual string PublicKey { get; set; }
 
-        public string PrivateKey { get; set; }
+        public virtual string PrivateKey { get; set; }
 
-        public Uri VerifyUri { get; set; }
+        public virtual Uri VerifyUri { get; set; } = new Uri("https://www.google.com/recaptcha/api/siteverify");
 
-        public string LinkToChallenge { get; set; }
+        public virtual string LinkToChallenge { get; set; } = "/recaptcha.aspx";
 
-        public IEnumerable<string> WhiteListedEmailAddresses { get; set; }
+        public virtual IEnumerable<string> WhiteListedEmailAddresses { get; set; } = Enumerable.Empty<string>();
 
-        public HttpStatusCode HttpChallengeStatusCode { get; set; }
+        public virtual HttpStatusCode HttpChallengeStatusCode { get; set; } = HttpStatusCode.Unauthorized;
 
         public string ProtectedPath { get; set; }
 
-        public Regex ExcludedUsernameExpression { get; set; }
+        public virtual Regex ExcludedUsernameExpression { get; set; }
 
-        public Regex ExcludedTenantExpression { get; set; }
+        public virtual Regex ExcludedTenantExpression { get; set; }
 
-        public Regex ExcludedOsVersionExpression { get; set; }
+        public virtual Regex ExcludedOsVersionExpression { get; set; }
 
-        public Regex ExcludedDeviceExpression { get; set; }
+        public virtual Regex ExcludedDeviceExpression { get; set; }
 
-        public int NumberOfAllowedLoginFailuresPerIpAddress { get; set; }
+        public virtual int NumberOfAllowedLoginFailuresPerIpAddress { get; set; }
 
-        public IEnumerable<string> ProtectedGrantTypes { get; set; }
+        public virtual IEnumerable<string> ProtectedGrantTypes { get; set; }
 
-        public IEnumerable<IPNetwork> ExcludedSubnets { get; set; }
+        public virtual IEnumerable<IPNetwork> ExcludedSubnets { get; set; } = Enumerable.Empty<IPNetwork>();
 
-        public string ContentServerName { get; set; }
+        public virtual string ContentServerName { get; set; }
 
-        public bool SupportBrowsersWithoutJavaScript { get; set; }
+        public virtual bool SupportBrowsersWithoutJavaScript { get; set; }
 
-        public IEnumerable<IOpenIdConnectClient> WebClients { get; set; }
+        public virtual IEnumerable<IOpenIdConnectClient> WebClients { get; set; } = Enumerable.Empty<IOpenIdConnectClient>();
     }
 }
