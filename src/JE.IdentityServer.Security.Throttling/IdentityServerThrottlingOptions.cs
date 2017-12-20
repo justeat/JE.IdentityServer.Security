@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -9,29 +9,22 @@ namespace JE.IdentityServer.Security.Throttling
 {
     public class IdentityServerThrottlingOptions : IOpenIdConnectRequestOptions
     {
-        public IdentityServerThrottlingOptions()
-        {
-            ProtectedGrantTypes = Enumerable.Empty<string>();
-            ExcludedSubnets = Enumerable.Empty<IPNetwork>();
-            HttpRequestThrottledStatusCode = (HttpStatusCode) 429;
-        }
-
         public string ProtectedPath { get; set; }
 
-        public IEnumerable<string> ProtectedGrantTypes { get; set; }
+        public IEnumerable<string> ProtectedGrantTypes { get; set; } = Enumerable.Empty<string>();
 
-        public Regex ExcludedUsernameExpression { get; set; }
+        public virtual Regex ExcludedUsernameExpression { get; set; }
 
-        public Regex ExcludedTenantExpression { get; set; }
+        public virtual Regex ExcludedTenantExpression { get; set; }
 
-        public Regex ExcludedOsVersionExpression { set; get; }
+        public virtual Regex ExcludedOsVersionExpression { set; get; }
 
-        public Regex ExcludedDeviceExpression { get; set; }
+        public virtual Regex ExcludedDeviceExpression { get; set; }
 
-        public IEnumerable<IPNetwork> ExcludedSubnets { get; set; }
+        public virtual IEnumerable<IPNetwork> ExcludedSubnets { get; set; } = Enumerable.Empty<IPNetwork>();
 
-        public int NumberOfAllowedLoginFailures { get; set; }
+        public virtual int NumberOfAllowedLoginFailures { get; set; }
 
-        public HttpStatusCode HttpRequestThrottledStatusCode { get; set; }
+        public virtual HttpStatusCode HttpRequestThrottledStatusCode { get; set; } = (HttpStatusCode)429;
     }
 }
