@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using JE.IdentityServer.Security.Extensions;
 using JE.IdentityServer.Security.OpenIdConnect;
@@ -44,6 +44,7 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
                             return;
                         }
                     case RecaptchaState.ChallengeSucceeded:
+                        await context.CleanupAcrValues();
                         await Next.Invoke(context);
                         return;
                 }

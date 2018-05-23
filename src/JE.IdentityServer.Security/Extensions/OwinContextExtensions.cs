@@ -1,6 +1,8 @@
-﻿using System;
+using System;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JE.IdentityServer.Security.OpenIdConnect;
 using Microsoft.Owin;
@@ -11,7 +13,7 @@ namespace JE.IdentityServer.Security.Extensions
     public static class OwinContextExtensions
     {
         private const string IdentityKeyPrefix = "je.identityserver:security";
-        
+
         public static IOwinContext Set<T>(this IOwinContext owinContext, T value)
         {
             if (owinContext == null)
@@ -37,7 +39,7 @@ namespace JE.IdentityServer.Security.Extensions
 
             IPAddress remoteIpAddress;
             IPAddress.TryParse(owinContext.GetRemoteClientIpAddress(), out remoteIpAddress);
-            
+
             return new OpenIdConnectRequest(remoteIpAddress, owinContext.ResourcePath(), owinContext.Request.Headers, formAsNameValueCollection);
         }
 
@@ -87,7 +89,7 @@ namespace JE.IdentityServer.Security.Extensions
             await owinContext.Response.WriteAsync(JsonConvert.SerializeObject(message));
         }
 
-        public static T ReadRequestBodyAsync<T>(this IOwinContext context) where T: class 
+        public static T ReadRequestBodyAsync<T>(this IOwinContext context) where T : class
         {
             try
             {
@@ -154,6 +156,34 @@ namespace JE.IdentityServer.Security.Extensions
         private static string GetKey(Type t)
         {
             return IdentityKeyPrefix + t.AssemblyQualifiedName;
+        }
+
+        public static async Task CleanupAcrValues(this IOwinContext owinContext)
+        {
+            var regex = new Regex("x-recaptcha-answer([A-z0-9!@#$%^&)(*~])*.");
+
+            string text;
+
+            using (var reader = new StreamReader(owinContext.Request.Body))
+            {
+                text = await reader.ReadToEndAsync();
+            }
+
+            text = regex.Replace(text, string.Empty);
+
+            var replacement = new MemoryStream();
+
+            using (var writer = new StreamWriter(replacement, System.Text.Encoding.UTF8, text.Length, leaveOpen: true))
+            {
+                await writer.WriteAsync(text);
+            }
+
+            owinContext.Request.Body = replacement;
+
+            // hack to prevent caching of an internalized type from Katana in environment
+            owinContext.Environment.Remove("Microsoft.Owin.Form#collection");
+
+            owinContext.Request.Body.Seek(0L, SeekOrigin.Begin);
         }
     }
 }
