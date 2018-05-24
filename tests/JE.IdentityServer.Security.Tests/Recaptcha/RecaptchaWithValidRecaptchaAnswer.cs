@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -96,6 +96,73 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                         .WithUsername("jeuser")
                         .WithPassword("Passw0rd")
                         .WithRecaptchaResponseAsAcrValue("correct_response")
+                        .Build()
+                        .PostAsync();
+                    response.StatusCode.Should().Be(HttpStatusCode.OK);
+                    var tokenResponse = await response.Content.ReadAsAsync<TokenResponseModel>();
+                    tokenResponse.AccessToken.Should().NotBeNullOrEmpty();
+                }
+            }
+        }
+
+        [Test]
+        public async Task RecaptchaWithValidRecaptchaAnswer_WithLongAnswerAsAcrValue_ShouldNotChallenge()
+        {
+            const string longAnswer = "sHPqR2vXe1Gvena4WLtGvpslvmQjQrrFVTQDUpTPJ05IAsEpxeuGuuWI4bpOE0fqVgk3GGSjZS3ZbAPwXJhpeZuEaQhg6Vyp8PqYKD1906snU6aWgphMtSpo4QLOgyzRbAtGV6km58lBWKvrzrzEzYUerm44QXngw0meLTmryh33X0xHMzTSm7DGueATSlSO2lCv9E9xKomDpOZVp8tDYEL5bJflNvB3fMD2P2kUftlb8iv6VON6flwMLYrCuweFPQZ61FizEJGwJ4zpS1Mfgw5hV9BEkHhYbmuYBoLniKkB4KwPrYOHFw9IwFyKTiqIQC70RVWODc4hpjVsLsP4xeNuIASjDKj33Np4XiocvEYv8JIYTWuEffot0SKWVE8OgNQH5BL77FkLjERV";
+
+            using (var fakeRecaptchaServer = new FakeServer())
+            {
+                fakeRecaptchaServer.Start();
+                fakeRecaptchaServer.Expect.Get("/?secret=private_key&response=" + longAnswer)
+                    .Returns(HttpStatusCode.OK, JsonConvert.SerializeObject(new RecaptchaVerificationResponse
+                    {
+                        Succeeded = true
+                    }));
+
+                using (var server = new IdentityServerWithRecaptcha()
+                    .WithProtectedGrantType("password")
+                    .WithPrivateKey("private_key")
+                    .WithVerificationUri(fakeRecaptchaServer.BaseUri)
+                    .WithNumberOfAllowedLoginFailuresPerIpAddress(1).Build())
+                {
+                    var response = await server.CreateNativeLoginRequest()
+                        .WithUsername("jeuser")
+                        .WithPassword("Passw0rd")
+                        .WithRecaptchaResponseAsAcrValue(longAnswer)
+                        .Build()
+                        .PostAsync();
+                    response.StatusCode.Should().Be(HttpStatusCode.OK);
+                    var tokenResponse = await response.Content.ReadAsAsync<TokenResponseModel>();
+                    tokenResponse.AccessToken.Should().NotBeNullOrEmpty();
+                }
+            }
+        }
+
+        [Test]
+        public async Task RecaptchaWithValidRecaptchaAnswer_WithLongAnswerAsAcrValue_AndAllTheTrimmings_ShouldNotChallenge()
+        {
+            const string longAnswer = "sHPqR2vXe1Gvena4WLtGvpslvmQjQrrFVTQDUpTPJ05IAsEpxeuGuuWI4bpOE0fqVgk3GGSjZS3ZbAPwXJhpeZuEaQhg6Vyp8PqYKD1906snU6aWgphMtSpo4QLOgyzRbAtGV6km58lBWKvrzrzEzYUerm44QXngw0meLTmryh33X0xHMzTSm7DGueATSlSO2lCv9E9xKomDpOZVp8tDYEL5bJflNvB3fMD2P2kUftlb8iv6VON6flwMLYrCuweFPQZ61FizEJGwJ4zpS1Mfgw5hV9BEkHhYbmuYBoLniKkB4KwPrYOHFw9IwFyKTiqIQC70RVWODc4hpjVsLsP4xeNuIASjDKj33Np4XiocvEYv8JIYTWuEffot0SKWVE8OgNQH5BL77FkLjERV";
+
+            using (var fakeRecaptchaServer = new FakeServer())
+            {
+                fakeRecaptchaServer.Start();
+                fakeRecaptchaServer.Expect.Get("/?secret=private_key&response=" + longAnswer)
+                    .Returns(HttpStatusCode.OK, JsonConvert.SerializeObject(new RecaptchaVerificationResponse
+                    {
+                        Succeeded = true
+                    }));
+
+                using (var server = new IdentityServerWithRecaptcha()
+                    .WithProtectedGrantType("password")
+                    .WithPrivateKey("private_key")
+                    .WithVerificationUri(fakeRecaptchaServer.BaseUri)
+                    .WithNumberOfAllowedLoginFailuresPerIpAddress(1).Build())
+                {
+                    var response = await server.CreateNativeLoginRequest()
+                        .WithUsername("jeuser")
+                        .WithPassword("Passw0rd")
+                        .WithRecaptchaResponseAsAcrValue(longAnswer)
+                        .WithEncodedDevice("id", "type", "name", "token")
                         .Build()
                         .PostAsync();
                     response.StatusCode.Should().Be(HttpStatusCode.OK);

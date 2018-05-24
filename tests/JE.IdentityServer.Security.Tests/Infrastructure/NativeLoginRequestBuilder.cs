@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Net.Http;
 using JE.IdentityServer.Security.Extensions;
 using JE.IdentityServer.Security.OpenIdConnect;
@@ -58,6 +58,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             _headers.Add("x-recaptcha-answer", httpHeaderRecaptchaResponse.ToBase64String());
             return this;
         }
+
         public NativeLoginRequestBuilder WithHttpHeaderRecaptchaResponseRaw(string httpHeaderRecaptchaResponse)
         {
             _headers.Add("x-recaptcha-answer", httpHeaderRecaptchaResponse);
