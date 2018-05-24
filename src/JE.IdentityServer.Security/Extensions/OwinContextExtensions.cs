@@ -12,6 +12,11 @@ namespace JE.IdentityServer.Security.Extensions
 {
     public static class OwinContextExtensions
     {
+        private static Regex recaptchaAnswerRegex =
+            new Regex(
+                "x-recaptcha-answer([A-z0-9!@#$%^&)(*~])*.",
+                RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
         private const string IdentityKeyPrefix = "je.identityserver:security";
 
         public static IOwinContext Set<T>(this IOwinContext owinContext, T value)
@@ -160,8 +165,6 @@ namespace JE.IdentityServer.Security.Extensions
 
         public static async Task CleanupAcrValues(this IOwinContext owinContext)
         {
-            var regex = new Regex("x-recaptcha-answer([A-z0-9!@#$%^&)(*~])*.");
-
             string text;
 
             using (var reader = new StreamReader(owinContext.Request.Body))
@@ -169,7 +172,7 @@ namespace JE.IdentityServer.Security.Extensions
                 text = await reader.ReadToEndAsync();
             }
 
-            text = regex.Replace(text, string.Empty);
+            text = recaptchaAnswerRegex.Replace(text, string.Empty);
 
             var replacement = new MemoryStream();
 
