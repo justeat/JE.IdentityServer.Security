@@ -14,7 +14,7 @@ namespace JE.IdentityServer.Security.Extensions
     {
         private static Regex recaptchaAnswerRegex =
             new Regex(
-                "x-recaptcha-answer([A-z0-9!@#$%^&)(*~])*.",
+                "x-recaptcha-answer.*(%20|$)",
                 RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         private const string IdentityKeyPrefix = "je.identityserver:security";

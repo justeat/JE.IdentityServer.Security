@@ -141,7 +141,7 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
         [Test]
         public async Task RecaptchaWithValidRecaptchaAnswer_WithLongAnswerAsAcrValue_AndAllTheTrimmings_ShouldNotChallenge()
         {
-            const string longAnswer = "sHPqR2vXe1Gvena4WLtGvpslvmQjQrrFVTQDUpTPJ05IAsEpxeuGuuWI4bpOE0fqVgk3GGSjZS3ZbAPwXJhpeZuEaQhg6Vyp8PqYKD1906snU6aWgphMtSpo4QLOgyzRbAtGV6km58lBWKvrzrzEzYUerm44QXngw0meLTmryh33X0xHMzTSm7DGueATSlSO2lCv9E9xKomDpOZVp8tDYEL5bJflNvB3fMD2P2kUftlb8iv6VON6flwMLYrCuweFPQZ61FizEJGwJ4zpS1Mfgw5hV9BEkHhYbmuYBoLniKkB4KwPrYOHFw9IwFyKTiqIQC70RVWODc4hpjVsLsP4xeNuIASjDKj33Np4XiocvEYv8JIYTWuEffot0SKWVE8OgNQH5BL77FkLjERV";
+            const string longAnswer = "03ACgFB9vknGtsjy3YCRubfh4Nk4_9j4jIaJ8q5nPO6AOu391yoMxeQctcw6-OPt5HyBGjm8B25-xrQUDD-kQjoJOrY3IBiFa5fh__YC9RVbRTPxNrGdhdUjyJxVzQE5obPE1AUPScn3gyS6iaIOxgW_wB-ttxB-0_ybk7GP6Dz-QFnrXQaYYGZEEQxLHQReku_wwiOIWV40HFEpMx_Z-LwPBKOWO3fk2p3fQsnZGCcAhnszi6DfdYJWKdBmfra6BjcJ4Tfx2Xvyn75a4CmDwS7FYp6kg_dmzN1BaLPSA26DKndbrjL3lW2ghKsaat6TTcIx23M5jvcUlzsh5QxHWd3YhmmokS_QfZa0dyuWMUJ1TisYrVOGsg6p2tCiPIm5qLLaWl1scXMgA5PLBR3cx0fNy7Q72gbkfLOQ";
 
             using (var fakeRecaptchaServer = new FakeServer())
             {
