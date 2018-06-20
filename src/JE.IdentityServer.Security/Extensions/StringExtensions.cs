@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -52,6 +53,13 @@ namespace JE.IdentityServer.Security.Extensions
             {
                 return null;
             }
+        }
+
+        public static int IndexOfAny(this string target, string[] options, int startIndex = 0, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        {
+            var values = options.Select(o => target.IndexOf(o, startIndex, comparison)).Where(i => i > 0);
+
+            return values.Any() ? values.Min() : -1;
         }
     }
 }
