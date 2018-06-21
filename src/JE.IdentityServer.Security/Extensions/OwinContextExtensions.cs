@@ -12,11 +12,6 @@ namespace JE.IdentityServer.Security.Extensions
 {
     public static class OwinContextExtensions
     {
-        private static Regex recaptchaAnswerRegex =
-            new Regex(
-                "x-recaptcha-answer.*(%20|$)",
-                RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
-
         private const string IdentityKeyPrefix = "je.identityserver:security";
 
         public static IOwinContext Set<T>(this IOwinContext owinContext, T value)
@@ -172,7 +167,22 @@ namespace JE.IdentityServer.Security.Extensions
                 text = await reader.ReadToEndAsync();
             }
 
-            text = recaptchaAnswerRegex.Replace(text, string.Empty);
+            var start = text.IndexOf("x-recaptcha-answer");
+
+            if (start > 0)
+            {
+                // Don't trim the &, but trim "%20" "+" or newlines - OR just trim to the end
+                var possibleEndings = new[]
+                {
+                    text.IndexOfAny(new[] { @"\n", "%20", "+" }, start) + 1,
+                    text.IndexOf("&", start),
+                    text.Length
+                };
+
+                var end = possibleEndings.Where(e => e > 0).Min();
+
+                text = text.Remove(start, end - start);
+            }
 
             var replacement = new MemoryStream();
 

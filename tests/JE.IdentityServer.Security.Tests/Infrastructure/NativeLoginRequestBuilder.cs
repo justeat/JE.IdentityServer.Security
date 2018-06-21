@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using JE.IdentityServer.Security.Extensions;
 using JE.IdentityServer.Security.OpenIdConnect;
@@ -131,6 +133,8 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             return builder;
         }
 
+        private static Random rand = new Random();
+
         private FormUrlEncodedContent CreateFormUrlEncodedContent()
         {
             var formInputValues = new List<KeyValuePair<string, string>>
@@ -146,6 +150,8 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             {
                 formInputValues.Add(new KeyValuePair<string, string>("acr_values", string.Join(" ", acrValues)));
             }
+
+            formInputValues = formInputValues.OrderBy(r => rand.Next()).ToList();
 
             return new FormUrlEncodedContent(formInputValues);
         }
@@ -179,7 +185,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
                 acrValues.Add($"{KnownAcrValuesExtensions.OsVersion}:{_osVersion}");
             }
 
-            return acrValues;
+            return acrValues.OrderBy(a => rand.Next()).ToList();
         }
     }
 
