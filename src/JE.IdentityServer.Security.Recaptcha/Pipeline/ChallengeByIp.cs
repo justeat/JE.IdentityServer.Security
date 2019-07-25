@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using JE.IdentityServer.Security.OpenIdConnect;
 using JE.IdentityServer.Security.Services;
 using Microsoft.Owin;
