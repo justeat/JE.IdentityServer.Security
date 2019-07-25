@@ -24,11 +24,13 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                         Succeeded = true
                     }));
 
-                using (var server = new IdentityServerWithRecaptcha()
+                var identityServerBuilder = new IdentityServerWithRecaptcha()
                     .WithProtectedGrantType("password")
                     .WithPrivateKey("private_key")
                     .WithVerificationUri(fakeRecaptchaServer.BaseUri)
-                    .WithNumberOfAllowedLoginFailuresPerIpAddress(1).Build())
+                    .WithNumberOfAllowedLoginFailuresPerIpAddress(1);
+
+                using (var server = identityServerBuilder.Build())
                 {
                     var response = await server.CreateNativeLoginRequest()
                         .WithUsername("jeuser")
@@ -39,6 +41,8 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     response.StatusCode.Should().Be(HttpStatusCode.OK);
                     var tokenResponse = await response.Content.ReadAsAsync<TokenResponseModel>();
                     tokenResponse.AccessToken.Should().NotBeNullOrEmpty();
+
+                    identityServerBuilder.RecaptchaMonitor.HasIssuedChallenge.Should().BeFalse();
                 }
             }
         }
@@ -55,11 +59,13 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                         Succeeded = true
                     }));
 
-                using (var server = new IdentityServerWithRecaptcha()
+                var identityServerBuilder = new IdentityServerWithRecaptcha()
                     .WithProtectedGrantType("password")
                     .WithPrivateKey("private_key")
                     .WithVerificationUri(fakeRecaptchaServer.BaseUri)
-                    .WithNumberOfAllowedLoginFailuresPerIpAddress(1).Build())
+                    .WithNumberOfAllowedLoginFailuresPerIpAddress(1);
+
+                using (var server = identityServerBuilder.Build())
                 {
                     var response = await server.CreateNativeLoginRequest()
                         .WithUsername("jeuser")
@@ -70,6 +76,8 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     response.StatusCode.Should().Be(HttpStatusCode.OK);
                     var tokenResponse = await response.Content.ReadAsAsync<TokenResponseModel>();
                     tokenResponse.AccessToken.Should().NotBeNullOrEmpty();
+
+                    identityServerBuilder.RecaptchaMonitor.HasIssuedChallenge.Should().BeFalse();
                 }
             }
         }
@@ -86,11 +94,13 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                         Succeeded = true
                     }));
 
-                using (var server = new IdentityServerWithRecaptcha()
+                var identityServerBuilder = new IdentityServerWithRecaptcha()
                     .WithProtectedGrantType("password")
                     .WithPrivateKey("private_key")
                     .WithVerificationUri(fakeRecaptchaServer.BaseUri)
-                    .WithNumberOfAllowedLoginFailuresPerIpAddress(1).Build())
+                    .WithNumberOfAllowedLoginFailuresPerIpAddress(1);
+
+                using (var server = identityServerBuilder.Build())
                 {
                     var response = await server.CreateNativeLoginRequest()
                         .WithUsername("jeuser")
@@ -101,6 +111,8 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     response.StatusCode.Should().Be(HttpStatusCode.OK);
                     var tokenResponse = await response.Content.ReadAsAsync<TokenResponseModel>();
                     tokenResponse.AccessToken.Should().NotBeNullOrEmpty();
+
+                    identityServerBuilder.RecaptchaMonitor.HasIssuedChallenge.Should().BeFalse();
                 }
             }
         }
@@ -184,22 +196,29 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                         Succeeded = true
                     }));
 
-                using (var server = new IdentityServerWithRecaptcha()
+                var username = "jeuser";
+
+                var identityServerBuilder = new IdentityServerWithRecaptcha()
                     .WithProtectedGrantType("password")
                     .WithPrivateKey("private_key")
                     .WithVerificationUri(fakeRecaptchaServer.BaseUri)
                     .WithChallengeAsBadRequest()
-                    .WithPlatformSecurityShieldsUp()
-                    .Build())
+                    .WithPlatformSecurityShieldsUp();
+
+                using (var server = identityServerBuilder.Build())
                 {
                     var response = await server.CreateNativeLoginRequest()
-                        .WithUsername("jeuser")
+                        .WithUsername(username)
                         .WithPassword("Passw0rd")
                         .WithGrantType("password")
                         .WithHttpHeaderRecaptchaResponseRaw("correct_response")
                         .Build()
                         .PostAsync();
                     response.StatusCode.Should().NotBe(HttpStatusCode.BadRequest);
+
+                    identityServerBuilder.RecaptchaMonitor.HasCompletedChallenge.Should().BeTrue();
+                    identityServerBuilder.RecaptchaMonitor.RecaptchaState.Should().Be(RecaptchaState.ChallengeSucceeded);
+                    identityServerBuilder.RecaptchaMonitor.UserContext.Username.Should().Be(username);
                 }
             }
         }
@@ -218,23 +237,37 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                         Succeeded = true
                     }));
 
-                using (var server = new IdentityServerWithRecaptcha()
+                var ipAddress = "192.168.1.101";
+                var username = "jeuser";
+
+                var identityServerBuilder = new IdentityServerWithRecaptcha()
                     .WithProtectedGrantType("password")
                     .WithPrivateKey("private_key")
                     .WithVerificationUri(fakeRecaptchaServer.BaseUri)
                     .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures)
-                    .WithFailuresForIpAddress("192.168.1.101", NumberOfAllowedLoginFailures + 1)
+                    .WithFailuresForIpAddress(ipAddress, NumberOfAllowedLoginFailures + 1)
                     .WithChallengeAsBadRequest()
-                    .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures).Build())
+                    .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures);
+
+                using (var server = identityServerBuilder.Build())
                 {
                     var response = await server.CreateNativeLoginRequest()
-                        .WithUsername("jeuser")
+                        .WithUsername(username)
                         .WithPassword("Passw0rd")
                         .WithGrantType("password")
                         .WithHttpHeaderRecaptchaResponseRaw("correct_response")
                         .Build()
                         .PostAsync();
                     response.StatusCode.Should().NotBe(HttpStatusCode.BadRequest);
+
+                    identityServerBuilder.RecaptchaMonitor.HasCompletedChallenge.Should().BeTrue();
+                    identityServerBuilder.RecaptchaMonitor.RecaptchaState.Should().Be(RecaptchaState.ChallengeSucceeded);
+                    identityServerBuilder.RecaptchaMonitor.UserContext.ShouldBeEquivalentTo(new RecaptchaUserContext
+                    {
+                        Username = username,
+                        IpAddress = ipAddress,
+                        Device = new RecaptchaUserDevice()
+                    });
                 }
             }
         }

@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JE.IdentityServer.Security.Recaptcha.Services;
 using JE.IdentityServer.Security.Resources;
 using JE.IdentityServer.Security.Tests.Infrastructure;
 using NUnit.Framework;
@@ -15,8 +16,10 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
         [Test]
         public async Task RecaptchaWithValidCredentials_WithUnsupportedGrantType_ShouldNotChallenge()
         {
-            using (var server = new IdentityServerWithRecaptcha()
-                .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures).Build())
+            var identityServerBuilder = new IdentityServerWithRecaptcha()
+                .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures);
+
+            using (var server = identityServerBuilder.Build())
             {
                 var response = await server.CreateNativeLoginRequest()
                     .WithUsername("jeuser")
@@ -26,6 +29,9 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                 response.StatusCode.Should().Be(HttpStatusCode.OK);
                 var tokenResponse = await response.Content.ReadAsAsync<TokenResponseModel>();
                 tokenResponse.AccessToken.Should().NotBeNullOrEmpty();
+
+                identityServerBuilder.RecaptchaMonitor.HasIssuedChallenge.Should().BeFalse();
+                identityServerBuilder.RecaptchaMonitor.HasCompletedChallenge.Should().BeFalse();
             }
         }
 
@@ -35,6 +41,7 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
             var identityServerBuilder = new IdentityServerWithRecaptcha()
                 .WithProtectedGrantType("password")
                 .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures);
+
             using (var server = identityServerBuilder.Build())
             {
                 await server.CreateNativeLoginRequest()
@@ -50,14 +57,19 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
         [Test]
         public async Task RecaptchaWithValidCredentials_WithDefaultChallengeType_ShouldChallengeAsUnauthorized()
         {
-            using (var server = new IdentityServerWithRecaptcha()
+            var ipAddress = "192.168.1.101";
+            var username = "jeuser";
+
+            var identityServerBuilder = new IdentityServerWithRecaptcha()
                 .WithProtectedGrantType("password")
                 .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures)
-                .WithFailuresForIpAddress("192.168.1.101", NumberOfAllowedLoginFailures)
-                .Build())
+                .WithFailuresForIpAddress(ipAddress, NumberOfAllowedLoginFailures);
+
+            using (var server = identityServerBuilder.Build())
             {
-                var response = await server.CreateNativeLoginRequest()
-                    .WithUsername("jeuser")
+                var response = await server
+                    .CreateNativeLoginRequest()
+                    .WithUsername(username)
                     .WithPassword("Passw0rd")
                     .WithGrantType("password")
                     .Build()
@@ -65,16 +77,25 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                 response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
                 response.Headers.WwwAuthenticate.Should().Contain(h => h.Scheme == "recaptcha");
                 response.Headers.WwwAuthenticate.Should().Contain(h => h.Parameter == @"url=""/recaptcha/platform""");
+
+                identityServerBuilder.RecaptchaMonitor.HasIssuedChallenge.Should().BeTrue();
+                identityServerBuilder.RecaptchaMonitor.HasCompletedChallenge.Should().BeFalse();
+                identityServerBuilder.RecaptchaMonitor.UserContext.Username.Should().Be(username);
+                identityServerBuilder.RecaptchaMonitor.UserContext.IpAddress.Should().Be(ipAddress);
             }
         }
 
         [Test]
         public async Task RecaptchaWithValidCredentials_WithDefaultChallengeType_ShouldReport()
         {
+            var ipAddress = "192.168.1.101";
+            var username = "jeuser";
+
             var identityServerBuilder = new IdentityServerWithRecaptcha()
                 .WithProtectedGrantType("password")
                 .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures)
-                .WithFailuresForIpAddress("192.168.1.101", NumberOfAllowedLoginFailures);
+                .WithFailuresForIpAddress(ipAddress, NumberOfAllowedLoginFailures);
+
             using (var server = identityServerBuilder.Build())
             {
                 await server.CreateNativeLoginRequest()
@@ -85,17 +106,27 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     .PostAsync();
 
                 identityServerBuilder.LoginStatistics.TotalNumberOfChallengesForFailedLogins.Should().Be(1);
+
+                identityServerBuilder.RecaptchaMonitor.HasIssuedChallenge.Should().BeTrue();
+                identityServerBuilder.RecaptchaMonitor.HasCompletedChallenge.Should().BeFalse();
+                identityServerBuilder.RecaptchaMonitor.UserContext.ShouldBeEquivalentTo(new RecaptchaUserContext
+                {
+                    Username = username,
+                    IpAddress = ipAddress,
+                    Device = new RecaptchaUserDevice()
+                });
             }
         }
 
         [Test]
         public async Task RecaptchaWithValidCredentials_WithDefaultChallengeType_ShouldContainExpectedRecaptchaBody()
         {
-            using (var server = new IdentityServerWithRecaptcha()
+            var identityServerBuilder = new IdentityServerWithRecaptcha()
                 .WithProtectedGrantType("password")
                 .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures)
-                .WithFailuresForIpAddress("192.168.1.101", NumberOfAllowedLoginFailures)
-                .Build())
+                .WithFailuresForIpAddress("192.168.1.101", NumberOfAllowedLoginFailures);
+
+            using (var server = identityServerBuilder.Build())
             {
                 var response = await server.CreateNativeLoginRequest()
                     .WithUsername("jeuser")
@@ -108,41 +139,64 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                 resource.LinkToChallenge.Should().Be("/recaptcha/platform");
                 resource.Description.Should().Contain("add the x-recaptcha-answer");
                 resource.ChallengeHtml.Should().Contain("<script src=\"https://www.google.com/recaptcha/api.js?hl=en-GB\" async defer>");
+
+                identityServerBuilder.RecaptchaMonitor.HasIssuedChallenge.Should().BeTrue();
+                identityServerBuilder.RecaptchaMonitor.HasCompletedChallenge.Should().BeFalse();
             }
         }
 
         [Test]
-        public async Task RecaptchaWithValidCredentials_WithBadRequestChallengeType_ShouldChallengAsBadRequest()
+        public async Task RecaptchaWithValidCredentials_WithBadRequestChallengeType_ShouldChallengeAsBadRequest()
         {
-            using (var server = new IdentityServerWithRecaptcha()
+            var ipAddress = "192.168.1.101";
+            var username = "jeuser";
+
+            var identityServerBuilder = new IdentityServerWithRecaptcha()
                 .WithProtectedGrantType("password")
                 .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures)
-                .WithFailuresForIpAddress("192.168.1.101", NumberOfAllowedLoginFailures)
+                .WithFailuresForIpAddress(ipAddress, NumberOfAllowedLoginFailures)
                 .WithChallengeAsBadRequest()
-                .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures).Build())
+                .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures);
+
+            using (var server = identityServerBuilder.Build())
             {
-                var response = await server.CreateNativeLoginRequest()
-                    .WithUsername("jeuser")
+                var response = await server
+                    .CreateNativeLoginRequest()
+                    .WithUsername(username)
                     .WithPassword("Passw0rd")
                     .WithGrantType("password")
                     .Build()
                     .PostAsync();
                 response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+                identityServerBuilder.RecaptchaMonitor.HasIssuedChallenge.Should().BeTrue();
+                identityServerBuilder.RecaptchaMonitor.HasCompletedChallenge.Should().BeFalse();
+                identityServerBuilder.RecaptchaMonitor.UserContext.ShouldBeEquivalentTo(new RecaptchaUserContext
+                {
+                    Username = username,
+                    IpAddress = ipAddress,
+                    Device = new RecaptchaUserDevice()
+                });
             }
         }
 
         [Test]
         public async Task RecaptchaWithValidCredentials_WithBadRequestChallengeType_ShouldContainExpectedRecaptchaBody()
         {
-            using (var server = new IdentityServerWithRecaptcha()
+            var ipAddress = "192.168.1.101";
+            var username = "jeuser";
+
+            var identityServerBuilder = new IdentityServerWithRecaptcha()
                 .WithProtectedGrantType("password")
                 .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures)
-                .WithFailuresForIpAddress("192.168.1.101", NumberOfAllowedLoginFailures)
+                .WithFailuresForIpAddress(ipAddress, NumberOfAllowedLoginFailures)
                 .WithChallengeAsBadRequest()
-                .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures).Build())
+                .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures);
+
+            using (var server = identityServerBuilder.Build())
             {
                 var response = await server.CreateNativeLoginRequest()
-                    .WithUsername("jeuser")
+                    .WithUsername(username)
                     .WithPassword("Passw0rd")
                     .WithGrantType("password")
                     .Build()
@@ -151,6 +205,15 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                 var resource = await response.Content.ReadAsAsync<IdentityServerBadRequestChallengeResource>();
                 resource.Message.Should().Contain("Please complete the Recaptcha");
                 resource.ChallengeHtml.Should().Contain("<script src=\"https://www.google.com/recaptcha/api.js?hl=en-GB\" async defer>");
+
+                identityServerBuilder.RecaptchaMonitor.HasIssuedChallenge.Should().BeTrue();
+                identityServerBuilder.RecaptchaMonitor.HasCompletedChallenge.Should().BeFalse();
+                identityServerBuilder.RecaptchaMonitor.UserContext.ShouldBeEquivalentTo(new RecaptchaUserContext
+                {
+                    Username = username,
+                    IpAddress = ipAddress,
+                    Device = new RecaptchaUserDevice()
+                });
             }
         }
     }

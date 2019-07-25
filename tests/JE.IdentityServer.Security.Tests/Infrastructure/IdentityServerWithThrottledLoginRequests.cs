@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
+using JE.IdentityServer.Security.Recaptcha.Services;
 using JE.IdentityServer.Security.Resolver;
 using JE.IdentityServer.Security.Services;
 using JE.IdentityServer.Security.Throttling;
@@ -12,7 +13,6 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
     public class IdentityServerWithThrottledLoginRequests : IDisposable
     {
         private string _protectedPath = "/identity/connect/token";
-        private readonly LoginStatisticsStub _loginStatistics = new LoginStatisticsStub();
         private int _numberOfAllowedLoginFailures;
 
         private Regex _excludedUsernameExpression;
@@ -23,7 +23,8 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         private TestServer _testServer;
         private HttpStatusCode _throttledHttpStatusCode = (HttpStatusCode) 429;
 
-        public LoginStatisticsStub LoginStatistics => _loginStatistics;
+        public LoginStatisticsStub LoginStatistics { get; } = new LoginStatisticsStub();
+        public RecaptchaMonitorStub RecaptchaMonitor { get; } = new RecaptchaMonitorStub();
 
         public IdentityServerWithThrottledLoginRequests WithProtectedPath(string protectedPath)
         {
@@ -71,7 +72,8 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         {
             _testServer = TestServer.Create(app =>
             {
-                app.UsePerOwinContext<ILoginStatistics>(() => _loginStatistics);
+                app.UsePerOwinContext<ILoginStatistics>(() => LoginStatistics);
+                app.UsePerOwinContext<IRecaptchaMonitor>(() => RecaptchaMonitor);
                 app.UseThrottlingForAuthenticationRequests(new IdentityServerThrottlingOptions
                 {
                     ProtectedPath = _protectedPath,

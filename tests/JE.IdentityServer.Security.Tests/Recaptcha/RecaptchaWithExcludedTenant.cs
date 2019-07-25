@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JE.IdentityServer.Security.Recaptcha.Services;
 using JE.IdentityServer.Security.Tests.Infrastructure;
 using NUnit.Framework;
 
@@ -11,30 +12,48 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
         [Test]
         public async Task RecaptchaWithExcludedTenant_WitNonExcludedTenant_ShouldChallenge()
         {
-            using (var server = new IdentityServerWithRecaptcha()
+            var ipAddress = "192.168.1.101";
+            var username = "jeuser";
+            var tenant = "uk";
+
+            var identityServerBuilder = new IdentityServerWithRecaptcha()
                 .WithExcludedTenantsMatching("es")
                 .WithProtectedGrantType("password")
                 .WithNumberOfAllowedLoginFailuresPerIpAddress(1)
-                .WithFailuresForIpAddress("192.168.1.101", 1).Build())
+                .WithFailuresForIpAddress(ipAddress, 1);
+
+            using (var server = identityServerBuilder.Build())
             {
                 var response = await server.CreateNativeLoginRequest()
-                    .WithUsername("jeuser")
+                    .WithUsername(username)
                     .WithPassword("Passw0rd")
-                    .WithTenant("uk")
+                    .WithTenant(tenant)
                     .Build()
                     .PostAsync();
                 response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+
+                identityServerBuilder.RecaptchaMonitor.HasIssuedChallenge.Should().BeTrue();
+                identityServerBuilder.RecaptchaMonitor.UserContext.ShouldBeEquivalentTo(new RecaptchaUserContext
+                {
+                    Username = username,
+                    IpAddress = ipAddress,
+                    Tenant = tenant,
+                    Device = new RecaptchaUserDevice()
+                });
             }
         }
 
         [Test]
         public async Task RecaptchaWithExcludedTenant_WitExcludedTenant_ShouldNotChallenge()
         {
-            using (var server = new IdentityServerWithRecaptcha()
+            var identityServerBuilder = new IdentityServerWithRecaptcha()
                 .WithExcludedTenantsMatching("es")
                 .WithProtectedGrantType("password")
                 .WithNumberOfAllowedLoginFailuresPerIpAddress(1)
-                .WithFailuresForIpAddress("192.168.1.101", 1).Build())
+                .WithFailuresForIpAddress("192.168.1.101", 1);
+
+
+            using (var server = identityServerBuilder.Build())
             {
                 var response = await server.CreateNativeLoginRequest()
                     .WithUsername("jeuser")
@@ -43,6 +62,8 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     .Build()
                     .PostAsync();
                 response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+                identityServerBuilder.RecaptchaMonitor.HasIssuedChallenge.Should().BeFalse();
             }
         }
     }

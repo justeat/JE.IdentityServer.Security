@@ -27,22 +27,25 @@ namespace JE.IdentityServer.Security.Tests.Throttling
         }
 
         [Test]
-        public async Task ThrottledRequestsWithMssingGrantType_WithZeroAllowedFailures_ShouldNotPublishLoginStatistics()
+        public async Task ThrottledRequestsWithMissingGrantType_WithZeroAllowedFailures_ShouldNotPublishLoginStatistics()
         {
-            using (var identityServerWithThrottledLoginRequests = new IdentityServerWithThrottledLoginRequests()
-                                                                    .WithNumberOfAllowedLoginFailures(0))
+            var identityServerBuilder = new IdentityServerWithThrottledLoginRequests()
+                .WithNumberOfAllowedLoginFailures(0);
+
+            using (var server = identityServerBuilder.Build())
             {
-                var server = identityServerWithThrottledLoginRequests.Build();
                 var response = await server.CreateNativeLoginRequest()
                     .WithUsername("jeuser")
                     .WithPassword("Passw0rd")
                     .Build()
                     .PostAsync();
                 response.StatusCode.Should().Be(HttpStatusCode.OK);
-                var loginStatistics = identityServerWithThrottledLoginRequests.LoginStatistics;
+                var loginStatistics = identityServerBuilder.LoginStatistics;
                 loginStatistics.TotalNumberOfFailedLogins.Should().Be(0);
                 loginStatistics.TotalNumberOfSuccessfulLogins.Should().Be(0);
                 loginStatistics.TotalNumberOfExcludedAttemptedLogins.Should().Be(0);
+
+                identityServerBuilder.RecaptchaMonitor.HasIssuedChallenge.Should().BeFalse();
             }
         }
 

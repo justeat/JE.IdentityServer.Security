@@ -112,6 +112,7 @@
     <Compile Include="Infrastructure\NoDataProtector.cs" />
     <Compile Include="Infrastructure\IdentityServerWithThrottledLoginRequests.cs" />
     <Compile Include="Infrastructure\PlatformSecurityStub.cs" />
+    <Compile Include="Infrastructure\RecaptchaMonitorStub.cs" />
     <Compile Include="Infrastructure\TokenFailureResponseModel.cs" />
     <Compile Include="Infrastructure\TokenResponseModel.cs" />
     <Compile Include="Recaptcha\RecaptchaPostOnValidationEndpoint.cs" />

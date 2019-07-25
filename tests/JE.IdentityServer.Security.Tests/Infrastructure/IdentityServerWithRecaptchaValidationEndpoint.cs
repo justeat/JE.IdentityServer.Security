@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
 using JE.IdentityServer.Security.Recaptcha;
+using JE.IdentityServer.Security.Recaptcha.Services;
 using JE.IdentityServer.Security.Resolver;
 using JE.IdentityServer.Security.Resources;
 using JE.IdentityServer.Security.Services;
@@ -28,6 +29,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         private Regex _excludedOsVersionExpression;
 
         public LoginStatisticsStub LoginStatistics { get; } = new LoginStatisticsStub();
+        public RecaptchaMonitorStub RecaptchaMonitor { get; } = new RecaptchaMonitorStub();
 
         public IdentityServerWithRecaptchaValidationEndpoint WithProtectedPath(string protectedPath)
         {
@@ -123,6 +125,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             _testServer = TestServer.Create(app =>
             {
                 app.UsePerOwinContext<ILoginStatistics>(() => LoginStatistics);
+                app.UsePerOwinContext<IRecaptchaMonitor>(() => RecaptchaMonitor);
                 app.UseRecaptchaForAuthenticationRequests(new IdentityServerRecaptchaOptions
                 {
                     ProtectedPath = _protectedPath,

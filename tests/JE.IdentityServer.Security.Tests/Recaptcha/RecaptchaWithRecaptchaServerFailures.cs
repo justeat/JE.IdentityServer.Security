@@ -21,11 +21,13 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                 fakeRecaptchaServer.Expect.Get("/?secret=private_key&response=correct_response")
                     .Returns(returnedStatusCode, string.Empty);
 
-                using (var server = new IdentityServerWithRecaptcha()
+                var identityServerBuilder = new IdentityServerWithRecaptcha()
                     .WithProtectedGrantType("password")
                     .WithPrivateKey("private_key")
                     .WithVerificationUri(fakeRecaptchaServer.BaseUri)
-                    .WithNumberOfAllowedLoginFailuresPerIpAddress(1).Build())
+                    .WithNumberOfAllowedLoginFailuresPerIpAddress(1);
+
+                using (var server = identityServerBuilder.Build())
                 {
                     var response = await server.CreateNativeLoginRequest()
                         .WithUsername("jeuser")
@@ -34,6 +36,10 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                         .Build()
                         .PostAsync();
                     response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+                    identityServerBuilder.RecaptchaMonitor.HasCompletedChallenge.Should().BeTrue();
+                    identityServerBuilder.RecaptchaMonitor.RecaptchaState.Should()
+                        .Be(RecaptchaState.ChallengeSucceeded);
                 }
             }
         }
@@ -50,12 +56,14 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                         Succeeded = false
                     }));
 
-                using (var server = new IdentityServerWithRecaptcha()
+                var identityServerBuilder = new IdentityServerWithRecaptcha()
                     .WithProtectedGrantType("password")
                     .WithPrivateKey("private_key")
                     .WithVerificationUri(fakeRecaptchaServer.BaseUri)
                     .WithNumberOfAllowedLoginFailuresPerIpAddress(1)
-                    .WithFailuresForIpAddress("192.168.1.101", 1).Build())
+                    .WithFailuresForIpAddress("192.168.1.101", 1);
+
+                using (var server = identityServerBuilder.Build())
                 {
                     var response = await server.CreateNativeLoginRequest()
                         .WithUsername("jeuser")
@@ -66,6 +74,8 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
                     response.Headers.WwwAuthenticate.Should().Contain(h => h.Scheme == "recaptcha");
                     response.Headers.WwwAuthenticate.Should().Contain(h => h.Parameter == @"url=""/recaptcha/platform""");
+
+                    identityServerBuilder.RecaptchaMonitor.HasIssuedChallenge.Should().BeTrue();
                 }
             }
         }

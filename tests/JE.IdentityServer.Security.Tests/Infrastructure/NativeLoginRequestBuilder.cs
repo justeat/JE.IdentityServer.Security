@@ -87,7 +87,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
 
         public NativeLoginRequestBuilder WithEncodedDevice(string deviceId, string deviceType, string deviceName, string deviceToken)
         {
-            var device = new Device(deviceId, deviceType, deviceType, deviceToken);
+            var device = new Device(deviceId, deviceType, deviceName, deviceToken);
             _device = JsonConvert.SerializeObject(device).ToBase64String();
 
             return this;
@@ -124,7 +124,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
                 .And(x => x.Content = CreateFormUrlEncodedContent())
                 .And(x => x.Headers.Authorization =
                     new BasicAuthenticationHeaderValue(_clientId, _secret));
-            
+
             foreach (var header in _headers)
             {
                 builder.AddHeader(header.Key, header.Value);
@@ -194,6 +194,6 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         public static NativeLoginRequestBuilder CreateNativeLoginRequest(this TestServer server)
         {
             return new NativeLoginRequestBuilder(server);
-        } 
+        }
     }
 }
