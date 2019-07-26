@@ -36,7 +36,7 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
 
                 var recaptchaMonitor = context.Get<IRecaptchaMonitor>();
 
-                recaptchaMonitor?.ChallengeCompleted(recaptchaContext.State, openIdConnectRequest.ToRecaptchaUserContext());
+                recaptchaMonitor?.ChallengeCompleted(openIdConnectRequest.ToRecaptchaUserContext(), recaptchaContext.State);
 
                 switch (recaptchaContext.State)
                 {

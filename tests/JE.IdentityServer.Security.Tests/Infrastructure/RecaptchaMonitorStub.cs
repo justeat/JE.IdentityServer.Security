@@ -18,10 +18,10 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             return Task.FromResult(true);
         }
 
-        public Task ChallengeCompleted(RecaptchaState recaptchaState, RecaptchaUserContext userContext)
+        public Task ChallengeCompleted(RecaptchaUserContext userContext, RecaptchaState recaptchaState)
         {
-            RecaptchaState = recaptchaState;
             UserContext = userContext;
+            RecaptchaState = recaptchaState;
             HasCompletedChallenge = true;
 
             return Task.FromResult(true);
