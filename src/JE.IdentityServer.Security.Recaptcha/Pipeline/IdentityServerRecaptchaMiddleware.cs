@@ -15,7 +15,7 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
         protected readonly IdentityServerRecaptchaOptions _options;
         protected readonly ILogger _logger;
 
-        public IdentityServerRecaptchaMiddlewareBase(OwinMiddleware next, IdentityServerRecaptchaOptions options)
+        protected IdentityServerRecaptchaMiddlewareBase(OwinMiddleware next, IdentityServerRecaptchaOptions options)
             : base(next)
         {
             _options = options;
@@ -32,11 +32,11 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
 
             if (recaptchaContext != null)
             {
-                _logger.ExtendedInfo("Recaptcha completed", new { username = openIdConnectRequest.GetUsername(), ipAddress = openIdConnectRequest.GetRemoteIpAddress(), RecaptchaState = recaptchaContext.State });
+                _logger.ExtendedInfo("Recaptcha completed", new { username = openIdConnectRequest.GetUsername(), ipAddress = openIdConnectRequest.GetRemoteIpAddress(), RecaptchaState = recaptchaContext.State, RecaptchaHostname = recaptchaContext.Hostname });
 
                 var recaptchaMonitor = context.Get<IRecaptchaMonitor>();
 
-                recaptchaMonitor?.ChallengeCompleted(openIdConnectRequest.ToRecaptchaUserContext(), recaptchaContext.State);
+                recaptchaMonitor?.ChallengeCompleted(openIdConnectRequest.ToRecaptchaUserContext(), recaptchaContext.ToRecaptchaResponseContext());
 
                 switch (recaptchaContext.State)
                 {
@@ -99,6 +99,6 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
             await httpChallenge.ReturnResponse(context, _options, openIdConnectRequest);
         }
 
-        public abstract Task<PipelineState> DoInvoke(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest, ILoginStatistics loginStatistics);
+        protected abstract Task<PipelineState> DoInvoke(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest, ILoginStatistics loginStatistics);
     }
 }

@@ -193,6 +193,7 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                 fakeRecaptchaServer.Expect.Get("/?secret=private_key&response=correct_response")
                     .Returns(HttpStatusCode.OK, JsonConvert.SerializeObject(new RecaptchaVerificationResponse
                     {
+                        Hostname = "response-host-name",
                         Succeeded = true
                     }));
 
@@ -217,7 +218,8 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     response.StatusCode.Should().NotBe(HttpStatusCode.BadRequest);
 
                     identityServerBuilder.RecaptchaMonitor.HasCompletedChallenge.Should().BeTrue();
-                    identityServerBuilder.RecaptchaMonitor.RecaptchaState.Should().Be(RecaptchaState.ChallengeSucceeded);
+                    identityServerBuilder.RecaptchaMonitor.ResponseContext.State.Should().Be(RecaptchaState.ChallengeSucceeded);
+                    identityServerBuilder.RecaptchaMonitor.ResponseContext.Hostname.Should().Be("response-host-name");
                     identityServerBuilder.RecaptchaMonitor.UserContext.Username.Should().Be(username);
                 }
             }
@@ -261,7 +263,7 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     response.StatusCode.Should().NotBe(HttpStatusCode.BadRequest);
 
                     identityServerBuilder.RecaptchaMonitor.HasCompletedChallenge.Should().BeTrue();
-                    identityServerBuilder.RecaptchaMonitor.RecaptchaState.Should().Be(RecaptchaState.ChallengeSucceeded);
+                    identityServerBuilder.RecaptchaMonitor.ResponseContext.State.Should().Be(RecaptchaState.ChallengeSucceeded);
                     identityServerBuilder.RecaptchaMonitor.UserContext.ShouldBeEquivalentTo(new RecaptchaUserContext
                     {
                         Username = username,

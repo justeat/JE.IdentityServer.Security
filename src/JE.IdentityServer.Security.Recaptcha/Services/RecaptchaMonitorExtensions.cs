@@ -22,5 +22,15 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
                 Tenant = request.GetTenant()
             };
         }
+
+        public static RecaptchaResponseContext ToRecaptchaResponseContext(this IRecaptchaContext recaptchaContext)
+        {
+            return new RecaptchaResponseContext
+            {
+                Hostname = recaptchaContext.Hostname,
+                State = recaptchaContext.State,
+                Timestamp = recaptchaContext.Timestamp
+            };
+        }
     }
 }

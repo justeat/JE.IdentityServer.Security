@@ -38,7 +38,7 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     response.StatusCode.Should().Be(HttpStatusCode.OK);
 
                     identityServerBuilder.RecaptchaMonitor.HasCompletedChallenge.Should().BeTrue();
-                    identityServerBuilder.RecaptchaMonitor.RecaptchaState.Should()
+                    identityServerBuilder.RecaptchaMonitor.ResponseContext.State.Should()
                         .Be(RecaptchaState.ChallengeSucceeded);
                 }
             }

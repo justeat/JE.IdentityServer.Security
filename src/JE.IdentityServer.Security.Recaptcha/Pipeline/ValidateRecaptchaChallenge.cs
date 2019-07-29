@@ -11,10 +11,10 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
     {
         public ValidateRecaptchaChallenge(OwinMiddleware next, IdentityServerRecaptchaOptions options) : base(next, options)
         {
-            
+
         }
 
-        public override async Task<PipelineState> DoInvoke(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest, ILoginStatistics loginStatistics)
+        protected override async Task<PipelineState> DoInvoke(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest, ILoginStatistics loginStatistics)
         {
             var recaptchaValidationService = context.Get<IRecaptchaValidationService>();
 
@@ -26,12 +26,12 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
 
                 if (recaptchaVerificationResponse.Succeeded)
                 {
-                    var recaptchaContext = context.Set<IRecaptchaContext>(new RecaptchaContext(RecaptchaState.ChallengeSucceeded));
+                    var recaptchaContext = context.Set<IRecaptchaContext>(new RecaptchaContext(RecaptchaState.ChallengeSucceeded, recaptchaVerificationResponse.Hostname, recaptchaVerificationResponse.Timestamp));
                     return PipelineState.Continue;
                 }
                 else
                 {
-                    var recaptchaContext = context.Set<IRecaptchaContext>(new RecaptchaContext(RecaptchaState.Failed));
+                    var recaptchaContext = context.Set<IRecaptchaContext>(new RecaptchaContext(RecaptchaState.Failed, recaptchaVerificationResponse.Hostname, recaptchaVerificationResponse.Timestamp));
                     return PipelineState.Challenge;
                 }
             }

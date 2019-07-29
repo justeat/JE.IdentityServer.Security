@@ -88,6 +88,7 @@
     <Compile Include="Services\IHttpRecaptchaChallenge.cs" />
     <Compile Include="Services\IRecaptchaValidationService.cs" />
     <Compile Include="Services\DefaultRecaptchaValidationService.cs" />
+    <Compile Include="Services\RecaptchaResponseContext.cs" />
     <Compile Include="Services\RecaptchaState.cs" />
     <Compile Include="Services\RecaptchaUserContext.cs" />
     <Compile Include="Services\RecaptchaUserDevice.cs" />

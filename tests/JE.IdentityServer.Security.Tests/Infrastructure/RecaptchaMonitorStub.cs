@@ -5,8 +5,8 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
 {
     public class RecaptchaMonitorStub : IRecaptchaMonitor
     {
-        public RecaptchaState? RecaptchaState { get; private set; }
         public RecaptchaUserContext UserContext { get; private set; }
+        public RecaptchaResponseContext ResponseContext { get; private set; }
         public bool HasIssuedChallenge { get; private set; }
         public bool HasCompletedChallenge { get; private set; }
 
@@ -18,10 +18,10 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             return Task.FromResult(true);
         }
 
-        public Task ChallengeCompleted(RecaptchaUserContext userContext, RecaptchaState recaptchaState)
+        public Task ChallengeCompleted(RecaptchaUserContext userContext, RecaptchaResponseContext responseContext)
         {
             UserContext = userContext;
-            RecaptchaState = recaptchaState;
+            ResponseContext = responseContext;
             HasCompletedChallenge = true;
 
             return Task.FromResult(true);

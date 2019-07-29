@@ -12,7 +12,7 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
         {
         }
 
-        public override async Task<PipelineState> DoInvoke(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest, ILoginStatistics loginStatistics)
+        protected override async Task<PipelineState> DoInvoke(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest, ILoginStatistics loginStatistics)
         {
             var challengeForAllLogins = await ShouldChallengeForAllLogins(context);
             if (challengeForAllLogins)
