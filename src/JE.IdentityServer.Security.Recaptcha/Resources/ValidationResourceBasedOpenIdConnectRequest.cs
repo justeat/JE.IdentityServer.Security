@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using JE.IdentityServer.Security.Extensions;
 using JE.IdentityServer.Security.OpenIdConnect;
 using JE.IdentityServer.Security.Resources;
@@ -72,6 +73,13 @@ namespace JE.IdentityServer.Security.Recaptcha.Resources
                 osVersion = _recaptchaValidationResource.Sdk;
             }
             return osVersion;
+        }
+
+        public string GetUserAgent()
+        {
+            var userAgentHeaderValues = new string[] { };
+
+            return _owinContext.Request.Headers.TryGetValue("User-Agent", out userAgentHeaderValues) ? userAgentHeaderValues.FirstOrDefault() : string.Empty;
         }
     }
 }

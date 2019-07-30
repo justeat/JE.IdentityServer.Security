@@ -13,7 +13,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         private readonly IDictionary<long, int> _failedipAddressStatistics = new Dictionary<long, int>();
         private readonly IDictionary<string, int> _successfulLoginStatistics = new Dictionary<string, int>();
         private readonly IDictionary<string, int> _excludedAttemptedloginStatistics = new Dictionary<string, int>();
-        
+
         private readonly IDictionary<string, int> _challengesForAttemptedLogins = new Dictionary<string, int>();
         private readonly IDictionary<string, int> _nonChallengesForAttemptedLogins = new Dictionary<string, int>();
 

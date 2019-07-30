@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using JE.IdentityServer.Security.OpenIdConnect;
 using JE.IdentityServer.Security.Services;
 using Microsoft.Owin;
@@ -15,7 +11,7 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
         {
         }
 
-        public override async Task<PipelineState> DoInvoke(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest, ILoginStatistics loginStatistics)
+        protected override async Task<PipelineState> DoInvoke(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest, ILoginStatistics loginStatistics)
         {
             var numberOfFailedLogins = await loginStatistics.GetNumberOfFailedLoginsForIpAddress(openIdConnectRequest.GetRemoteIpAddress());
 

@@ -25,3 +25,4 @@ src/*/[N|n]log.config
 src/*/[C|c]onnectionstrings.config
 
 *.ncrunchproject
+.idea/*

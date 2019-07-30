@@ -23,12 +23,14 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                         Succeeded = false
                     }));
 
-                using (var server = new IdentityServerWithRecaptcha()
+                var identityServerBuilder = new IdentityServerWithRecaptcha()
                     .WithProtectedGrantType("password")
                     .WithPrivateKey("private_key")
                     .WithVerificationUri(fakeRecaptchaServer.BaseUri)
                     .WithNumberOfAllowedLoginFailuresPerIpAddress(1)
-                    .WithFailuresForIpAddress("192.168.1.101", 1).Build())
+                    .WithFailuresForIpAddress("192.168.1.101", 1);
+
+                using (var server = identityServerBuilder.Build())
                 {
                     var response = await server.CreateNativeLoginRequest()
                         .WithUsername("jeuser")
