@@ -32,7 +32,7 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
 
             if (recaptchaContext != null)
             {
-                _logger.ExtendedInfo("Recaptcha completed", new { username = openIdConnectRequest.GetUsername(), ipAddress = openIdConnectRequest.GetRemoteIpAddress(), RecaptchaState = recaptchaContext.State, RecaptchaHostname = recaptchaContext.Hostname });
+                _logger.ExtendedInfo("Recaptcha completed", new { username = openIdConnectRequest.GetUsername(), ipAddress = openIdConnectRequest.GetRemoteIpAddress(), userAgent = openIdConnectRequest.GetUserAgent(), RecaptchaState = recaptchaContext.State, RecaptchaHostname = recaptchaContext.Hostname });
 
                 var recaptchaMonitor = context.Get<IRecaptchaMonitor>();
 
