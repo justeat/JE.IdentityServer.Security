@@ -24,5 +24,7 @@ namespace JE.IdentityServer.Security.OpenIdConnect
         string GetTenant();
 
         string GetOsVersion();
+
+        string GetUserAgent();
     }
 }

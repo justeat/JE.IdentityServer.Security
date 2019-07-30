@@ -13,7 +13,7 @@ namespace JE.IdentityServer.Security.Recaptcha
     {
         private readonly RecaptchaValidationOptions _options;
 
-        public RecaptchaValidationMiddleware(OwinMiddleware next, RecaptchaValidationOptions options) 
+        public RecaptchaValidationMiddleware(OwinMiddleware next, RecaptchaValidationOptions options)
             : base(next)
         {
             _options = options;
@@ -39,15 +39,15 @@ namespace JE.IdentityServer.Security.Recaptcha
                 await Next.Invoke(context);
                 return;
             }
-            
+
             var challengeForAllLogins = await ShouldChallengeForAllLogins(context);
-            if (!challengeForAllLogins && 
+            if (!challengeForAllLogins &&
                 await loginStatistics.GetNumberOfFailedLoginsForIpAddress(ipAaddress) < _options.NumberOfAllowedLoginFailuresPerIpAddress)
             {
                 await Next.Invoke(context);
                 return;
             }
-            
+
             await ChallengeWithRequestForRecaptcha(context, openIdConnectRequest);
         }
 
@@ -59,6 +59,9 @@ namespace JE.IdentityServer.Security.Recaptcha
 
         private async Task ChallengeWithRequestForRecaptcha(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest)
         {
+            var recaptchaMonitor = context.Get<IRecaptchaMonitor>();
+            recaptchaMonitor?.ChallengeIssued(openIdConnectRequest.ToRecaptchaUserContext());
+
             var httpChallenge = context.Get<IHttpRecaptchaChallenge>();
             if (openIdConnectRequest == null)
             {

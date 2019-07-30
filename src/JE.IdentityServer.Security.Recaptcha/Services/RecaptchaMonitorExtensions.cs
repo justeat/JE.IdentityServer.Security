@@ -6,11 +6,17 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
     {
         public static RecaptchaUserContext ToRecaptchaUserContext(this IOpenIdConnectRequest request)
         {
+            if (request == null)
+            {
+                return new RecaptchaUserContext();
+            }
+
             var device = request.GetDevice();
 
             return new RecaptchaUserContext
             {
                 Username = request.GetUsername(),
+                UserAgent = request.GetUserAgent(),
                 Device = new RecaptchaUserDevice
                 {
                     Id = device?.DeviceId,

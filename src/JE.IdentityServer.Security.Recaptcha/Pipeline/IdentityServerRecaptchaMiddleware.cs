@@ -63,7 +63,7 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
                             var numberOfFailedLogins = await loginStatistics.GetNumberOfFailedLoginsForIpAddress(openIdConnectRequest.GetRemoteIpAddress());
 
                             await ChallengeWithRequestForRecaptcha(context, openIdConnectRequest, numberOfFailedLogins);
-                            _logger.ExtendedInfo("Issuing Recaptcha Challenge", new { username = openIdConnectRequest.GetUsername(), ipAddress = openIdConnectRequest.GetRemoteIpAddress(), RecaptchaState = recaptchaContext?.State, numberOfFailedLogins });
+                            _logger.ExtendedInfo("Issuing Recaptcha Challenge", new { username = openIdConnectRequest.GetUsername(), ipAddress = openIdConnectRequest.GetRemoteIpAddress(), userAgent = openIdConnectRequest.GetUserAgent(), RecaptchaState = recaptchaContext?.State, numberOfFailedLogins });
 
                             return;
                         }
