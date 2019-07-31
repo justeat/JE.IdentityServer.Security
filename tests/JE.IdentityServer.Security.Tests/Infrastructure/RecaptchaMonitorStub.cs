@@ -9,6 +9,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
         public RecaptchaResponseContext ResponseContext { get; private set; }
         public bool HasIssuedChallenge { get; private set; }
         public bool HasCompletedChallenge { get; private set; }
+        public int ChallengeCompletedInvokeCount { get; private set; }
 
         public Task ChallengeIssued(RecaptchaUserContext userContext)
         {
@@ -23,6 +24,7 @@ namespace JE.IdentityServer.Security.Tests.Infrastructure
             UserContext = userContext;
             ResponseContext = responseContext;
             HasCompletedChallenge = true;
+            ChallengeCompletedInvokeCount++;
 
             return Task.FromResult(true);
         }

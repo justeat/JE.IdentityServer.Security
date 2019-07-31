@@ -26,12 +26,12 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
 
                 if (recaptchaVerificationResponse.Succeeded)
                 {
-                    var recaptchaContext = context.Set<IRecaptchaContext>(new RecaptchaContext(RecaptchaState.ChallengeSucceeded, recaptchaVerificationResponse.Hostname, recaptchaVerificationResponse.Timestamp));
+                    context.Set<IRecaptchaContext>(new RecaptchaContext(RecaptchaState.ChallengeSucceeded, recaptchaVerificationResponse.Hostname, recaptchaVerificationResponse.Timestamp));
                     return PipelineState.Continue;
                 }
                 else
                 {
-                    var recaptchaContext = context.Set<IRecaptchaContext>(new RecaptchaContext(RecaptchaState.Failed, recaptchaVerificationResponse.Hostname, recaptchaVerificationResponse.Timestamp));
+                    context.Set<IRecaptchaContext>(new RecaptchaContext(RecaptchaState.Failed, recaptchaVerificationResponse.Hostname, recaptchaVerificationResponse.Timestamp));
                     return PipelineState.Challenge;
                 }
             }
