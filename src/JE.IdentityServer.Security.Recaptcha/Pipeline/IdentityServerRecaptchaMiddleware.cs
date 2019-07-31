@@ -12,8 +12,8 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
 
     public abstract class IdentityServerRecaptchaMiddlewareBase : OwinMiddleware
     {
+        private readonly ILogger _logger;
         protected readonly IdentityServerRecaptchaOptions _options;
-        protected readonly ILogger _logger;
 
         protected IdentityServerRecaptchaMiddlewareBase(OwinMiddleware next, IdentityServerRecaptchaOptions options)
             : base(next)
@@ -29,14 +29,20 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
 
             var loginStatistics = context.Get<ILoginStatistics>();
             var recaptchaContext = context.Get<IRecaptchaContext>();
+            var recaptchaTracker = context.Get<IRecaptchaTracker>();
 
             if (recaptchaContext != null)
             {
-                _logger.ExtendedInfo("Recaptcha completed", new { username = openIdConnectRequest.GetUsername(), ipAddress = openIdConnectRequest.GetRemoteIpAddress(), userAgent = openIdConnectRequest.GetUserAgent(), RecaptchaState = recaptchaContext.State, RecaptchaHostname = recaptchaContext.Hostname });
+                if (!recaptchaTracker.IsCompleted)
+                {
+                    _logger.ExtendedInfo("Recaptcha completed", new { username = openIdConnectRequest.GetUsername(), ipAddress = openIdConnectRequest.GetRemoteIpAddress(), userAgent = openIdConnectRequest.GetUserAgent(), RecaptchaState = recaptchaContext.State, RecaptchaHostname = recaptchaContext.Hostname });
 
-                var recaptchaMonitor = context.Get<IRecaptchaMonitor>();
+                    var recaptchaMonitor = context.Get<IRecaptchaMonitor>();
 
-                recaptchaMonitor?.ChallengeCompleted(openIdConnectRequest.ToRecaptchaUserContext(), recaptchaContext.ToRecaptchaResponseContext());
+                    recaptchaMonitor?.ChallengeCompleted(openIdConnectRequest.ToRecaptchaUserContext(), recaptchaContext.ToRecaptchaResponseContext());
+
+                    recaptchaTracker.IsCompleted = true;
+                }
 
                 switch (recaptchaContext.State)
                 {
