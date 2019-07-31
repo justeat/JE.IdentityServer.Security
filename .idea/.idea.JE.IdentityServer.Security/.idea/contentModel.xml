@@ -16,6 +16,9 @@
         </e>
         <e p="RavelinRealtimeProtectionMiddleware.cs" t="Include" />
         <e p="RavelinRealtimeProtectionOptions.cs" t="Include" />
+        <e p="Services" t="Include">
+          <e p="IRavelinService.cs" t="Include" />
+        </e>
       </e>
       <e p="JE.IdentityServer.Security.sln" t="IncludeFlat" />
       <e p="nuget.config" t="Include" />
@@ -156,7 +159,9 @@
           <e p="Properties" t="Include">
             <e p="AssemblyInfo.cs" t="Include" />
           </e>
-          <e p="Ravelin" t="Include" />
+          <e p="Ravelin" t="Include">
+            <e p="RavelinRealtimeProtectionEnabled.cs" t="Include" />
+          </e>
           <e p="Recaptcha" t="Include">
             <e p="RecaptchaGetOnValidationEndpoint.cs" t="Include" />
             <e p="RecaptchaPostOnValidationEndpoint.cs" t="Include" />

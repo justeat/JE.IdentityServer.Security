@@ -50,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RavelinRealtimeProtectionMiddleware.cs" />
     <Compile Include="RavelinRealtimeProtectionOptions.cs" />
+    <Compile Include="Services\IRavelinService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
