@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\justeat\JE.IdentityServer.Security" t="IncludeFlat">
+      <e p="Assets" t="Include" />
+      <e p="Build.ps1" t="Include" />
+      <e p="Generate-Configs.ps1" t="Include" />
+      <e p="JE.IdentityServer.Security.Ravelin" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IdentityServerRavelinRealtimeProtectionAppBuilderExtensions.cs" t="Include" />
+        <e p="JE.IdentityServer.Security.Ravelin.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="RavelinRealtimeProtectionMiddleware.cs" t="Include" />
+        <e p="RavelinRealtimeProtectionOptions.cs" t="Include" />
+      </e>
+      <e p="JE.IdentityServer.Security.sln" t="IncludeFlat" />
+      <e p="nuget.config" t="Include" />
+      <e p="Package.ps1" t="Include" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="README.md" t="Include" />
+      <e p="src\CommonAssemblyInfo.cs" t="Include" />
+      <e p="src\JE.IdentityServer.Security" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Extensions" t="Include">
+          <e p="IpAddresExtensions.cs" t="Include" />
+          <e p="OwinContextExtensions.cs" t="Include" />
+          <e p="OwinContextIpAddressExtensions.cs" t="Include" />
+          <e p="StringExtensions.cs" t="Include" />
+        </e>
+        <e p="JE.IdentityServer.Security.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="OpenIdConnect" t="Include">
+          <e p="IOpenIdConnectRequest.cs" t="Include" />
+          <e p="IOpenIdConnectRequestOptions.cs" t="Include" />
+          <e p="KnownAcrValues.cs" t="Include" />
+          <e p="KnownAcrValuesExtensions.cs" t="Include" />
+          <e p="OpenIdConnectRequest.cs" t="Include" />
+          <e p="OpenIdConnectRequestOptionsExtensions.cs" t="Include" />
+        </e>
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="Resolver" t="Include">
+          <e p="IDependencyFactory.cs" t="Include" />
+          <e p="ServiceFactory.cs" t="Include" />
+          <e p="ServiceFactoryMiddleware.cs" t="Include" />
+          <e p="ServiceFactoryOptions.cs" t="Include" />
+          <e p="ServiceResolverAppBuilderExtensions.cs" t="Include" />
+        </e>
+        <e p="Resources" t="Include">
+          <e p="Device.cs" t="Include" />
+          <e p="IdentityServerBadRequestChallengeResource.cs" t="Include" />
+          <e p="IdentityServerErrorResource.cs" t="Include" />
+          <e p="IdentityServerUnauthorizedChallengeResource.cs" t="Include" />
+          <e p="IDevice.cs" t="Include" />
+          <e p="IOpenIdConnectClient.cs" t="Include" />
+          <e p="IPNetwork.cs" t="Include" />
+          <e p="OpenIdConnectClient.cs" t="Include" />
+        </e>
+        <e p="Services" t="Include">
+          <e p="ILoginStatistics.cs" t="Include" />
+          <e p="IPlatformSecurity.cs" t="Include" />
+        </e>
+      </e>
+      <e p="src\JE.IdentityServer.Security.Recaptcha" t="IncludeRecursive">
+        <e p="app.config" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IdentityServerRecaptchaAppBuilderExtensions.cs" t="Include" />
+        <e p="IdentityServerRecaptchaOptions.cs" t="Include" />
+        <e p="IIdentityServerRecaptchaOptions.cs" t="Include" />
+        <e p="JE.IdentityServer.Security.Recaptcha.csproj" t="IncludeRecursive" />
+        <e p="JE.IdentityServer.Security.Recaptcha.nuspec" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Pipeline" t="Include">
+          <e p="ChallengeByIp.cs" t="Include" />
+          <e p="ChallengeEveryoneMiddleware.cs" t="Include" />
+          <e p="IdentityServerRecaptchaMiddleware.cs" t="Include" />
+          <e p="PipelineState.cs" t="Include" />
+          <e p="ValidateRecaptchaChallenge.cs" t="Include" />
+        </e>
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="RecaptchaValidationAppBuilderExtensions.cs" t="Include" />
+        <e p="RecaptchaValidationMiddleware.cs" t="Include" />
+        <e p="RecaptchaValidationOptions.cs" t="Include" />
+        <e p="Resources" t="Include">
+          <e p="RecaptchaValidationResource.cs" t="Include" />
+          <e p="ValidationResourceBasedOpenIdConnectRequest.cs" t="Include" />
+        </e>
+        <e p="Services" t="Include">
+          <e p="DefaultRecaptchaValidationService.cs" t="Include" />
+          <e p="HttpRecaptchaBadRequestChallenge.cs" t="Include" />
+          <e p="HttpRecaptchaOkChallenge.cs" t="Include" />
+          <e p="HttpRecaptchaUnauthorizedChallenge.cs" t="Include" />
+          <e p="IdentityServerRecaptchaOptionsExtenstions.cs" t="Include" />
+          <e p="IHttpRecaptchaChallenge.cs" t="Include" />
+          <e p="IRecaptchaContext.cs" t="Include" />
+          <e p="IRecaptchaPage.cs" t="Include" />
+          <e p="IRecaptchaValidationService.cs" t="Include" />
+          <e p="RecaptchaContext.cs" t="Include" />
+          <e p="RecaptchaPage.cs" t="Include" />
+          <e p="RecaptchaState.cs" t="Include" />
+          <e p="RecaptchaValidationOptionsExtensions.cs" t="Include" />
+          <e p="RecaptchaVerificationResponse.cs" t="Include" />
+        </e>
+      </e>
+      <e p="src\JE.IdentityServer.Security.Throttling" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IdentityServerThrottlingAppBuilderExtensions.cs" t="Include" />
+        <e p="IdentityServerThrottlingMiddleware.cs" t="Include" />
+        <e p="IdentityServerThrottlingOptions.cs" t="Include" />
+        <e p="JE.IdentityServer.Security.Throttling.csproj" t="IncludeRecursive" />
+        <e p="JE.IdentityServer.Security.Throttling.nuspec" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Tests" t="Include">
+        <e p="JE.IdentityServer.Security.Tests" t="IncludeRecursive">
+          <e p="app.config" t="Include" />
+          <e p="bin" t="ExcludeRecursive" />
+          <e p="Extensions" t="Include">
+            <e p="ExcludingRequestsBasedOnOptions.cs" t="Include" />
+            <e p="ExtractClientIpFromOwinContext.cs" t="Include" />
+            <e p="MatchingOpenIdConnectOptions.cs" t="Include" />
+            <e p="ParsingKnownAcrValues.cs" t="Include" />
+            <e p="StubOpenIdConnectRequestOptions.cs" t="Include" />
+          </e>
+          <e p="Infrastructure" t="Include">
+            <e p="IdentityServerConfiguration.cs" t="Include" />
+            <e p="IdentityServerWithRavelinRealtimeProtection.cs" t="Include" />
+            <e p="IdentityServerWithRecaptcha.cs" t="Include" />
+            <e p="IdentityServerWithRecaptchaValidationEndpoint.cs" t="Include" />
+            <e p="IdentityServerWithThrottledLoginRequests.cs" t="Include" />
+            <e p="idsrv3test.pfx" t="Include" />
+            <e p="InmemoryIdentityServerStartup.cs" t="Include" />
+            <e p="LoginStatisticsStub.cs" t="Include" />
+            <e p="NativeLoginRequestBuilder.cs" t="Include" />
+            <e p="NoDataProtector.cs" t="Include" />
+            <e p="PlatformSecurityStub.cs" t="Include" />
+            <e p="TokenFailureResponseModel.cs" t="Include" />
+            <e p="TokenResponseModel.cs" t="Include" />
+          </e>
+          <e p="JE.IdentityServer.Security.Tests.csproj" t="IncludeRecursive" />
+          <e p="obj" t="ExcludeRecursive" />
+          <e p="packages.config" t="Include" />
+          <e p="Properties" t="Include">
+            <e p="AssemblyInfo.cs" t="Include" />
+          </e>
+          <e p="Ravelin" t="Include" />
+          <e p="Recaptcha" t="Include">
+            <e p="RecaptchaGetOnValidationEndpoint.cs" t="Include" />
+            <e p="RecaptchaPostOnValidationEndpoint.cs" t="Include" />
+            <e p="RecaptchaResponseBodyStructure.cs" t="Include" />
+            <e p="RecaptchaWithExcludedDeviceType.cs" t="Include" />
+            <e p="RecaptchaWithExcludedOsVersion.cs" t="Include" />
+            <e p="RecaptchaWithExcludedTenant.cs" t="Include" />
+            <e p="RecaptchaWithExcludedUsers.cs" t="Include" />
+            <e p="RecaptchaWithInvalidRecaptchaAnswer.cs" t="Include" />
+            <e p="RecaptchaWithPlatformLevelSecurity.cs" t="Include" />
+            <e p="RecaptchaWithRecaptchaServerFailures.cs" t="Include" />
+            <e p="RecaptchaWithValidCredentials.cs" t="Include" />
+            <e p="RecaptchaWithValidRecaptchaAnswer.cs" t="Include" />
+          </e>
+          <e p="ServiceResolver" t="Include">
+            <e p="ITextDataSource.cs" t="Include" />
+            <e p="RandomTextSelectorMiddleware.cs" t="Include" />
+            <e p="StartUp.cs" t="Include" />
+            <e p="TextDataSource.cs" t="Include" />
+            <e p="WhenInjectingDependencies.cs" t="Include" />
+          </e>
+          <e p="Throttling" t="Include">
+            <e p="ThrottledRequestsWithExcludedOsVersion.cs" t="Include" />
+            <e p="ThrottledRequestsWithExcludedTenant.cs" t="Include" />
+            <e p="ThrottledRequestsWithExcludedUsername.cs" t="Include" />
+            <e p="ThrottledRequestsWithMatchingGrantType.cs" t="Include" />
+            <e p="ThrottledRequestsWithMissingGrantType.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="version.txt" t="Include" />
+    </e>
+    <e p="C:\Users\luke.parry\.Rider2019.2\config\scratches" t="IncludeRecursive" />
+    <e p="C:\Users\luke.parry\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\luke.parry\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_JE.IdentityServer.Security.131060897.00" t="ExcludeRecursive" />
+  </component>
+</project>

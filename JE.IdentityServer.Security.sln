@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3A2E2CAE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JE.IdentityServer.Security", "src\JE.IdentityServer.Security\JE.IdentityServer.Security.csproj", "{D1201F47-5A86-4E85-A67B-D387384726D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JE.IdentityServer.Security.Ravelin", "JE.IdentityServer.Security.Ravelin\JE.IdentityServer.Security.Ravelin.csproj", "{39572522-90AE-48C9-886D-3A43A7DBADEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{D1201F47-5A86-4E85-A67B-D387384726D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1201F47-5A86-4E85-A67B-D387384726D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1201F47-5A86-4E85-A67B-D387384726D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39572522-90AE-48C9-886D-3A43A7DBADEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39572522-90AE-48C9-886D-3A43A7DBADEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39572522-90AE-48C9-886D-3A43A7DBADEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39572522-90AE-48C9-886D-3A43A7DBADEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -13,7 +13,7 @@ namespace JE.IdentityServer.Security.Throttling
         private readonly IdentityServerThrottlingOptions _options;
 
         public IdentityServerThrottlingMiddleware(
-            OwinMiddleware next, 
+            OwinMiddleware next,
             IdentityServerThrottlingOptions options) : base(next)
         {
             _options = options;
@@ -85,10 +85,12 @@ namespace JE.IdentityServer.Security.Throttling
 
             if (IsSuccessStatusCode(context.Response.StatusCode))
             {
+                // Add ravelin call here?
                 await loginStatistics.IncrementSuccessfulLoginsForUsernameAndIpAddress(openIdConnectRequest.GetUsername(), openIdConnectRequest.GetRemoteIpAddress());
             }
             else
             {
+                // Add ravelin call here?
                 await loginStatistics.IncrementFailedLoginsForUserAndIpAddress(openIdConnectRequest.GetUsername(), openIdConnectRequest.GetRemoteIpAddress());
             }
         }

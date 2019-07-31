@@ -104,6 +104,7 @@
     <Compile Include="Extensions\ParsingKnownAcrValues.cs" />
     <Compile Include="Extensions\StubOpenIdConnectRequestOptions.cs" />
     <Compile Include="Infrastructure\IdentityServerConfiguration.cs" />
+    <Compile Include="Infrastructure\IdentityServerWithRavelinRealtimeProtection.cs" />
     <Compile Include="Infrastructure\IdentityServerWithRecaptcha.cs" />
     <Compile Include="Infrastructure\IdentityServerWithRecaptchaValidationEndpoint.cs" />
     <Compile Include="Infrastructure\InmemoryIdentityServerStartup.cs" />
@@ -146,6 +147,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\JE.IdentityServer.Security.Ravelin\JE.IdentityServer.Security.Ravelin.csproj">
+      <Project>{39572522-90ae-48c9-886d-3a43a7dbadef}</Project>
+      <Name>JE.IdentityServer.Security.Ravelin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\JE.IdentityServer.Security.Recaptcha\JE.IdentityServer.Security.Recaptcha.csproj">
       <Project>{e5cbc67a-185b-403e-957e-09c790c3010a}</Project>
       <Name>JE.IdentityServer.Security.Recaptcha</Name>
@@ -161,6 +166,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Ravelin" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
