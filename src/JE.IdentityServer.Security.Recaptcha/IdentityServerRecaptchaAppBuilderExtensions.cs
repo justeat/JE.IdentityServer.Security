@@ -9,7 +9,7 @@ namespace JE.IdentityServer.Security.Recaptcha
 {
     public static class IdentityServerRecaptchaAppBuilderExtensions
     {
-        public static IAppBuilder UseRecaptchaForAuthenticationRequests(this IAppBuilder app,
+        public static IRecaptchaMiddlewareBuilder UseRecaptchaForAuthenticationRequests(this IAppBuilder app,
             IdentityServerRecaptchaOptions options,
             Func<IRecaptchaValidationService> recaptchaValidationService)
         {
@@ -26,11 +26,28 @@ namespace JE.IdentityServer.Security.Recaptcha
             app.UseRequestedChallengeType(options);
 
             app.UsePerOwinContext(recaptchaValidationService);
-            app.Use<ValidateRecaptchaChallenge>(options);
-            app.Use<ChallengeEveryoneMiddleware>(options);
-            app.Use<ChallengeByIp>(options);
+
+            var recaptchaOptions = new RecaptchaMiddlewareBuilder(app, options);
+
+            recaptchaOptions.UseRecaptchaMiddleware<ValidateRecaptchaChallenge>();
+            recaptchaOptions.UseRecaptchaMiddleware<ChallengeEveryoneMiddleware>();
+            recaptchaOptions.UseRecaptchaMiddleware<ChallengeByIp>();
+
+            return recaptchaOptions;
+        }
+
+        public static IRecaptchaMiddlewareBuilder UseRecaptchaMiddleware<TMiddleware>(this IRecaptchaMiddlewareBuilder app) where TMiddleware : IdentityServerRecaptchaMiddlewareBase
+        {
+            app.Use<TMiddleware>(app.Options);
 
             return app;
+        }
+
+        public static IRecaptchaMiddlewareBuilder UseRecaptchaForAuthenticationRequests(this IAppBuilder app,
+            IdentityServerRecaptchaOptions options)
+        {
+            return app.UseRecaptchaForAuthenticationRequests(options,
+                () => new DefaultRecaptchaValidationService());
         }
 
         private static void UseRequestedChallengeType(this IAppBuilder app, IIdentityServerRecaptchaOptions options)
@@ -50,13 +67,6 @@ namespace JE.IdentityServer.Security.Recaptcha
                         () => new HttpRecaptchaBadRequestChallenge(new RecaptchaPage(options)));
                     break;
             }
-        }
-
-        public static IAppBuilder UseRecaptchaForAuthenticationRequests(this IAppBuilder app,
-            IdentityServerRecaptchaOptions options)
-        {
-            return app.UseRecaptchaForAuthenticationRequests(options,
-                () => new DefaultRecaptchaValidationService());
         }
     }
 }
