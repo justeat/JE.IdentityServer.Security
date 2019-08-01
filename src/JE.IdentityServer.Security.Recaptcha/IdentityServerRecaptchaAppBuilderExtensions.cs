@@ -27,13 +27,13 @@ namespace JE.IdentityServer.Security.Recaptcha
 
             app.UsePerOwinContext(recaptchaValidationService);
 
-            var recaptchaOptions = new RecaptchaMiddlewareBuilder(app, options);
+            var recaptchaMiddlewareBuilder = new RecaptchaMiddlewareBuilder(app, options);
 
-            recaptchaOptions.UseRecaptchaMiddleware<ValidateRecaptchaChallenge>();
-            recaptchaOptions.UseRecaptchaMiddleware<ChallengeEveryoneMiddleware>();
-            recaptchaOptions.UseRecaptchaMiddleware<ChallengeByIp>();
+            recaptchaMiddlewareBuilder.UseRecaptchaMiddleware<ValidateRecaptchaChallenge>();
+            recaptchaMiddlewareBuilder.UseRecaptchaMiddleware<ChallengeEveryoneMiddleware>();
+            recaptchaMiddlewareBuilder.UseRecaptchaMiddleware<ChallengeByIp>();
 
-            return recaptchaOptions;
+            return recaptchaMiddlewareBuilder;
         }
 
         public static IRecaptchaMiddlewareBuilder UseRecaptchaMiddleware<TMiddleware>(this IRecaptchaMiddlewareBuilder app) where TMiddleware : IdentityServerRecaptchaMiddlewareBase
