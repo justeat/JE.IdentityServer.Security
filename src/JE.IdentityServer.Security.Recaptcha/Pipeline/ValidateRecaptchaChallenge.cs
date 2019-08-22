@@ -22,18 +22,16 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
 
             if (!string.IsNullOrEmpty(recaptchaChallengeResponse))
             {
-                var recaptchaVerificationResponse = await recaptchaValidationService.Validate(recaptchaChallengeResponse, _options);
+                var recaptchaVerificationResponse = await recaptchaValidationService.Validate(recaptchaChallengeResponse, Options);
 
                 if (recaptchaVerificationResponse.Succeeded)
                 {
                     context.Set<IRecaptchaContext>(new RecaptchaContext(RecaptchaState.ChallengeSucceeded, recaptchaVerificationResponse.Hostname, recaptchaVerificationResponse.Timestamp));
                     return PipelineState.Continue;
                 }
-                else
-                {
-                    context.Set<IRecaptchaContext>(new RecaptchaContext(RecaptchaState.Failed, recaptchaVerificationResponse.Hostname, recaptchaVerificationResponse.Timestamp));
-                    return PipelineState.Challenge;
-                }
+
+                context.Set<IRecaptchaContext>(new RecaptchaContext(RecaptchaState.Failed, recaptchaVerificationResponse.Hostname, recaptchaVerificationResponse.Timestamp));
+                return PipelineState.Challenge;
             }
 
             return PipelineState.Continue;

@@ -15,10 +15,10 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
         {
             var numberOfFailedLogins = await loginStatistics.GetNumberOfFailedLoginsForIpAddress(openIdConnectRequest.GetRemoteIpAddress());
 
-            if (numberOfFailedLogins < _options.NumberOfAllowedLoginFailuresPerIpAddress)
+            if (numberOfFailedLogins < Options.NumberOfAllowedLoginFailuresPerIpAddress)
             {
                 await loginStatistics.IncrementUnchallengedLoginsForUserAndIpAddress(openIdConnectRequest.GetUsername(),
-                        openIdConnectRequest.GetRemoteIpAddress(), numberOfFailedLogins, _options.NumberOfAllowedLoginFailuresPerIpAddress);
+                        openIdConnectRequest.GetRemoteIpAddress(), numberOfFailedLogins, Options.NumberOfAllowedLoginFailuresPerIpAddress);
                 return PipelineState.Continue;
             }
 

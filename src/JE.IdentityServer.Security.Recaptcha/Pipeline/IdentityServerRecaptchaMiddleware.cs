@@ -4,28 +4,24 @@ using JE.IdentityServer.Security.OpenIdConnect;
 using JE.IdentityServer.Security.Recaptcha.Services;
 using JE.IdentityServer.Security.Services;
 using Microsoft.Owin;
-using NLog;
-using NLog.StructuredLogging.Json;
 
 namespace JE.IdentityServer.Security.Recaptcha.Pipeline
 {
 
     public abstract class IdentityServerRecaptchaMiddlewareBase : OwinMiddleware
     {
-        private readonly ILogger _logger;
-        protected readonly IdentityServerRecaptchaOptions _options;
+        protected readonly IdentityServerRecaptchaOptions Options;
 
         protected IdentityServerRecaptchaMiddlewareBase(OwinMiddleware next, IdentityServerRecaptchaOptions options)
             : base(next)
         {
-            _options = options;
-            _logger = LogManager.GetCurrentClassLogger();
+            Options = options;
         }
 
         public override async Task Invoke(IOwinContext context)
         {
             var openIdConnectRequest = await context.ToOpenIdConnectRequest();
-            var isExcludedFromRecaptcha = _options.IsExcluded(openIdConnectRequest);
+            var isExcludedFromRecaptcha = Options.IsExcluded(openIdConnectRequest);
 
             var loginStatistics = context.Get<ILoginStatistics>();
             var recaptchaContext = context.Get<IRecaptchaContext>();
@@ -35,8 +31,6 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
             {
                 if (!recaptchaTracker.IsCompleted)
                 {
-                    _logger.ExtendedInfo("Recaptcha completed", new { username = openIdConnectRequest.GetUsername(), ipAddress = openIdConnectRequest.GetRemoteIpAddress(), userAgent = openIdConnectRequest.GetUserAgent(), RecaptchaState = recaptchaContext.State, RecaptchaHostname = recaptchaContext.Hostname });
-
                     var recaptchaMonitor = context.Get<IRecaptchaMonitor>();
 
                     recaptchaMonitor?.ChallengeCompleted(openIdConnectRequest.ToRecaptchaUserContext(), recaptchaContext.ToRecaptchaResponseContext());
@@ -58,7 +52,7 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
                 }
             }
 
-            if (_options.Matches(openIdConnectRequest) && !isExcludedFromRecaptcha)
+            if (Options.Matches(openIdConnectRequest) && !isExcludedFromRecaptcha)
             {
                 var result = await DoInvoke(context, openIdConnectRequest, loginStatistics);
 
@@ -69,7 +63,6 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
                             var numberOfFailedLogins = await loginStatistics.GetNumberOfFailedLoginsForIpAddress(openIdConnectRequest.GetRemoteIpAddress());
 
                             await ChallengeWithRequestForRecaptcha(context, openIdConnectRequest, numberOfFailedLogins);
-                            _logger.ExtendedInfo("Issuing Recaptcha Challenge", new { username = openIdConnectRequest.GetUsername(), ipAddress = openIdConnectRequest.GetRemoteIpAddress(), userAgent = openIdConnectRequest.GetUserAgent(), RecaptchaState = recaptchaContext?.State, numberOfFailedLogins });
 
                             return;
                         }
@@ -97,12 +90,12 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
                 openIdConnectRequest.GetRemoteIpAddress());
 
             await loginStatistics.IncrementChallengedLoginsForUserAndIpAddress(openIdConnectRequest.GetUsername(),
-                openIdConnectRequest.GetRemoteIpAddress(), numberOfFailedLogins, _options.NumberOfAllowedLoginFailuresPerIpAddress);
+                openIdConnectRequest.GetRemoteIpAddress(), numberOfFailedLogins, Options.NumberOfAllowedLoginFailuresPerIpAddress);
 
             recaptchaMonitor?.ChallengeIssued(openIdConnectRequest.ToRecaptchaUserContext());
 
             var httpChallenge = context.Get<IHttpRecaptchaChallenge>();
-            await httpChallenge.ReturnResponse(context, _options, openIdConnectRequest);
+            await httpChallenge.ReturnResponse(context, Options, openIdConnectRequest);
         }
 
         protected abstract Task<PipelineState> DoInvoke(IOwinContext context, IOpenIdConnectRequest openIdConnectRequest, ILoginStatistics loginStatistics);
