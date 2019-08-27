@@ -24,13 +24,13 @@ build:
 
 after_build:
   - ps: dir;
-  - ps: Get-ChildItem C:\Users\appveyor\AppData\Local\Temp\*\JE*.nupkg -Recurse | Copy-Item -Destination C:\projects\je-identityserver-security;
+  - ps: Get-ChildItem C:\Users\appveyor\AppData\Local\Temp\*\JE*.nupkg -Recurse | Copy-Item -Destination C:\projects\je-identityserver-security\artifacts;
   - ps: dir;
 
 skip_tags: false
 
 artifacts:
-- path: '**\JE.*.nupkg'
+- path: 'artifacts\JE.*.nupkg'
   name: JEPackages
 
 deploy:
