@@ -23,11 +23,7 @@ build:
   verbosity: minimal
 
 after_build:
-  - ps: Write-Host $env:APPVEYOR_BUILD_FOLDER
-  - ps: >-
-      foreach ($artifactName in $artifacts.keys) {
-        Write-Host $artifacts[$artifactName].path
-      }
+  - ps: Get-ChildItem .**\JE*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 
 artifacts:
   - path: '**\JE*.nupkg'
