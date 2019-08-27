@@ -23,7 +23,7 @@ build:
   verbosity: minimal
 
 after_build:
-  - ps: Get-ChildItem -Recurse .\JE*.nupkg | % { Write-Host $_.FullName }
+  - ps: Get-ChildItem -Recurse .\*.dll | % { Write-Host $_.FullName }
 
 artifacts:
   - path: '**\JE*.nupkg'
