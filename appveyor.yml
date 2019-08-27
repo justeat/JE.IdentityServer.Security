@@ -21,8 +21,8 @@ build:
 
 after_build:
   ps: >- 
-    nuget pack $env:APPVEYOR_BUILD_FOLDER\src\JE.IdentityServer.Security.Recaptcha.csproj -IncludeReferencedProjects -OutputDirectory $env:APPVEYOR_BUILD_FOLDER\artifacts;
-    nuget pack $env:APPVEYOR_BUILD_FOLDER\src\JE.IdentityServer.Security.Throttling.csproj -IncludeReferencedProjects -OutputDirectory $env:APPVEYOR_BUILD_FOLDER\artifacts;
+    nuget pack $env:APPVEYOR_BUILD_FOLDER\src\JE.IdentityServer.Security.Recaptcha\JE.IdentityServer.Security.Recaptcha.csproj -IncludeReferencedProjects -OutputDirectory $env:APPVEYOR_BUILD_FOLDER\artifacts;
+    nuget pack $env:APPVEYOR_BUILD_FOLDER\src\JE.IdentityServer.Security.Throttling\JE.IdentityServer.Security.Throttling.csproj -IncludeReferencedProjects -OutputDirectory $env:APPVEYOR_BUILD_FOLDER\artifacts;
 
 skip_tags: false
 
