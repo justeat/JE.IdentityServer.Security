@@ -26,7 +26,7 @@ after_build:
   - ps: Get-ChildItem -Recurse C:\Users\appveyor\AppData\Local\Temp\*\JE*.nupkg | % { Write-Host $_.FullName }
   - ps: >- 
     foreach ($artifactName in $artifacts.keys) {
-      $artifacts[$artifactName]
+      Write-Host $artifacts[$artifactName].path
     }
 
 artifacts:
