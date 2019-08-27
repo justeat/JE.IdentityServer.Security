@@ -22,7 +22,7 @@ build:
   parallel: true
   verbosity: minimal
 
-build_success:
+on_success:
   - ps: >-
       foreach ($artifactName in $artifacts.keys) {
         Write-Host $artifacts[$artifactName].path
