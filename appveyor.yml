@@ -13,7 +13,7 @@ assembly_info:
   assembly_informational_version: '{version}'
 
 before_build:
-- ps: Write-Host $env.APPVEYOR_BUILD_FOLDER
+- ps: Write-Host $env:APPVEYOR_BUILD_FOLDER
 - nuget restore
 
 build:
