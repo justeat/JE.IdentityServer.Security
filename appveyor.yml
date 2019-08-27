@@ -1,6 +1,10 @@
 version: 1.0.1.{build}
 configuration: Release
 
+branches:
+  only:
+    - master
+
 assembly_info:
   patch: true
   file: '**\*AssemblyInfo.*'
@@ -18,14 +22,16 @@ build:
   parallel: true
   verbosity: minimal
 
-artifacts:
-- path: '**\JE.*.nupkg'
-  name: Nuget
+nuget:
+  disable_publish_on_pr: true
+
+skip_tags: false
+test: off
 
 deploy:
 - provider: NuGet
   api_key:
     secure: DgZLtZcCWRTg+CP/Cj8wZpBNjNWDsP2lxsEmz615tXu7UQvXyIH7WyBLXSQ/CwH6
-  artifact: /JE*.nupkg/
+  artifact: '**\JE*.nupkg'
   on:
     APPVEYOR_REPO_TAG: true
