@@ -19,7 +19,6 @@ build:
   publish_nuget: true
   publish_nuget_symbols: true
   include_nuget_references: true
-  parallel: true
   verbosity: minimal
 
 after_build:
@@ -31,7 +30,7 @@ after_build:
 skip_tags: false
 
 artifacts:
-- path: 'JE.*.nupkg'
+- path: /JE*.nupkg/
   name: JEPackages
 
 deploy:
