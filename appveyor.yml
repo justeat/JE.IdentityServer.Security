@@ -23,7 +23,7 @@ build:
   verbosity: minimal
 
 after_build:
-  - ps: Get-ChildItem .\*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name -Verbosity  Normal -DeploymentName JEPackages }
+  - ps: Get-ChildItem -Recurse .\JE*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name -Verbosity  Normal -DeploymentName JEPackages }
 
 artifacts:
   - path: '**\JE*.nupkg'
