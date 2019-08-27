@@ -22,7 +22,8 @@ build:
   parallel: true
   verbosity: minimal
 
-on_success:
+after_build:
+  - ps: $(APPVEYOR_BUILD_FOLDER)
   - ps: >-
       foreach ($artifactName in $artifacts.keys) {
         Write-Host $artifacts[$artifactName].path
