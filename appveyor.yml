@@ -23,7 +23,7 @@ build:
   verbosity: minimal
 
 after_build:
-  - ps: Get-ChildItem -Recurse C:\Users\appveyor\AppData\Local\Temp\*\JE*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName 'artifacts\' + $_.Name -Verbosity Normal }
+  - ps: Copy-Item -Recurse C:\Users\appveyor\AppData\Local\Temp\*\JE*.nupkg -Destination $env:APPVEYOR_BUILD_FOLDER + '\artifacts'
 
 skip_tags: false
 
