@@ -22,6 +22,9 @@ build:
   parallel: true
   verbosity: minimal
 
+artifacts:
+  - path: '**\JE*.nupkg'
+
 skip_tags: false
 
 deploy:
