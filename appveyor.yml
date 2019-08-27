@@ -16,13 +16,18 @@ before_build:
 - nuget restore
 
 build:
-  publish_nuget: true
-  publish_nuget_symbols: true
-  include_nuget_references: true
   parallel: true
   verbosity: minimal
 
+after_build:
+  ps: nuget pack $env:APPVEYOR_BUILD_FOLDER\src\JE.IdentityServer.Security.Recaptcha.csproj -IncludeReferencedProjects -OutputDirectory $env:APPVEYOR_BUILD_FOLDER\artifacts
+  ps: nuget pack $env:APPVEYOR_BUILD_FOLDER\src\JE.IdentityServer.Security.Throttling.csproj -IncludeReferencedProjects -OutputDirectory $env:APPVEYOR_BUILD_FOLDER\artifacts
+
 skip_tags: false
+
+artifacts:
+- path: artifacts\*.nupkg
+  name: Nuget
 
 deploy:
 - provider: NuGet
