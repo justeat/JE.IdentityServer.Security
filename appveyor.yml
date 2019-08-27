@@ -25,9 +25,13 @@ build:
 after_build:
   - ps: Get-ChildItem -Recurse C:\Users\appveyor\AppData\Local\Temp\*\JE*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name -Verbosity Normal -DeploymentName JEPackages }
 
-artifacts:
-  - path: '**\JE*.nupkg'
-    name: JEPackages
+before_deploy:
+  -ps: >- 
+      foreach ($artifactName in $artifacts.keys) {
+        Write-Host $artifacts[$artifactName].name
+        Write-Host $artifacts[$artifactName].type
+        Write-Host $artifacts[$artifactName].path
+      }
 
 skip_tags: false
 
