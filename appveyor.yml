@@ -29,7 +29,7 @@ skip_tags: false
 
 artifacts:
 - path: '**\JE.*.nupkg'
-- name: JEPackages
+  name: JEPackages
 
 deploy:
 - provider: NuGet
