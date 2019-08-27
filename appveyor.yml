@@ -23,7 +23,7 @@ build:
   verbosity: minimal
 
 after_build:
-  - ps: Copy-Item -Recurse C:\Users\appveyor\AppData\Local\Temp\*\JE*.nupkg -Destination $env:APPVEYOR_BUILD_FOLDER
+  - ps: Copy-Item -Recurse "C:\Users\appveyor\AppData\Local\Temp\*\JE*.nupkg" -Destination "C:\projects\je-identityserver-security\recaptcha"
 
 skip_tags: false
 
