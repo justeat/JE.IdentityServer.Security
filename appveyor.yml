@@ -23,9 +23,9 @@ build:
   verbosity: minimal
 
 after_build:
-  - ps: dir
-  - ps: Get-ChildItem C:\Users\appveyor\AppData\Local\Temp\*\JE*.nupkg -Recurse | % { Copy-Item -Destination C:\projects\je-identityserver-security }
-  - ps: dir
+  - ps: dir;
+  - ps: Get-ChildItem C:\Users\appveyor\AppData\Local\Temp\*\JE*.nupkg -Recurse | Copy-Item -Destination C:\projects\je-identityserver-security;
+  - ps: dir;
 
 skip_tags: false
 
