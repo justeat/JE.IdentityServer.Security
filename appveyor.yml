@@ -16,18 +16,22 @@ before_build:
 - nuget restore
 
 build:
-  publish_nuget: true
-  publish_nuget_symbols: true
-  include_nuget_references: true
   parallel: true
   verbosity: minimal
 
+after_build:
+  ps: Get-Item $env:APPVEYOR_BUILD_FOLDER\src\JE.IdentityServer.Security.*\*.csproj | % { nuget pack $_.FullName -IncludeReferencedProjects -OutputDirectory $env:APPVEYOR_BUILD_FOLDER\artifacts }
+
 skip_tags: false
+
+artifacts:
+- path: artifacts\*.nupkg
+  name: DeploymentPackages
 
 deploy:
 - provider: NuGet
   api_key:
     secure: DgZLtZcCWRTg+CP/Cj8wZpBNjNWDsP2lxsEmz615tXu7UQvXyIH7WyBLXSQ/CwH6
-  artifact: '**\JE*.nupkg'
+  artifact: DeploymentPackages
   on:
     APPVEYOR_REPO_TAG: true
