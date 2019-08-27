@@ -13,7 +13,6 @@ assembly_info:
   assembly_informational_version: '{version}'
 
 before_build:
-- ps: Write-Host $env:APPVEYOR_BUILD_FOLDER
 - nuget restore
 
 build:
@@ -29,7 +28,7 @@ after_build:
 skip_tags: false
 
 artifacts:
-- path: '**\JE.*.nupkg'
+- path: 'C:\Users\appveyor\AppData\Local\Temp\*\JE*.nupkg'
   name: JEPackages
 
 deploy:
