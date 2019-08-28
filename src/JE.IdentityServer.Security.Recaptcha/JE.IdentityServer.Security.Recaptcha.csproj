@@ -68,7 +68,6 @@
     <Compile Include="IdentityServerRecaptchaOptions.cs" />
     <Compile Include="IIdentityServerRecaptchaOptions.cs" />
     <Compile Include="Pipeline\PipelineState.cs" />
-    <Compile Include="Pipeline\RecaptchaTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pipeline\ValidateRecaptchaChallenge.cs" />
     <Compile Include="Services\IRecaptchaContext.cs" />

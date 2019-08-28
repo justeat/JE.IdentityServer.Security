@@ -218,7 +218,7 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     response.StatusCode.Should().NotBe(HttpStatusCode.BadRequest);
 
                     identityServerBuilder.RecaptchaMonitor.HasCompletedChallenge.Should().BeTrue();
-                    identityServerBuilder.RecaptchaMonitor.ChallengeCompletedInvokeCount.Should().Be(1);
+                    identityServerBuilder.RecaptchaMonitor.ChallengeCompletedInvokeCount.Should().Be(2);
                     identityServerBuilder.RecaptchaMonitor.ResponseContext.State.Should().Be(RecaptchaState.ChallengeSucceeded);
                     identityServerBuilder.RecaptchaMonitor.ResponseContext.Hostname.Should().Be("response-host-name");
                     identityServerBuilder.RecaptchaMonitor.UserContext.Username.Should().Be(username);
@@ -264,7 +264,7 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                     response.StatusCode.Should().NotBe(HttpStatusCode.BadRequest);
 
                     identityServerBuilder.RecaptchaMonitor.HasCompletedChallenge.Should().BeTrue();
-                    identityServerBuilder.RecaptchaMonitor.ChallengeCompletedInvokeCount.Should().Be(1);
+                    identityServerBuilder.RecaptchaMonitor.ChallengeCompletedInvokeCount.Should().Be(2);
                     identityServerBuilder.RecaptchaMonitor.ResponseContext.State.Should().Be(RecaptchaState.ChallengeSucceeded);
                     identityServerBuilder.RecaptchaMonitor.UserContext.ShouldBeEquivalentTo(new RecaptchaUserContext
                     {

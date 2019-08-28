@@ -25,18 +25,12 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
 
             var loginStatistics = context.Get<ILoginStatistics>();
             var recaptchaContext = context.Get<IRecaptchaContext>();
-            var recaptchaTracker = context.Get<IRecaptchaTracker>();
 
             if (recaptchaContext != null)
             {
-                if (!recaptchaTracker.IsCompleted)
-                {
-                    var recaptchaMonitor = context.Get<IRecaptchaMonitor>();
+                var recaptchaMonitor = context.Get<IRecaptchaMonitor>();
 
-                    recaptchaMonitor?.ChallengeCompleted(openIdConnectRequest.ToRecaptchaUserContext(), recaptchaContext.ToRecaptchaResponseContext());
-
-                    recaptchaTracker.IsCompleted = true;
-                }
+                recaptchaMonitor?.ChallengeCompleted(openIdConnectRequest.ToRecaptchaUserContext(), recaptchaContext.ToRecaptchaResponseContext());
 
                 switch (recaptchaContext.State)
                 {

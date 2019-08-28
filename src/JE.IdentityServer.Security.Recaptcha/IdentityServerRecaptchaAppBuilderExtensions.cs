@@ -21,8 +21,6 @@ namespace JE.IdentityServer.Security.Recaptcha
                 recaptchaValidationService = () => new DefaultRecaptchaValidationService();
             }
 
-            app.UsePerOwinContext<IRecaptchaTracker>(() => new RecaptchaTracker());
-
             app.UseRequestedChallengeType(options);
 
             app.UsePerOwinContext(recaptchaValidationService);
