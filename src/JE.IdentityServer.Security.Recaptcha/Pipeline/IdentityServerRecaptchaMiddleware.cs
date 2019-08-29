@@ -33,7 +33,10 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
                 {
                     var recaptchaMonitor = context.Get<IRecaptchaMonitor>();
 
-                    recaptchaMonitor?.ChallengeCompleted(openIdConnectRequest.ToRecaptchaUserContext(), recaptchaContext.ToRecaptchaResponseContext());
+                    if (recaptchaMonitor != null)
+                    {
+                        await recaptchaMonitor.ChallengeCompleted(openIdConnectRequest.ToRecaptchaUserContext(), recaptchaContext.ToRecaptchaResponseContext());
+                    }
 
                     recaptchaTracker.IsCompleted = true;
                 }
@@ -92,7 +95,10 @@ namespace JE.IdentityServer.Security.Recaptcha.Pipeline
             await loginStatistics.IncrementChallengedLoginsForUserAndIpAddress(openIdConnectRequest.GetUsername(),
                 openIdConnectRequest.GetRemoteIpAddress(), numberOfFailedLogins, Options.NumberOfAllowedLoginFailuresPerIpAddress);
 
-            recaptchaMonitor?.ChallengeIssued(openIdConnectRequest.ToRecaptchaUserContext());
+            if (recaptchaMonitor != null)
+            {
+                await recaptchaMonitor.ChallengeIssued(openIdConnectRequest.ToRecaptchaUserContext());
+            }
 
             var httpChallenge = context.Get<IHttpRecaptchaChallenge>();
             await httpChallenge.ReturnResponse(context, Options, openIdConnectRequest);
