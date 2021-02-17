@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -60,6 +62,24 @@ namespace JE.IdentityServer.Security.Extensions
             var values = options.Select(o => target.IndexOf(o, startIndex, comparison)).Where(i => i > 0);
 
             return values.Any() ? values.Min() : -1;
+        }
+
+        public static IReadOnlyDictionary<string, string> ToAcrValues(this string acrValues)
+        {
+            try
+            {
+                return new ReadOnlyDictionary<string, string>(
+                    acrValues
+                        .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(x => x.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries))
+                        .Where(x => x.Length == 2 && x[0].Length > 0 && x[1].Length > 0)
+                        .ToDictionary(x => x[0], x => x[1])
+                );
+            }
+            catch
+            {
+                return new ReadOnlyDictionary<string, string>(new Dictionary<string, string>());
+            }
         }
     }
 }

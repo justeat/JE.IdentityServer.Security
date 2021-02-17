@@ -1,4 +1,5 @@
-﻿using System.Net;
+using System.Collections.Generic;
+using System.Net;
 using JE.IdentityServer.Security.Resources;
 
 namespace JE.IdentityServer.Security.OpenIdConnect
@@ -26,5 +27,7 @@ namespace JE.IdentityServer.Security.OpenIdConnect
         string GetOsVersion();
 
         string GetUserAgent();
+
+        IReadOnlyDictionary<string, string> GetAcrValues();
     }
 }

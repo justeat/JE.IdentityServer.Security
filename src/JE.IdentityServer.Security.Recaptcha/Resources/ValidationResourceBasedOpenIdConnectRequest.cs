@@ -1,4 +1,6 @@
-﻿using System.Linq;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net;
 using JE.IdentityServer.Security.Extensions;
 using JE.IdentityServer.Security.OpenIdConnect;
@@ -80,6 +82,11 @@ namespace JE.IdentityServer.Security.Recaptcha.Resources
             var userAgentHeaderValues = new string[] { };
 
             return _owinContext.Request.Headers.TryGetValue("User-Agent", out userAgentHeaderValues) ? userAgentHeaderValues.FirstOrDefault() : string.Empty;
+        }
+
+        public IReadOnlyDictionary<string, string> GetAcrValues()
+        {
+            return new ReadOnlyDictionary<string, string>(new Dictionary<string, string>());
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net;
 using JE.IdentityServer.Security.Extensions;
 using JE.IdentityServer.Security.Resources;
@@ -82,6 +83,13 @@ namespace JE.IdentityServer.Security.OpenIdConnect
         public string GetBasicAuthenticationHeaderValue()
         {
             return _headers.Get("Authorization");
+        }
+
+        public IReadOnlyDictionary<string, string> GetAcrValues()
+        {
+            var acrValues = _form.Get(AcrValuesFormKey);
+
+            return acrValues.ToAcrValues();
         }
     }
 }

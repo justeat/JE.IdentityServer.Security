@@ -115,6 +115,7 @@
     <Compile Include="Infrastructure\RecaptchaMonitorStub.cs" />
     <Compile Include="Infrastructure\TokenFailureResponseModel.cs" />
     <Compile Include="Infrastructure\TokenResponseModel.cs" />
+    <Compile Include="Extensions\AcrValuesStringExtensionTests.cs" />
     <Compile Include="Recaptcha\RecaptchaPostOnValidationEndpoint.cs" />
     <Compile Include="Recaptcha\RecaptchaResponseBodyStructure.cs" />
     <Compile Include="Recaptcha\RecaptchaGetOnValidationEndpoint.cs" />
