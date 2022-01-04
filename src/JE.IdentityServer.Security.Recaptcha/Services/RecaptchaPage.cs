@@ -1,7 +1,5 @@
-﻿using System.Globalization;
-using System.Linq;
+using System.Globalization;
 using JE.IdentityServer.Security.OpenIdConnect;
-using JE.IdentityServer.Security.Resources;
 
 namespace JE.IdentityServer.Security.Recaptcha.Services
 {
@@ -15,14 +13,14 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
             _options = options;
         }
 
-        public string CreateHtmlBody(string languageCode, IDevice device)
+        public string CreateHtmlBody(string languageCode)
         {
             if (string.IsNullOrEmpty(languageCode))
             {
                 languageCode = DefaultLanguageCode;
             }
 
-            return CreateFullHtmlBody(languageCode, device);
+            return CreateFullHtmlBody(languageCode);
         }
 
         public string CreateHtmlBody(IOpenIdConnectRequest openIdConnectRequest)
@@ -34,60 +32,39 @@ namespace JE.IdentityServer.Security.Recaptcha.Services
                 languageCode = DefaultLanguageCode;
             }
 
-            return _options.SupportsPartialRecaptcha(openIdConnectRequest) 
-                ? CreatePartialHtmlBody(languageCode, openIdConnectRequest.GetDevice()) 
-                : CreateFullHtmlBody(languageCode, openIdConnectRequest.GetDevice());
+            return _options.SupportsPartialRecaptcha(openIdConnectRequest)
+                ? CreatePartialHtmlBody(languageCode)
+                : CreateFullHtmlBody(languageCode);
         }
 
         public string CreateHtmlBody()
         {
-            return CreatePartialHtmlBody(DefaultLanguageCode, null);
+            return CreatePartialHtmlBody(DefaultLanguageCode);
         }
 
-        private string CreateFullHtmlBody(string languageCode, IDevice device)
+        private string CreateFullHtmlBody(string languageCode)
         {
             return string.Format(CultureInfo.InvariantCulture, @"<!DOCTYPE html>
             <html>
               <head>
                 <title>reCAPTCHA - please prove that you are human to continue</title>
-                {0}
-                <script src=""https://www.google.com/recaptcha/api.js?hl={1}"" async defer></script>
+                <script src=""https://www.google.com/recaptcha/api.js?hl={0}"" async defer></script>
               </head>
               <body>
                 <form action=""?"" method=""POST"">
-                  <div class=""g-recaptcha"" data-sitekey=""{2}""></div>
-                  {3}
+                  <div class=""g-recaptcha"" data-sitekey=""{1}""></div>
+                  {2}
                 </form>
               </body>
-            </html>", CssIncludeForDevice(device), languageCode, _options.PublicKey, HtmlContentForIfNoScriptIsAllowed());
+            </html>", languageCode, _options.PublicKey, HtmlContentForIfNoScriptIsAllowed());
         }
 
-        private string CreatePartialHtmlBody(string languageCode, IDevice device)
+        private string CreatePartialHtmlBody(string languageCode)
         {
             return string.Format(CultureInfo.InvariantCulture,
-                @"{0}<script src=""https://www.google.com/recaptcha/api.js?hl={1}"" async defer></script>
-          <div class=""g-recaptcha"" data-sitekey=""{2}""></div>{3}",
-                CssIncludeForDevice(device), languageCode, _options.PublicKey, HtmlContentForIfNoScriptIsAllowed());
-        }
-
-        private string CssIncludeForDevice(IDevice device)
-        {
-            if (string.IsNullOrEmpty(_options.ContentServerName))
-            {
-                return string.Empty;
-            }
-
-            var platform = "other";
-            var supportedDevices = new[] {"android", "windows", "iphone"};
-
-            if (!string.IsNullOrEmpty(device?.DeviceType))
-            {
-                platform = supportedDevices.Any(d => d.Contains(device.DeviceType)) ? device.DeviceType : "other";
-            }
-
-            return string.Format(CultureInfo.InvariantCulture,
-                @"<link rel=""stylesheet"" type=""text/css"" media=""all"" href=""https://{0}/content/recaptcha.{1}.css""/>",
-                _options.ContentServerName, platform);
+                @"<script src=""https://www.google.com/recaptcha/api.js?hl={0}"" async defer></script>
+          <div class=""g-recaptcha"" data-sitekey=""{1}""></div>{2}",
+                languageCode, _options.PublicKey, HtmlContentForIfNoScriptIsAllowed());
         }
 
         private string HtmlContentForIfNoScriptIsAllowed()

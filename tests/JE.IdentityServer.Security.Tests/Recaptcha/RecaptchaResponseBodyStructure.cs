@@ -110,33 +110,5 @@ namespace JE.IdentityServer.Security.Tests.Recaptcha
                 resource.ChallengeHtml.Should().StartWith("<script src=\"");
             }
         }
-
-        [TestCase("android", "<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"https://public.example-api.com/content/recaptcha.android.css\"/>")]
-        [TestCase("iphone", "<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"https://public.example-api.com/content/recaptcha.iphone.css\"/>")]
-        [TestCase("windows", "<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"https://public.example-api.com/content/recaptcha.windows.css\"/>")]
-        [TestCase("some_platform", "<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"https://public.example-api.com/content/recaptcha.other.css\"/>")]
-        public async Task RecaptchaResponseBody_WithDefaultChallengeTypeAndHost_ShouldContainExpectedCssInRecaptchaBody(string deviceType, string expectedHtml)
-        {
-            using (var server = new IdentityServerWithRecaptcha()
-                .WithProtectedGrantType("password")
-                .WithNumberOfAllowedLoginFailuresPerIpAddress(NumberOfAllowedLoginFailures)
-                .WithFailuresForIpAddress("192.168.1.101", NumberOfAllowedLoginFailures)
-                .WithPublicKey("recaptcha-public-key")
-                .WithContentServerName("public.example-api.com")
-                .Build())
-            {
-                var response = await server.CreateNativeLoginRequest()
-                    .WithUsername("jeuser")
-                    .WithPassword("Passw0rd")
-                    .WithGrantType("password")
-                    .WithLanguageCode("es-ES")
-                    .WithEncodedDevice("device-id", deviceType, "some-device-name", "some-device-token")
-                    .Build()
-                    .PostAsync();
-                response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-                var resource = await response.Content.ReadAsAsync<IdentityServerUnauthorizedChallengeResource>();
-                resource.ChallengeHtml.Should().Contain(expectedHtml);
-            }
-        }
     }
 }
